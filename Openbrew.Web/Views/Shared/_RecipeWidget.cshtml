@@ -1,0 +1,33 @@
+﻿@using Openbrew.Web
+@model Openbrew.Web.Core.Model.RecipeSummary
+
+@{
+    var srmClass = Math.Round(Model.Srm) >= 41 ? "srmBlack" : Math.Round(Model.Srm) > 0 ? "srm" + Math.Round(Model.Srm) : "srmWhite";
+    var recipeName = Model.RecipeName.Length > 30 ? Model.RecipeName.Substring(0, 30) + "..." : Model.RecipeName;
+}
+
+<div class="recipe-widget">
+    <div class="recipe-summary">
+        <div class="image">
+            <a href="@Url.RecipeDetailUrl(Model.RecipeId, Model.RecipeName, Model.BJCPStyleName)">
+                <img src="@Url.RecipeThumbnailUrl(Model.ImageUrlRoot, Model.Srm)" alt="" border="0" width="45" height="45" />
+            </a>
+        </div>
+        <div class="info">
+            <div class="name">
+                <a href="@Url.RecipeDetailUrl(Model.RecipeId, Model.RecipeName, Model.BJCPStyleName)">@recipeName</a>
+            </div>
+            <div class="type">@Model.GetRecipeTypeName() Recipe</div>
+            <div class="author">
+                 by <a href="@Url.UserProfileUrl(Model.CreatedByUserName)">@Model.CreatedByUserName</a>
+            </div>
+        </div>
+        <div class="clearall"> </div>
+    </div>
+    <div class="data">
+        <div class="stat srm-stat"><span class="srm @srmClass">&nbsp;</span><span class="lovi">@Math.Round(Model.Srm)&deg;</span></div>
+        <div class="stat ibu">@Model.Ibu.ToString("F1") IBU</div>
+        <div class="stat abv">@Model.Abv.ToString("F1")% ABV</div>
+        <div class="stat calories">@Model.Calories cal.</div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+﻿@using Openbrew.Web
+
+@model RecipeViewModel
+
+<div id="recipeinfo" class="recipedata info groupbox">
+    <span>
+        <h3>Recipe Info</h3>
+    </span>
+    <div>
+        <input type="hidden" data-name="r_OriginalRecipeId" value="@Model.OriginalRecipeId" />
+        <input type="hidden" data-name="r_RecipeId" value="@Model.RecipeId" />
+        <input type="text" placeholder="Give Your Homebrew a Name" data-name="r_Name" data-filter="ext-text" class="name" value="@Model.Name" data-validate="1" />
+
+        <div class="recipe-visibility">
+            <label for="RecipeVisibility">Sharing</label>
+            <select id="RecipeVisibility" data-name="r_Visibility" data-track="1">
+                <option value="public" @(string.Equals(Model.Visibility, "private", StringComparison.OrdinalIgnoreCase) ? "" : "selected=\"selected\"")>Publish when complete</option>
+                <option value="private" @(string.Equals(Model.Visibility, "private", StringComparison.OrdinalIgnoreCase) ? "selected=\"selected\"" : "")>Keep private</option>
+            </select>
+            <p id="RecipeVisibilityHint" class="fine-print"></p>
+        </div>
+
+        <div class="values">
+            <div>
+                <div class="title">
+                    <label for="unit">Measurement</label>
+                </div>
+                <select name="unit" data-name="r_UnitType" data-track="1">
+                    <option value="s" @(Model.UnitType == "s" ? " selected=\"selected\"" : "")>US</option>
+                    <option value="m" @(Model.UnitType == "m" ? " selected=\"selected\"" : "")>Metric</option>
+                </select>
+            </div>
+            <div>
+                <div class="title">
+                    <label for="batch_size">Batch Size</label>
+                    <span class="helptip" original-title="The amount of wort, after the boil.  NOTE: This includes any volume you expect to lose due to trub loss when transferring to your fermenter.">&nbsp;</span>
+                </div>
+                <div>
+                    <input type="text" name="batch_size" data-name="r_BatchSize" data-track="1" data-filter="positiveFloat" maxlength="6" value="@Model.BatchSize" data-validate="1" />
+                    <span data-unit="s" class="textlabel">gallons</span>
+                    <span data-unit="m" class="textlabel">liters</span>
+                </div>
+            </div>
+            <div>
+                <div class="title">
+                    <label for="boil_size">Boil Size</label>
+                    <span class="helptip" original-title="The amount of sweet wort that you will be boiling">&nbsp;</span>
+                </div>
+                <div>
+                    <input type="text" name="boil_size" data-name="r_BoilSize" data-track="1" data-filter="positiveFloat" maxlength="6" value="@Model.BoilSize" data-validate="1" />
+                    <span data-unit="s" class="textlabel">gallons</span>
+                    <span data-unit="m" class="textlabel">liters</span>
+                </div>
+            </div>
+            <div>
+                <div class="title">
+                    <label for="boil_time">Boil Time</label>
+                    <span class="helptip" original-title="The total time that you will be boiling the sweet wort">&nbsp;</span>
+                </div>
+                <select name="boil_time" data-name="r_BoilTime" data-track="1">
+                    @for (var i = 5; i <= 180; i += 5)
+                    {
+                        <option value="@i" @(Model.BoilTime == i ? " selected=\"selected\"" : "")>@i Minutes</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <div class="title">
+                    <label for="efficiency">Efficiency</label>
+                    <span class="helptip" original-title="This is how well your equipment and process does at extracting sugars from the malts in the mash/lauter process">&nbsp;</span>
+                </div>
+                <select name="efficiency" data-name="r_Efficiency" data-track="1">
+                    @for (var i = 10; i <= 99; i++)
+                    {
+                        <option value=".@i" @((Model.Efficiency * 100) == i ? " selected=\"selected\"" : "")>@i%</option>
+                    }
+                    <option value="1" @(Model.Efficiency == 1 ? " selected=\"selected\"" : "")>100%</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="clearall"> </div>
+
+        <div class="more marginbottom5">
+            <div>
+                <h4>Description</h4>
+                (Include recipe history, facts and other details that brewers will find interesting)
+                <textarea name="description" data-name="r_Description" class="expand2-200" rows="8">@Model.Description</textarea>
+            </div>
+            <div>
+                <div class="actions">
+                    <div class="floatleft margintop5">
+                        <div class="floatleft marginright10">
+                            <a href="@Url.RecipeDetailImageUrl(Model.ImageUrlRoot, Model.Srm)" target="_blank" rel="noopener noreferrer">
+                                <img id="RecipePhotoPreview" src="@Url.RecipeThumbnailUrl(Model.ImageUrlRoot, Model.Srm)" alt="Recipe Photo" width="80" height="80" />
+                            </a>
+                        </div>
+                        <a href="#" id="ScalePopupTrigger" class="button_small button_black">Scale</a>
+                        <a href="#" id="PhotoPopupTrigger" class="button_small button_black">@(Model.HasImage ? "New Photo" : "Add a Photo")</a>
+
+                        @if (!Model.IsNewRecipe())
+                        {
+                            <a href="@Url.RecipeCloneUrl(Model.RecipeId)" class="button_small button_black">Clone</a>
+                            <a href="@Url.RecipePrintUrl(Model.RecipeId)" class="button_small button_black new-window" rel="nofollow">Print</a>
+                            <a href="#" class="button_small button_black delete-recipe" data-recipeid="@Model.RecipeId">Delete</a>
+                        }
+                    </div>
+                    @if(!Model.IsNewRecipe())
+                    {
+                        <div class="floatright width175">
+                        
+                        @if(Model.MostRecentBrewSession.HasValue)
+                        {
+                            <a href="@Url.EditBrewSessionUrl(Model.MostRecentBrewSession.Value)" class="button_small button_gray block width150 marginbottom5"><img src="~/img/icons/book_open.png" alt="edit" class="valignmiddle marginright10" />  <span class="valignmiddle">Go To Brew Session</span></a>
+                        }
+                        <a href="@Url.NewBrewSessionUrl(Model.RecipeId)" class="button_small button_gray block width150"><img src="~/img/icons/add.png" alt="new" class="valignmiddle marginright10" />  <span class="valignmiddle">New Brew Session</span></a>                        
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="clearall"> </div>
+        </div>
+    </div>
+</div>

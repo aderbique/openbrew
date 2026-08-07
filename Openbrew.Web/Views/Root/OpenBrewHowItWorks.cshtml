@@ -1,0 +1,40 @@
+@{
+    Layout = "~/Views/Shared/_OpenBrewLayout.cshtml";
+    ViewBag.Title = "How It Works";
+    ViewBag.Description = "Build recipes, see live brewing calculations, and manage every batch in one place.";
+}
+
+<div id="howitworks" class="content how-it-works-page">
+    <header class="how-it-works-intro">
+        <p class="eyebrow">OpenBrew workflow</p>
+        <h2>Powerful features, simplified.</h2>
+        <p>Everything you need to build, understand, and keep improving your homebrew recipes.</p>
+    </header>
+
+    <section class="how-it-works-step">
+        <div class="how-it-works-copy">
+            <h3>Fast and simple ingredient entry.</h3>
+            <p>Add fermentables, hops, yeast, and extra ingredients to the recipe calculator. Values stay editable, so your recipe can match the ingredients and equipment you actually use.</p>
+            <a class="button button_green" href="@Url.Action("homebrew-recipe-calculator", "Recipe")">Start crafting great beer</a>
+        </div>
+        <img src="@Url.Content("~/img/howbrewgrworks1.png")" alt="Adding ingredients to an OpenBrew recipe" />
+    </section>
+
+    <section class="how-it-works-step reverse">
+        <img src="@Url.Content("~/img/howbrewgrworks2.png")" alt="OpenBrew recipe calculations" />
+        <div class="how-it-works-copy">
+            <h3>Easy-to-read calculations.</h3>
+            <p>Recipe facts update as you add ingredients, making gravity, color, bitterness, alcohol, and calories easy to understand before brew day.</p>
+            <a href="@Url.Action("Calculations", "Content")">See how the calculations work</a>
+        </div>
+    </section>
+
+    <section class="how-it-works-step">
+        <div class="how-it-works-copy">
+            <h3>See every recipe in one place.</h3>
+            <p>Keep your recipes together, clone ideas worth brewing, and track the batches and tasting notes that make each version better.</p>
+            <a class="button button_green" href="@Url.Action("login", "Auth")">Create a free account</a>
+        </div>
+        <img src="@Url.Content("~/img/howbrewgrworks3.png")" alt="OpenBrew recipe collection" />
+    </section>
+</div>

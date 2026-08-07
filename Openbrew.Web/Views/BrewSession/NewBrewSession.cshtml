@@ -1,0 +1,45 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@using ctorx.Core.Formatting
+
+@model BrewSessionViewModel
+
+@{
+	ViewBag.Title = "New Brew Session for " + Model.RecipeSummary.Name;
+}
+
+<div id="view-newbrewsession" class="content builder-wrapper">
+    <div class="primary builder session">
+        @Html.Partial("_BrewSessionForm", Model)
+    </div>
+    <div class="catcher">
+        <!--catcher-->
+    </div>
+    <div class="compliment">
+        @Html.Partial("_RecipeFacts", Model.RecipeSummary)
+        <input type="button" id="SaveBrewSessionButton" class="button button_green save-brewsession margintop10" value="Save Brew Session" />
+    </div>
+    <div class="catcher">
+        <!--catcher-->
+    </div>  
+</div>
+
+<div class="hidden">
+    @using (Html.BeginForm("SaveSession", "BrewSession", FormMethod.Post, new { id = "SessionForm" }))
+    {
+        <input type="hidden" name="SessionJson" id="SessionJson" />
+    }
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            SessionBuilder.initialize();
+            @if(Model.RecipeSummary.RecipeTypeId != (int)RecipeType.Extract)
+            {
+                <text>WaterCalc.initialize($('#s_waterIn'), $('#s_waterOut'), $('select[data-name=s_UnitType]'));</text>
+            }
+        });
+    </script>
+}

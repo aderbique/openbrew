@@ -1,0 +1,58 @@
+﻿@model UserSettingsViewModel
+
+@using(Html.BeginForm("SetNotifications", "User", FormMethod.Post))
+{                 
+    @Html.HiddenFor(m => m.UserId)
+  
+    <h3 class="marginbottom10 margintop10">User Action Notifications</h3>
+    <p>
+        These are email notifications you receive when other openbrew users interact with things you've created or interacted with yourself.
+    </p>
+    
+    <div class="form-field notification marginleft20">
+        @Html.CheckBoxFor(m => m.RecipeCommentNotifications)
+        @Html.LabelFor(m => m.RecipeCommentNotifications, "Recipe Comments")
+        <p>
+            You will receive an email notification if someone comments on one of your recipes.   You will also receive email notifications 
+            when others comment on recipes in which you have also commented.
+        </p>
+    </div>    
+    
+    <div class="form-field notification marginleft20">
+        @Html.CheckBoxFor(m => m.BrewSessionCommentNotifications)
+        @Html.LabelFor(m => m.BrewSessionCommentNotifications, "Brew Session Comments")
+        <p>
+            You will receive an email notification if someone comments on one of your brew sessions.   You will also receive email notifications 
+            when others comment on brew sessions in which you have also commented.
+        </p>
+    </div>
+    
+    <div class="form-field notification marginleft20">
+        @Html.CheckBoxFor(m => m.BrewerFollowNotifications)
+        @Html.LabelFor(m => m.BrewerFollowNotifications, "Followed By Others")
+        <p>
+            You will receive an email notification when another openbrew user starts following you.
+        </p>
+    </div>
+    
+    <h3 class="marginbottom10">openbrew Notifications</h3>
+    <p>These are emails that we send to keep you informed about new features, site outages and other information related to the openbrew website.</p>
+          
+    <div class="form-field notification marginleft20">
+        @Html.CheckBoxFor(m => m.SiteFeatureNotifications)
+        @Html.LabelFor(m => m.SiteFeatureNotifications, "New Features")
+        <p>
+            You will receive an email notification when we release new site features.
+        </p>
+    </div>
+    
+    <div class="form-field notification marginleft20">
+        @Html.CheckBoxFor(m => m.SiteOutageNotifications)
+        @Html.LabelFor(m => m.SiteOutageNotifications, "Site Outages")
+        <p>
+            You will receive an email in advance of a scheduled site outage informing you when the outage will occur and how long we expect it to last.
+        </p>
+    </div>
+          
+    <input id="savesettings" type="submit" class="button button_green" value="Save Changes" />	
+}

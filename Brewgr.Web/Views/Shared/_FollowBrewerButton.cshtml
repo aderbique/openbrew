@@ -1,5 +1,0 @@
-﻿@model Brewgr.Web.Core.Model.UserSummary
-@if (ViewBag.ActiveUser != null && Model.UserId != ViewBag.ActiveUser.UserId)
-{
-    <a href="#" class="follow-brewer button floatleft marginleft20 @(ViewBag.UserIsFollowed ? "button_gray" : "button_green" ) button_small" data-brewerid="@Model.UserId">@(ViewBag.UserIsFollowed ? "Following" : "Follow" )</a>
-}

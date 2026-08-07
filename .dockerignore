@@ -1,0 +1,16 @@
+.git
+.github
+.openclaw
+.clawhub
+memory
+tmp
+*.log
+*.tmp
+*.swp
+.DS_Store
+.env
+.env.*
+.openbrew.dev.env
+bin
+obj
+packages

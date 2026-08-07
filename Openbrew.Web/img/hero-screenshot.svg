@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="864" viewBox="0 0 1536 864">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a130f"/>
+      <stop offset="100%" stop-color="#0f0a08"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="18%" cy="18%" r="34%">
+      <stop offset="0%" stop-color="#e29a47" stop-opacity="0.36"/>
+      <stop offset="72%" stop-color="#e29a47" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#e29a47" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mint" cx="82%" cy="16%" r="26%">
+      <stop offset="0%" stop-color="#7eb18b" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#7eb18b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f7e3bb"/>
+      <stop offset="48%" stop-color="#efbb67"/>
+      <stop offset="100%" stop-color="#ca7125"/>
+    </linearGradient>
+    <linearGradient id="foam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff9ef"/>
+      <stop offset="100%" stop-color="#eadbc6"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="1" y2="1">
+      <stop offset="0%" stop-color="#211712"/>
+      <stop offset="100%" stop-color="#140e0b"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f6efe6" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#f6efe6" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7eb18b"/>
+      <stop offset="100%" stop-color="#45664f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1536" height="864" fill="url(#bg)"/>
+  <circle cx="236" cy="156" r="264" fill="url(#halo)"/>
+  <circle cx="1292" cy="680" r="196" fill="#e08a33" fill-opacity="0.08"/>
+  <circle cx="1224" cy="126" r="126" fill="url(#mint)"/>
+  <path d="M0 734c172-56 362-58 512-26s266 38 402 8 266-34 622 28v120H0Z" fill="#2c211a" fill-opacity="0.88"/>
+
+  <g transform="translate(96 88)">
+    <rect x="0" y="0" width="1344" height="688" rx="48" fill="url(#panel)" stroke="#f3d39d" stroke-opacity="0.18" stroke-width="2"/>
+    <rect x="18" y="18" width="1308" height="652" rx="38" fill="none" stroke="#fff" stroke-opacity="0.05"/>
+
+    <g transform="translate(88 128)">
+      <circle cx="252" cy="116" r="146" fill="#d47c30" fill-opacity="0.12"/>
+      <circle cx="324" cy="82" r="34" fill="#e4ae56" fill-opacity="0.2"/>
+      <ellipse cx="246" cy="402" rx="178" ry="16" fill="#f6e5c9" fill-opacity="0.14"/>
+
+      <path d="M144 318c0-22 18-40 40-40h182c22 0 40 18 40 40v90c0 58-47 106-106 106H250c-58 0-106-47-106-106v-90Z" fill="url(#glass)"/>
+      <path d="M430 324c62 0 112 50 112 112s-50 112-112 112" fill="none" stroke="url(#glass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="50"/>
+      <path d="M174 186c0-18 14-32 32-32h138c18 0 32 14 32 32v34H174v-34Z" fill="url(#foam)"/>
+      <circle cx="222" cy="190" r="24" fill="#fff8ee"/>
+      <circle cx="314" cy="180" r="28" fill="#fff8ee"/>
+      <circle cx="382" cy="190" r="18" fill="#fff8ee"/>
+      <path d="M194 232c30 20 88 20 118 0" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="12" stroke-opacity="0.34"/>
+      <path d="M226 320c0-26 21-48 48-48s48 22 48 48v132c0 22 18 40 40 40h34" fill="none" stroke="#ead8bf" stroke-linecap="round" stroke-width="36"/>
+      <path d="M224 298c0-28 22-50 50-50s50 22 50 50" fill="none" stroke="#fff4e0" stroke-linecap="round" stroke-width="18" stroke-opacity="0.42"/>
+      <path d="M178 608c84-34 186-34 298 0" fill="none" stroke="#efd8af" stroke-linecap="round" stroke-width="16" stroke-opacity="0.44"/>
+      <path d="M640 168c10-20 28-31 52-34" fill="none" stroke="url(#accent)" stroke-linecap="round" stroke-width="18"/>
+      <path d="M670 182c0-20 16-36 36-36s36 16 36 36-16 36-36 36-36-16-36-36Z" fill="url(#accent)"/>
+      <circle cx="686" cy="172" r="6" fill="#f7eddc" fill-opacity="0.72"/>
+      <path d="M642 228c16 10 28 24 36 42" fill="none" stroke="#7eb18b" stroke-linecap="round" stroke-width="10" stroke-opacity="0.7"/>
+    </g>
+
+    <g transform="translate(748 176)">
+      <text x="0" y="0" fill="#f7efe6" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="88" font-weight="800" letter-spacing="-2.6">openbrew</text>
+      <text x="2" y="58" fill="#e6d2b6" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="24" font-weight="500">Build. Share. Clone. Brew.</text>
+      <rect x="0" y="98" width="412" height="4" rx="2" fill="#e08a33"/>
+
+      <g transform="translate(0 136)">
+        <rect x="0" y="0" width="302" height="44" rx="22" fill="#f1dfc8" fill-opacity="0.12" stroke="#f1dfc8" stroke-opacity="0.16"/>
+        <text x="18" y="28" fill="#f7efe6" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="18" font-weight="600">GPL-3.0 licensed</text>
+      </g>
+
+      <g transform="translate(0 212)">
+        <rect x="0" y="0" width="458" height="104" rx="24" fill="url(#card)" stroke="#f1dfc8" stroke-opacity="0.12"/>
+        <text x="20" y="34" fill="#f7efe6" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="18" font-weight="700">Recipe stats</text>
+        <text x="20" y="64" fill="#dcc9b0" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="16">ABV 6.2%  •  IBU 42  •  SRM 13</text>
+        <text x="246" y="64" fill="#dcc9b0" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="16">Clone ready</text>
+      </g>
+
+      <g transform="translate(0 332)">
+        <rect x="0" y="0" width="458" height="124" rx="24" fill="url(#card)" stroke="#f1dfc8" stroke-opacity="0.12"/>
+        <text x="20" y="34" fill="#f7efe6" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="18" font-weight="700">Shareable workflow</text>
+        <text x="20" y="62" fill="#dcc9b0" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="16">BeerXML export, print view, public links, and brew-session notes.</text>
+        <text x="20" y="92" fill="#dcc9b0" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="16">Current source: github.com/aderbique/openbrew</text>
+      </g>
+
+      <text x="0" y="506" fill="#f0e1cb" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="18">Original source: github.com/rak-phillip/Brewgr.com</text>
+      <text x="0" y="536" fill="#f0e1cb" font-family="Avenir Next, Aptos, Manrope, Inter, sans-serif" font-size="18">Users are free to contribute on GitHub.</text>
+    </g>
+  </g>
+</svg>

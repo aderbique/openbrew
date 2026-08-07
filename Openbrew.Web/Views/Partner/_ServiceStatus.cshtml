@@ -1,0 +1,35 @@
+﻿@model PartnerServiceStatusViewModel
+           
+@{
+    this.Layout = null;
+}
+
+<div id="service-status">
+           
+    <h3 class="marginbottom10">Status</h3>
+
+    @if(Model.IsEnabled)
+    {
+        <p>
+            This service is currently <span class="bold">enabled</span> and can be used by all openbrew users
+            who use your partner link to come to openbrew.  You can disable the service below
+            which will prevent it from being used by anyone except for you or other users
+            linked to this partner account.
+        </p>
+
+        <a href="#" data-partnerid="@Model.PartnerId" data-servicetype="@((int)Model.PartnerServiceType)" data-enabled="false" class="service-status-link button button_red">Disable</a>
+    }
+    else
+    {
+        <p>
+            This service is currently <span class="bold">disabled</span> and can only be used 
+            by you or other users linked to this partner account.  You can enable the service below 
+            which will allow it to be used by all openbrew users who use your partner link to come to openbrew.
+        </p>
+
+        <a href="#" data-partnerid="@Model.PartnerId" data-servicetype="@((int)Model.PartnerServiceType)" data-enabled="true" class="service-status-link button button_green">Enable</a>
+    }
+    
+</div>
+
+

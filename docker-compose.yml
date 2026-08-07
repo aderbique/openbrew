@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: brewgr-sql
+    environment:
+      ACCEPT_EULA: "1"
+      MSSQL_SA_PASSWORD: ${OPENBREW_SA_PASSWORD:-Brewgr_dev_123!}
+    ports:
+      - "1433:1433"
+    volumes:
+      - brewgr-sql-data:/var/opt/mssql
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: brewgr-web
+    environment:
+      OPENBREW_REPO_ROOT: /workspace/brewgr
+      OPENBREW_WEB_ROOT: /workspace/brewgr/Openbrew.Web
+      OPENBREW_HOST_PORT: ${OPENBREW_HOST_PORT:-8085}
+      OPENBREW_HOST_NAME: ${OPENBREW_HOST_NAME:-localhost}
+      OPENBREW_DB_NAME: ${OPENBREW_DB_NAME:-Openbrew_DEV}
+      OPENBREW_SA_PASSWORD: ${OPENBREW_SA_PASSWORD:-Brewgr_dev_123!}
+      OPENBREW_CONTACT_EMAIL_ADDRESS: ${OPENBREW_CONTACT_EMAIL_ADDRESS:-austinjderbique@gmail.com}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - ./:/workspace/brewgr
+      - ../packages:/workspace/packages
+    ports:
+      - "8085:8085"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  brewgr-sql-data:

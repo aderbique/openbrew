@@ -1,0 +1,104 @@
+﻿@using Openbrew.Web.Core.Model
+@model RecipeSearchResults
+
+@{
+    ViewBag.Title = "Homebrew Recipe Finder and Search Tool";
+}
+<div id="view-recipefinder">
+    <div class="compliment">
+        <div class="ad-sense">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- openbrew - LargeSkyscraper ad slot -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:600px"
+                 data-ad-client="ca-pub-6867430027291087"
+                 data-ad-slot="3992788908"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+    <div class="primary">
+        <div class="groupbox">
+            <span><h3 class="floatleft">Recipe Search Options</h3></span>
+            @using(Html.BeginForm())
+            {
+                <div class="summary paddingleft18 paddingtop20 options">
+                    <div class="marginbottom20">
+                        <h3>Recipe Type</h3>
+                        <div class="item">
+                            <label><input type="checkbox" checked="checked" name="RecipeTypes" value="@RecipeType.AllGrain" /> All Grain</label>
+                            <label><input type="checkbox" checked="checked" name="RecipeTypes" value="@RecipeType.Extract" /> Extract</label>
+                            <label><input type="checkbox" checked="checked" name="RecipeTypes" value="@RecipeType.AllGrainPlusExtract" /> Partial Mash</label>
+                        </div>
+                    </div>
+                
+                    <div class="marginbottom20">
+                        <h3>Recipe Style</h3>
+                        <div class="item recipe-finder-catalog">
+                            <label for="finder-style-catalog">Style catalog</label>
+                            <select id="finder-style-catalog" name="StyleCatalog"><option value="ba-2026" selected="selected">2026 Catalog</option><option value="legacy-bjcp">Legacy</option></select>
+                        </div>
+                        <div id="finder-ba-styles" class="item styles"><span class="fine-print">Loading 2026 styles…</span></div>
+                        <div id="finder-legacy-styles" class="item styles" style="display:none">
+                            @foreach(BjcpStyleSummary style in ViewBag.Styles)
+                            {
+                                <label><input type="checkbox" name="RecipeStyles" value="@style.SubCategoryId" /> @style.SubCategoryName</label>
+                            }
+                        </div>
+                    </div>
+                
+                    <div class="marginbottom20">
+                        <h3 class="inline-block">Search Terms</h3> <span class="fine-print"></span>
+                        <div class="item">
+                            <input type="text" name="SearchTerm" />
+                            <label><input type="radio" name="AndSearchTerm" value="false" checked="checked" /> Match any word</label>
+                            <label><input type="radio" name="AndSearchTerm" value="true" /> Match all words</label>
+                        </div>
+                    </div>
+
+                    <div class="marginbottom20">
+                        <h3>Search Options</h3>
+                        <div class="item">
+                            <label><input type="checkbox" name="IsClone" value="true"/> is a clone</label>
+                            <label><input type="checkbox" name="HasBrewSessions" value="true" /> has brew sessions</label>
+                            <label><input type="checkbox" name="HasTastingNotes" value="true" /> has tasting notes</label>
+                            <label><input type="checkbox" name="HasComments" value="true" /> has comments</label>
+                        </div>
+                    </div>
+
+                    <div class="marginbottom20">
+                        <input type="submit" class="button button_green" value="Find Homebrew Recipes" />
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="padding10">
+            <p>
+                Much of the enjoyment of being a homebrewer and making your own beer is building and designing your own recipes.  Whether you're a beginning home brewer
+                looking for guidance on how best to formulate a recipe, or you're an experienced brewer looking for a good starting point for your next award winning recipe,
+                openbrew's recipe finder and advanced homebrew recipe search tool will help you find what you're looking for.
+            </p>
+            <h3>Search Tips</h3>
+
+            <ul>
+                <li>Choose only the recipe type you want to brew.</li>
+                <li>Only choose a beer style if your are looking for a specific style to brew. </li>
+                <li>Only choose "is a clone" if you are looking for homebrew recipes for clones of popular beers</li>
+                <li>Choosing "has brew sessions", "has tasting notes", or "has comments" will limit your results but might help you find a recipe that has already been vetted.</li>
+            </ul>
+            
+        </div>
+
+    </div>
+    
+</div>
+<script>
+    (function () {
+        var catalog = document.getElementById('finder-style-catalog'), modern = document.getElementById('finder-ba-styles'), legacy = document.getElementById('finder-legacy-styles');
+        function show() { modern.style.display = catalog.value === 'ba-2026' ? '' : 'none'; legacy.style.display = catalog.value === 'legacy-bjcp' ? '' : 'none'; }
+        catalog.onchange = show; show();
+        $.getJSON('/ba-2026-style-catalog', function (styles) { modern.innerHTML = styles.map(function (style) { return '<label><input type="checkbox" name="RecipeStyles" value="' + style.Id + '" /> ' + $('<div>').text(style.Name).html() + '</label>'; }).join(''); });
+    }());
+</script>

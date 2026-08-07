@@ -1,0 +1,21 @@
+﻿@using Openbrew.Web
+@model RecipeViewModel
+
+<h2>@(Model.HasImage ? "Change Photo" : "Add Photo")</h2>
+<p>Select the photo to upload and click the "Save Photo" button. Please use jpg, png, gif and bmp files only. Files will be automatically resized as needed.</p>
+
+@if(Model.HasImage)
+{
+    <div class="photo">
+        <img src="@Url.RecipeThumbnailUrl(Model.ImageUrlRoot, Model.Srm)" alt="Recipe Thumbnail" width="80" height="80" />
+    </div>
+}
+
+<div class="fileuploadwrapper @(Model.HasImage ? "margintop40" : "")">
+    <input type="file" name="PhotoForUpload" id="PhotoForUpload" size="40" />
+</div>
+
+@if(!Model.IsNewRecipe())
+{
+    <div class="clearall"></div>
+}

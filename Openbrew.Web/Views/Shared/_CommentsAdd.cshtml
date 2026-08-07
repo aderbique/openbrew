@@ -1,0 +1,14 @@
+﻿@using Openbrew.Web.Core.Model
+@model CommentAddViewModel
+
+@if (ViewBag.ActiveUser != null)
+{
+    <div class="comment addcomment">
+       
+        <img src="@Model.GetAvatar(30, ViewBag.ActiveUser.EmailAddress)" width="30" height="30" alt="" class="commentimage" />
+        <div class="commenttext">
+           @Html.TextAreaFor(m => m.CommentText, new { PlaceHolder = "Write a comment...", Class = "CommentText" })
+           <a href="#" rel="nofollow" id="AddComment" data-genericid="@Model.GenericId" data-commenttype="@Model.CommentType.ToString()" class="button button_gray button_small AddComment">Post</a>
+        </div>
+    </div>
+}

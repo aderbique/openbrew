@@ -1,0 +1,78 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Configuration
+@using Openbrew.Web.Core.Model
+@using ctorx.Core.Formatting
+@model IList<Openbrew.Web.Core.Model.BrewSessionSummary>
+
+<div class="brewsession-list">
+	@foreach (var brewSession in Model)
+	{
+		<div class="brewsession@(Model.IndexOf(brewSession) == Model.Count - 1 ? " last" : "")">
+			<div class="image">
+				<a href="@Url.BrewSessionDetailUrl(brewSession.BrewSessionId, brewSession.RecipeName)"><img src="@Url.RecipeThumbnailUrl(brewSession.RecipeImageUrlRoot, brewSession.RecipeSrm)" alt="@brewSession.RecipeName" height="80" width="80" /></a>	
+			</div>			
+			<div class="details">
+				<h3 class="name">
+					<a href="@Url.BrewSessionDetailUrl(brewSession.BrewSessionId, brewSession.RecipeName)">Brew Session: @brewSession.RecipeName</a>
+				</h3>
+				<span class="author">by <a href="@Url.UserProfileUrl(brewSession.BrewedByUsername)">@brewSession.BrewedByUsername</a> on @brewSession.BrewDate.ToShortDateString()</span>
+			
+				<div class="data">
+                    @if(brewSession.HasWaterInfusion)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>&nbsp;Water Infusion</span>
+						</span>
+					}
+					@if(brewSession.HasMashBoil)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>&nbsp;@(brewSession.GetRecipeType() == RecipeType.Extract ? "Boil" : "Mash/Boil")</span>
+						</span>
+					}
+					@if(brewSession.HasFermentation)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>&nbsp;Fermentation</span>
+						</span>
+					}
+					@if(brewSession.HasConditioning)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>&nbsp;Conditioning</span>
+						</span>
+					}
+					@if(brewSession.HasTastingNotes)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>&nbsp;Tasting</span>
+						</span>
+					}
+				</div>
+
+				<div class="actions">
+					@if (ViewBag.ActiveUser != null && brewSession.WasBrewedBy(ViewBag.ActiveUser.UserId))
+					{
+						<a href="@Url.EditBrewSessionUrl(brewSession.BrewSessionId)" class="button button_gray button_small">Edit</a>
+						<a href="#" class="button button_gray button_small delete-brewsession" data-brewsessionid="@brewSession.BrewSessionId">Delete</a>
+					}
+					<a href="@Url.RecipeDetailUrl(brewSession.RecipeId, brewSession.RecipeName, !string.IsNullOrWhiteSpace(brewSession.RecipeBjcpStyleSubCategoryId) ? brewSession.RecipeBjcpStyleName : null)" class="button button_gray button_small">Go To Recipe</a>
+				</div>
+			</div>
+		
+			<div class="clearall"></div>
+		
+			@if (!string.IsNullOrWhiteSpace(brewSession.Summary))
+			{
+				<div class="description">
+					@brewSession.Summary
+				</div>
+			}
+		</div>
+	}
+</div>

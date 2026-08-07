@@ -1,0 +1,45 @@
+<script type="text/javascript">
+    window.OpenBrewTheme = window.OpenBrewTheme || {
+        set: function (preference) {
+            if (preference !== 'light' && preference !== 'dark' && preference !== 'system') preference = 'system';
+            var isDark = preference === 'dark' || (preference === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme-preference', preference);
+            try { localStorage.setItem('openbrew-theme-preference', preference); } catch (e) { }
+
+            var choices = document.querySelectorAll('[data-theme-choice]');
+            for (var i = 0; i < choices.length; i++) {
+                var selected = choices[i].getAttribute('data-theme-choice') === preference;
+                choices[i].className = choices[i].className.replace(/\s?is-selected/g, '') + (selected ? ' is-selected' : '');
+                choices[i].setAttribute('aria-pressed', selected ? 'true' : 'false');
+            }
+
+            var status = document.getElementById('theme-choice-status');
+            if (status) status.innerHTML = preference === 'system'
+                ? 'Following your system preference (' + (isDark ? 'Dark' : 'Light') + ' mode).'
+                : 'Using ' + (isDark ? 'Dark' : 'Light') + ' mode.';
+        }
+    };
+</script>
+
+<div class="appearance-settings">
+    <h3 class="margintop10">Appearance</h3>
+    <p>Choose how OpenBrew looks on this device. Your preference is remembered here and does not affect anyone else.</p>
+
+    <div class="theme-choice-group" role="group" aria-label="Color theme">
+        <button type="button" class="theme-choice" data-theme-choice="light" aria-pressed="false" onclick="OpenBrewTheme.set('light'); return false;">
+            <span class="theme-choice-swatch theme-choice-light" aria-hidden="true"></span>
+            <span><strong>Light</strong><small>Warm and bright</small></span>
+        </button>
+        <button type="button" class="theme-choice" data-theme-choice="dark" aria-pressed="false" onclick="OpenBrewTheme.set('dark'); return false;">
+            <span class="theme-choice-swatch theme-choice-dark" aria-hidden="true"></span>
+            <span><strong>Dark</strong><small>Easy on the eyes</small></span>
+        </button>
+        <button type="button" class="theme-choice" data-theme-choice="system" aria-pressed="false" onclick="OpenBrewTheme.set('system'); return false;">
+            <span class="theme-choice-swatch theme-choice-system" aria-hidden="true"></span>
+            <span><strong>System</strong><small>Matches your device</small></span>
+        </button>
+    </div>
+    <p class="theme-choice-note">The system option automatically follows your device’s light or dark appearance.</p>
+    <p id="theme-choice-status" class="theme-choice-status" role="status" aria-live="polite"></p>
+</div>

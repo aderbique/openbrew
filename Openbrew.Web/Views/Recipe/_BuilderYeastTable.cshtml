@@ -1,0 +1,69 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+
+@model IList<RecipeYeastViewModel>
+           
+@{
+    RecipeCreationOptions options = ViewBag.RecipeCreationOptions;
+}
+
+<div class="groupbox">
+	<span>
+		<h3 class="floatleft">Yeast</h3>
+		<div class="floatright">
+			<select id="yeast-list" data-trigger="y">
+			    <option value="" data-image="/img/pixel.gif" data-imagecss="lovibond addfirst">Add Yeast...</option>
+                <option value="0" data-image="/img/pixel.gif" data-atten=".70" data-imagecss="lovibond addcustom">Add Custom Ingredient</option>
+                @foreach (IngredientGroup<Yeast> yeastGroup in ViewBag.RecipeCreationOptions.YeastGroups)
+                {
+                    <optgroup label="@yeastGroup.Category">
+        
+                        @foreach (var yeast in yeastGroup.Ingredients)
+                        {
+                            var cssClass = options.SendToShopSettings.IsEnabled ? options.SendToShopSettings.IngredientIsEnabled(yeast) ? "partner-ing-yes" : "partner-ing-no" : "";
+                            <option class="@cssClass" value="@yeast.IngredientId" data-atten="@yeast.Attenuation.ToString("F2")">@yeast.Name</option>
+                        }
+                    </optgroup>
+                }
+			</select>
+		</div>
+	</span>
+	<div class="nopadding">
+		<table data-name="y_table" class="dataTable" >
+			<thead class="@(!Model.Any() ? "hidden" : "")">
+				<tr>
+					<td>name </td>
+					<td>attenuation <span class="helptip" original-title="Apparent attenuation is the percentage of sugars that the yeast will convert into alcohol and carbon dioxide during fermentation">&nbsp;</span> </td>
+					<td>remove </td>
+				</tr>
+			</thead>
+		    <tbody>
+		        @if(!Model.Any())
+                {
+                  <tr class="introrow">
+                      <td colspan="7">
+                          <img src="@Url.Image("~/img/home-brew-yeast.jpg")" width="100" height="100" alt="Homebrew Yeast" />
+                          <div class="content">
+                              <h4>Add Yeast to Create Alcohol and Carbon Dioxide</h4>
+                              Yeast is the magic ingredient that turns flat sugary wort into the delicious alcohol filled
+                              homebrew we all love to drink.  Yeast also plays an important role in the flavor of homebrew. 
+                          </div>
+                      </td>
+                  </tr>
+                }
+                else
+                {
+                    foreach(var yeast in Model)
+                    {
+                        @Html.Partial("_BuilderYeastRow", yeast)
+                    }
+                }
+		    </tbody>
+			<tfoot class="@(!Model.Any() ? "hidden" : "")">
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>

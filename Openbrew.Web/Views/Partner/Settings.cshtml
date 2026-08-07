@@ -1,0 +1,119 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model PartnerSettingsViewModel
+
+@{
+    Layout = "_PartnerLayout.cshtml";
+	ViewBag.Title = Model.Name;
+}
+
+<ul class="breadcrumbs">
+    <li><a href="@Url.Action("Index", "Root")">openbrew</a></li>
+    <li><a href="@Url.Action("Dashboard")">Partner Dashboard</a></li>
+    <li>Settings</li>
+</ul>
+
+<div id="view-partnersettings" class="content">
+    
+    <div class="message-wrapper"></div>
+
+    <h2 class="marginbottom10">Partner Settings</h2>
+    <p>Change settings related to your partner account. If you're looking for your openbrew account settings, <a href="@Url.Action("Settings", "User")">click here</a>.</p>
+    
+
+    @using(Html.BeginForm())
+    {
+        @Html.HiddenFor(m => m.PartnerId)
+        
+        <div class="form-field paddingtop6">
+            <label for="Name" class="valigntop">Partner Name</label>
+            <span>
+                @Html.TextBoxFor(m => m.Name)
+                <p>This is the name that openbrew users will see when they interact with you on
+                    openbrew. In most cases this should be your company name.
+                </p>
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactName" class="valigntop">Contact Name</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactName, new { MaxLength = 100 })
+                <p>This is the name of the person with whom you'd like us to ask for
+                    if we need to contact you about something.
+                </p>
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactAddress1" class="valigntop">Address</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactAddress1, new { MaxLength = 50 })
+            </span>
+        </div>
+
+        <div class="form-field">
+            <label for="ContactAddress2" class="valigntop">Address (cont.)</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactAddress2, new { MaxLength = 50 })
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactCity" class="valigntop">City</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactCity, new { MaxLength = 50 })
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactStateProvince" class="valigntop">State/Province</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactStateProvince, new { MaxLength = 50 })
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactPostalCode" class="valigntop">Postal Code</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactPostalCode, new { MaxLength = 50 })
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactCountry" class="valigntop">Country</label>
+            <span>
+                @Html.DropDownListFor(m => m.ContactCountry, new SelectList(ViewBag.Countries, "CountryCode", "CountryName", Model.ContactCountry))
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactPhone" class="valigntop">Phone Number</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactPhone, new { MaxLength = 15 })
+                <p>Used by some of our services but only displayed if you choose to make it public</p>
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactFax" class="valigntop">FAX Number</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactFax, new { MaxLength = 15 })
+            </span>
+        </div>
+        
+        <div class="form-field">
+            <label for="ContactEmail" class="valigntop">Email Address</label>
+            <span>
+                @Html.TextBoxFor(m => m.ContactEmail, new { MaxLength = 255 })
+                
+                <p>Emails will be sent to this address from us and on behalf of users who interact with you
+                    regarding openbrew services. We won't display this anywhere and we won't send you spam.
+                </p>
+
+            </span>
+        </div>
+        
+        <input type="submit" value="Save Settings" class="button button_green margintop20" />
+    }
+</div>

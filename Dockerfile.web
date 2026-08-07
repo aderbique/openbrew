@@ -1,0 +1,18 @@
+FROM mono:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN printf 'deb http://archive.debian.org/debian buster main\n\
+deb http://archive.debian.org/debian-security buster/updates main\n' > /etc/apt/sources.list \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get -o Acquire::Check-Valid-Until=false install -y --no-install-recommends \
+        mono-xsp4 \
+        nuget \
+        unzip \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY scripts/docker-web-entrypoint.sh /usr/local/bin/brewgr-web-entrypoint.sh
+RUN chmod +x /usr/local/bin/brewgr-web-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/brewgr-web-entrypoint.sh"]

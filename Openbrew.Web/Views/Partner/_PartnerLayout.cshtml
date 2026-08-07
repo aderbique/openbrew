@@ -1,0 +1,15 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Configuration
+@using ctorx.Core.Messaging
+@using Openbrew.Web.Core.Model
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/css/partners.css")" />
+<div id="partner-wrapper">
+    @RenderBody()
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/js/partners.js")"></script>

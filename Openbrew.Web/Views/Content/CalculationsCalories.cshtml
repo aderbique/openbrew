@@ -1,0 +1,32 @@
+﻿@{
+    if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
+    ViewBag.Title = "How to Calculate Calories";
+    ViewBag.Description = "How to calculate the calories in your homebrew.";
+    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/calories";
+}
+
+<div class="calculations">
+    
+    @Html.Partial("_CalculationsNavigation")
+
+    <div class="primary">
+        <h3>Calculating Calories</h3>
+        
+        <div class="ad-sense" style="width: 728px; margin: 18px auto;">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- openbrew - calculations spotlight -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-6867430027291087"
+                 data-ad-slot="1178923302"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <p>The calories in homebrew come from alcohol and carbohydrates. openbrew uses the following calculation to determine the amount of calories that will be in your homebrew.</p>
+        <p class="formula">Calories From Alcohol = 1881.22 * FG * (OG - FG) / (1.775 - OG)</p>
+        <p class="formula">Calories From Carbs = 3550.0 * FG * ((0.1808 * OG) + (0.8192 * FG) - 1.0004)</p>
+		<p class="formula">Total Calories = Calories From Alcohol + Calories From Carbs</p>
+    </div>
+</div>

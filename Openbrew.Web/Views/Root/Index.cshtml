@@ -1,0 +1,106 @@
+﻿@using Openbrew.Web
+@using ctorx.Core.Messaging
+
+@model HomePageViewModel
+
+@{
+	Layout = "~/Views/Shared/_CoreLayout.cshtml";
+    ViewBag.Title = "Homebrew Recipes, Tools & Community";
+    ViewBag.Description = "OpenBrew is a GPL-3.0 licensed homebrew recipe builder and community.";
+}
+
+<!-- Header Start-->
+<div id="view-home">
+    <div class="header-wrapper-light">
+	    @Html.Partial("_Header")
+        <div class="hero">
+            <div class="copy">
+                <p class="eyebrow">OpenBrew / GPL-3.0</p>
+                <h1 class="welcome">Connecting the world's homebrewers.</h1>
+                <div class="description">
+                    <p>
+                        Build, share, clone, and brew better beer with an open recipe workspace made for practical homebrewers.
+                    </p>
+
+                    <a href="@Url.Action("homebrew-recipe-calculator", "Recipe", null, Url.Https())" class="button button_green bold margintop10">Create Your First Recipe</a>
+                </div>
+            </div>
+            <div class="search">
+                <div class="top-search">
+                    @Html.Partial("_SearchForm", new SearchViewModel())
+                </div>
+                <div class="clearall"> </div>
+            </div>
+        </div>
+    </div>
+
+       @*  Middle Part Start *@
+    <div id="middle-wrapper">
+        @Html.Partial("_SiteMessages", ViewBag.Messages as IList<IMessage>)
+
+        <div class="webdesign">
+            <h3 class="green">Fresh recipes</h3>
+            @foreach (var recipeSummary in Model.NewRecipes)
+            {
+                @Html.Partial("_RecipeWidget", recipeSummary)
+            }
+        </div>
+        <div class="webdesign">
+            <h3 class="green">Active brewers</h3>
+            @foreach (var userSummary in Model.TopContributors)
+            {
+                @Html.Partial("_UserWidget", userSummary)
+            }
+        </div>
+        <div class="webdesign no-margin">
+            <h3 class="green">Popular recipes</h3>
+            @foreach (var recipeSummary in Model.PopularRecipes)
+            {
+                @Html.Partial("_RecipeWidget", recipeSummary)
+            }
+        </div>
+
+        <div class="clearall"> </div>
+
+        <div class="divider margintop20 marginbottom20">
+            <div class="lighting"></div>
+        </div>
+
+        <div class="webdesign">
+            <a href="@Url.Action("login", "auth", null, Url.Https())"><h3 class="connect">Connect</h3></a>
+            <p>
+                Connect with other brewers, share recipes, and keep notes on what actually worked.
+                OpenBrew is still the same core idea: recipes you can find, clone, refine, and brew.
+            </p>
+        </div>
+
+        <div class="webdesign">
+            <a href="@Url.Action("homebrew-recipes", "recipe", null, "http")"><h3 class="discover">Discover</h3></a>
+            <p>
+                Browse public recipes by style, spot the interesting clones, and pull BeerXML when you want to try a batch yourself.
+            </p>
+        </div>
+
+        <div class="webdesign no-margin">
+            <a href="@Url.Action("homebrew-recipe-calculator", "Recipe", null, Url.Https())"><h3 class="create">Create</h3></a>
+            <p>
+                The recipe builder gives you real-time calculations, ingredient lists, and brew-day planning while you work.
+            </p>
+        </div>
+
+        <div class="clearall"> </div>
+
+        <div class="divider margintop20 marginbottom20">
+            <div class="lighting"></div>
+        </div>
+
+        <h3>Online Homebrew Community</h3>
+        <p>
+            OpenBrew stays focused on the practical stuff: making good beer, keeping the workflow usable, and keeping the source open.
+        </p>
+
+
+    </div>
+</div>
+@*  Footer Part Start *@
+@Html.Partial("_Footer")

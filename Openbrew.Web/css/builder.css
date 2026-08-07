@@ -1,0 +1,225 @@
+﻿
+/* ---- [ Shared ] ---------------------------------------------> */	
+	.primary { width: 665px; margin-right: 35px; float: left; }
+	.compliment { width: 236px; float: left; }
+	.primary .groupbox > span { height: 20px; padding-right: 0; }
+	[data-name=styleid] { width: 220px; }
+
+/* ---- [ Recipe Builder ] ---------------------------------------------> */	
+	.save-recipe, .save-brewsession { width: 240px; height: 40px; font-weight: bold; font-size: 18px; }
+	.builder-wrapper .edit-recipe { width: 210px; font-weight: bold; font-size: 18px; text-align: center; margin-bottom: 0px; }
+	.builder-wrapper .spinner { display: none; position: relative; top:10px; right: -100px; margin-top: 20px; height:40px; }
+
+	/* common builder styles */
+	[data-unit] { display: none; }
+	.builder input { font-size: 11px; }
+	.builder label { color: #666; display: inline-block; padding-right: 0; padding-bottom: 4px;}
+	.builder [data-trigger] { width: 300px;   }
+
+	/* recipe info box / recipe Data*/
+	.builder .info [data-name=r_Name] { display: block; width: 608px; padding: 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; font-size: 18px; color: #777; margin: 8px auto 18px auto; } 
+	.builder .info .values { width: 600px; margin: 0 auto; }
+	.builder .info .values > div { width: 110px; padding: 0 5px; float: left; }
+	.builder .info .values > div .title { text-align: center; font-size: 12px; }
+	.builder .info .values > div label { font-weight: bold; text-align: center; }
+	.builder .info .values > div select, .builder .info .values > div input { margin: 0 auto; width: 100px; display: block; }
+	.builder .info .values [data-name=r_BatchSize], .builder .info .values [data-name=r_BoilSize] { width: 87px !important; }
+	.builder .info .values .textlabel { position: absolute; margin-top: -19px; margin-left: 58px; font-size: 11px !important; color: #aaa; text-align: right; width: 35px; }
+	.builder .info .more { margin-top: 18px; }
+	.builder .info .more h4 { display: inline-block; margin: 0 0 0 4px;  }
+	.builder .info [data-name=r_Description], .builder .info [data-name=s_Notes] { border: 2px inset; display: block; width: 608px; min-height: 120px; height: auto; padding: 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; font-size: 12px; color: #333; margin: 8px auto 12px auto; resize: vertical; }
+	.builder .actions { margin: 12px 4px; }
+	.builder .actions .button_small { padding-left: 12px; padding-right: 12px; font-weight: bold; margin-right: 8px; }
+	
+	/* common ing table styles */
+	.builder .introrow h4 { margin: 0; margin-bottom: 6px; font-size: 16px; color: #666; font-weight: bold; }
+	.builder .introrow td { padding: 12px; }
+	.builder .introrow > td > .starthere { float: right; margin-right: 10px; }
+	.builder .introrow > td > img { float: left; margin-right: 10px; }
+	.builder .introrow > td > .content { float: left; width: 450px; font-size: 14px; }
+	.builder .dataTable tbody tr[data-datarow] td { cursor: move; height: 30px; }
+	.builder .dataTable tbody tr.introrow td { text-align: left; }
+	.builder .dataTable thead tr, .builder .dataTable tfoot tr td { border-top: solid 1px #ccc; border-bottom: solid 1px #ccc; }	
+	.builder .dataTable thead td, .builder .dataTable tfoot td { padding: 4px; }
+	.builder .dataTable tbody tr td.placeholder { background: #aaa !important; height: 28px; text-align: center; color: #fff; }
+	.builder .dataTable { border-collapse: collapse; }
+	.builder .dataTable td { text-align: center;  }
+	.builder tr.ui-sortable-helper	{ border-top: solid 2px #aaa; border-bottom: solid 2px #aaa; }
+	.builder .dataTable .ingName, .builder .dataTable .customname { font-weight: bold; font-size: 12px; }
+	.builder [data-name=remove] { cursor: pointer; }
+	.builder [data-name=sort] { cursor: move; }
+	.builder .groupbox,
+	.builder .groupbox > div { overflow: visible; }
+	.builder .chosen-container.chosen-with-drop,
+	.builder .chosen-container.chosen-open {
+		position: relative;
+		z-index: 25000;
+	}
+	.builder .chosen-container.chosen-with-drop .chosen-drop,
+	.builder .chosen-container.chosen-open .chosen-drop {
+		z-index: 25001;
+	}
+
+	.builder .dataTable tbody tr[data-datarow] td span { width: inherit; overflow: hidden; display: inline-block; }
+	.builder .dataTable tbody tr[data-datarow] td span.hidden { display: none; }
+
+	/* f-table styles */
+	.builder [data-name=f_Amt] { width: 56px; text-align: center; }
+	.builder [data-name=f_table] .customname, .builder [data-name=f_table] [data-name=f_Name] { width: 213px; }
+	.builder [data-name=f_table] [data-name=f_Name] { display: inline-block; }
+	.builder [data-name=f_table] thead td:nth-child(3), .builder [data-name=f_table] tbody td:nth-child(3) { text-align: left; }
+	.builder [data-name=f_table] .content { width: 385px; margin-top: -36px; }
+	.builder [data-name=f_table] tr td:nth-of-type(1) { width: 35px; }
+	.builder [data-name=f_table] tr td:nth-of-type(2) { width: 55px; }
+	.builder [data-name=f_table] tr td:nth-of-type(3) { width: 225px; }
+	.builder [data-name=f_table] tr td:nth-of-type(4) { width: 50px; }
+	.builder [data-name=f_table] tr td:nth-of-type(5) { width: 57px; }
+	.builder [data-name=f_table] tr td:nth-of-type(6) { width: 76px; }
+	.builder [data-name=f_table] tr td:nth-of-type(7) { width: 43px; }
+	
+	/* h-table styles */
+	.builder [data-name=h_Amt] { width: 56px; text-align: center; }
+	.builder [data-name=h_table] .customname, .builder [data-name=h_table] [data-name=h_Name] { width: 116px; }
+	.builder [data-name=h_table] [data-name=h_Name] { display: inline-block; }
+	.builder [data-name=h_table] thead td:nth-child(2), .builder [data-name=h_table] tbody td:nth-child(2) { text-align: left; }
+	.builder [data-name=h_table] tr td:nth-of-type(1) { width: 52px; }
+	.builder [data-name=h_table] tr td:nth-of-type(2) { width: 123px; }
+	.builder [data-name=h_table] tr td:nth-of-type(3) { width: 61px; }
+	.builder [data-name=h_table] tr td:nth-of-type(4) { width: 85px; }
+	.builder [data-name=h_table] tr td:nth-of-type(5) { width: 72px; }
+	.builder [data-name=h_table] tr td:nth-of-type(6) { width: 57px; }
+	.builder [data-name=h_table] tr td:nth-of-type(7) { width: 35px; }
+	.builder [data-name=h_table] tr td:nth-of-type(8) { width: 37px; }
+	.builder [data-name=h_table] .options div { display: inline-block; margin-left: 8px; }
+	.builder [data-name=h_table] .options { font-size: 11px; text-align: right; padding-right: 12px; }
+	.builder [data-name=h_table] .options label { font-size: 11px; text-align: right; padding-right: 4px; }
+	.builder [data-name=h_table] .options select { font-size: 11px; padding: 2px; }
+	.builder [data-name=h_table] .options input { font-size: 11px; padding: 2px; width: 30px; }
+		
+	/* y-table styles */
+	.builder [data-name=y_table] .customname, .builder [data-name=y_table] [data-name=y_Name] { width: 481px; }
+	.builder [data-name=y_table] [data-name=y_Name] { display: inline-block; }
+	.builder [data-name=y_table] [data-name=y_Name].hidden { display: none; }
+	.builder [data-name=y_table] thead td:nth-child(1), .builder [data-name=y_table] tbody td:nth-child(1) { text-align: left; }
+	.builder [data-name=y_table] tr td:nth-of-type(1) { width: 488px; }
+	.builder [data-name=y_table] tr td:nth-of-type(2) { width: 76px; }
+	.builder [data-name=y_table] tr td:nth-of-type(3) { width: 41px; }
+
+	/* o-table styles */
+	.builder [data-name=o_Amt] { width: 56px; text-align: center; }
+	.builder [data-name=o_table] .customname, .builder [data-name=o_table] [data-name=o_Name] { width: 281px; }
+	.builder [data-name=o_table] [data-name=o_Name] { display: inline-block; }
+	.builder [data-name=o_table] thead td:nth-child(3), .builder [data-name=o_table] tbody td:nth-child(3) { text-align: left; }
+	.builder [data-name=o_table] tr td:nth-of-type(1) { width: 63px; }
+	.builder [data-name=o_table] tr td:nth-of-type(2) { width: 69px; }
+	.builder [data-name=o_table] tr td:nth-of-type(3) { width: 293px; }
+	.builder [data-name=o_table] tr td:nth-of-type(4) { width: 103px; }
+	.builder [data-name=o_table] tr td:nth-of-type(5) { width: 45px; }
+
+	/* m-table styles */
+	.builder [data-name=m_table] .customname, .builder [data-name=y_table] [data-name=y_Name] { width: 180px; }
+	.builder [data-name=m_table] [data-name=m_Name] { display: inline-block; }
+	.builder [data-name=m_table] [data-name=m_Name].hidden { display: none; }
+	.builder [data-name=m_table] thead td:nth-child(1), .builder [data-name=m_table] tbody td:nth-child(1) { text-align: left; }
+	.builder [data-name=m_table] tr td:nth-of-type(1) { width: 228px; }
+	.builder [data-name=m_table] tr td:nth-of-type(2) { width: 122px; }
+	.builder [data-name=m_table] tr td:nth-of-type(3) { width: 120px; }
+    .builder [data-name=m_table] tr td:nth-of-type(4) { width: 90px; }
+    .builder [data-name=m_table] tr td:nth-of-type(5) { width: 70px; }
+	.builder [data-name=m_table] [data-name=m_Temp] { width: 30px; text-align: center; }
+
+	/* make amount fields easier to spot and edit */
+	.builder [data-name=f_Amt],
+	.builder [data-name=h_Amt],
+	.builder [data-name=o_Amt] {
+		min-height: 28px;
+		min-width: 58px;
+		padding: 4px 6px;
+		box-sizing: border-box;
+		border: 1px solid #bdb7b0;
+		border-radius: 4px;
+		background-color: #fff;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	/* s-table styles */
+	.builder .groupbox:nth-of-type(7) div table thead tr td p { font-size: 18px; color: #666; line-height: 18px; margin-bottom: 8px; margin-top: 6px; margin-left: 6px; }
+	.builder .groupbox:nth-of-type(7) div table thead tr td span { display: block; margin: 12px 8px; }
+	.builder [data-name=s_table] tbody tr, .builder [data-name=s_table] thead tr, .builder [data-name=s_table] tfoot tr { border: 0; }	
+	.builder [data-name=s_table] thead tr td, .builder [data-name=s_table] tfoot tr td { border: 0; text-align: left; }	
+	.builder [data-name=s_table] td { padding: 0; }
+	.builder [data-name=s_table] [data-name=s_RankLabel] { font-size: 18px; color: #666; width: 35px; float: left; margin-top: 10px; }
+	.builder [data-name=s_table] [data-name=s_Text] { width: 494px; padding: 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; font-size: 18px; color: #777; }
+	.builder [data-name=s_table] span { display: block; font-size: 11px; margin-bottom: 12px; margin-left: 12px;  }
+	.builder [data-name=s_table] a  { font-weight: bold;  }
+	.builder [data-name=s_table] a * { vertical-align: middle;  }
+	.builder [data-name=s_table] a img { margin-right: 4px; margin-top: -4px;  }
+	.builder [data-name=s_table] td { background-color: #fff !important; }
+	.builder [data-name=s_table] tbody tr td.placeholder { background: #fff !important; height: 46px; }
+	.builder [data-name=s_table] tr td:nth-of-type(1) { width: 45px; }
+	.builder [data-name=s_table] tr td:nth-of-type(2) { width: 547px; }
+	.builder [data-name=s_table] tr td:nth-of-type(3) { width: 38px; }
+
+	/* Scale Dialog */
+	#ScaleDialog { width: 508px; }
+	#ScaleDialog div.wrapper {margin-left: auto; margin-right: auto; width: 400px; text-align: center;}
+	#ScaleDialog .wrapper h2 { display: inline-block !important; } 
+	#ScaleDialog .wrapper span { padding-left: 4px; color: #666; } 
+	#ScaleDialog input.button { width: 125px; text-align: center; }
+	#TargetVolume { font-size: 24px; color: #666; width: 100px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; text-align: center; display: inline-block; margin-top: 18px; } 
+
+	/* Photo Dialog */
+	#PhotoDialog { width: 500px; }
+	#view-changerecipephoto #PhotoDialog .photo { float: left; margin-right: 18px; }
+	#view-changerecipephoto .fileuploadwrapper { float: left; width: 380px; }
+	#view-changerecipephoto .photo img { border: solid 1px #ccc; }
+
+/* ---- [ Recipe Facts ] ---------------------------------------------> */
+	.facts { border: solid 4px #aaa; padding: 8px; width: 220px; -webkit-border-radius:8px; -moz-border-radius:8px; border-radius:8px; background-color: #fff; margin-bottom: 10px; }
+    .facts [data-name=recipe-name] { font-size: 11px; }
+    .facts h3 { font-family: Arial; font-size: 18px; margin-bottom: 4px; }
+    .facts .first .color { float: right; width: 45px; height: 45px; padding-left: 4px; }
+    .facts .first label { font-weight: normal; width: 75px;}
+    .facts .block { padding: 6px 4px; border-top: solid 4px #ccc; clear: left; margin-bottom: 18px;}
+    .facts .block div { clear: left; }
+    .facts .first { border-top: 0; margin-bottom: 4px; padding-bottom: 12px; border-bottom: solid 6px #ccc; }
+    .facts .second { border-top: 0; }
+    .facts label { font-size: 11px; font-weight: bold; float: left; width: 65px; padding: 0; }
+    .facts span { font-size: 11px; float: left; }
+    .facts .block label { width: 90px; }
+    .facts .blocktworow label {width: 65px; }
+    .facts .blocktworow span { width: 73px; }
+    .facts .color {border: solid 1px #AAA;}
+    .facts .last a { font-size: 11px; margin-top: 2px; }
+    .facts .block-head { font-weight: bold; }
+	.facts .public-link { display: block; margin-top: 5px; font-weight: bold; text-decoration: underline; color: #444 !important;  }
+
+
+	[data-name=facts_boilsize], [data-name=facts_batchsize] { margin-right: 4px; }
+	li.partner-ing-yes, li.partner-ing-no { padding-left: 24px !important; background-repeat: no-repeat; background-position-x: 0; background-position-y: 4px; }
+	li.partner-ing-yes { background-image: url(../img/icons/bullet_tick.png); }
+	li.partner-ing-no { background-image: url(../img/icons/bullet_cross.png); }
+
+
+/* ---- [ Brew Session Builder ] ---------------------------------------------> */
+	.session input[data-name=s_BrewDate] { text-align: center; }
+	.builder.session .info .values { width: auto; }
+	.builder.session .info .values label { display: block; padding: 0; text-align: left; margin: 0 0 4px 2px; }
+	.builder.session .info .values input, .builder.session .info .values select { margin: 0; }
+
+	.builder.session .summary h3 { margin-bottom: 10px; }
+	.builder.session .summary .item { margin-left: 4px; }
+	.builder.session .summary .item label { width: 167px; }
+	.builder.session .summary .item input { text-align: center; padding: 3px; width: 35px; }
+
+	/*.builder.session .summary .item span[data-unit] { display: inline-block; width: 70px; }*/
+
+	.builder.session span[data-unit] { display: none; width: 70px; }
+	.builder.session span[data-unit].active { display: inline-block; }
+
+	.builder.session .summary .item input[data-name=s_PrimingSugarType] { width: 135px; text-align: left; }
+	.builder.session .summary .item > span > span:nth-of-type(1), .builder.session .summary .item > span > span:nth-of-type(2) { margin-left: 8px; }
+	.builder.session .summary .item span.predicted { color: #aaa; }
+	.builder.session .predicted span[data-unit] { width: auto; }
+	.builder.session .summary .item span { vertical-align: initial; }

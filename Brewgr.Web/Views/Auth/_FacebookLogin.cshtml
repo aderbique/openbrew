@@ -1,7 +1,0 @@
-﻿@using Brewgr.Web
-@* Facebook Login *@
-<div class="margintop20">
-	<a href="https://www.facebook.com/dialog/oauth?client_id=324420670945545&redirect_uri=@(ViewBag.FacebookAuthRedirectUrl)&scope=email&state=@Session["OAuthStateToken"]">
-		<img src="@Url.Image("~/img/fb-login.gif")" alt="Login or Sign-Up Using Facebook" title="Login or Sign-Up Using Facebook" />
-	</a>
-</div>

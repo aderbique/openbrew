@@ -1,0 +1,93 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${OPENBREW_SA_PASSWORD}
+    volumes:
+      - type: bind
+        source: /var/lib/openbrew-dev/sql
+        target: /var/opt/mssql
+    networks:
+      openbrew-internal:
+        aliases:
+          - db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == node1
+      restart_policy:
+        condition: on-failure
+
+  web:
+    image: ${OPENBREW_IMAGE}
+    environment:
+      Environment: dev
+      OPENBREW_SQL_HOST: db
+      OPENBREW_SQL_PORT: 1433
+      OPENBREW_DB_NAME: ${OPENBREW_DB_NAME:-Openbrew_DEV}
+      OPENBREW_SQL_ADMIN_USER: sa
+      OPENBREW_SA_PASSWORD: ${OPENBREW_SA_PASSWORD}
+      OPENBREW_DB_INIT_SCRIPT: /app/Setup/Database/Build.20150807/20150807_initial.sql
+      OPENBREW_HOST_PORT: 8085
+      OPENBREW_ROOT_URL: https://dev.openbrew.net
+      OPENBREW_ROOT_URL_SECURE: https://dev.openbrew.net
+      OPENBREW_STATIC_ROOT_URL: https://dev.openbrew.net
+      OPENBREW_STATIC_ROOT_URL_SECURE: https://dev.openbrew.net
+      # Recipe images are served by XSP from /Media, so persist them at the
+      # corresponding directory beneath the application web root.
+      OPENBREW_MEDIA_PHYSICAL_ROOT: /workspace/brewgr/Openbrew.Web/Media
+      Google_ApplicationKey: ${GOOGLE_APPLICATION_KEY}
+      Google_ApplicationSecret: ${GOOGLE_APPLICATION_SECRET}
+      OPENBREW_CONTACT_EMAIL_ADDRESS: ${OPENBREW_CONTACT_EMAIL_ADDRESS:-austinjderbique@gmail.com}
+      SMTP_HOST_FILE: /run/secrets/openbrew_smtp_host
+      SMTP_PORT_FILE: /run/secrets/openbrew_smtp_port
+      SMTP_USERNAME_FILE: /run/secrets/openbrew_smtp_username
+      SMTP_PASSWORD_FILE: /run/secrets/openbrew_smtp_password
+    volumes:
+      - type: bind
+        source: /var/lib/openbrew-dev/media
+        target: /workspace/brewgr/Openbrew.Web/Media
+    secrets:
+      - openbrew_smtp_host
+      - openbrew_smtp_port
+      - openbrew_smtp_username
+      - openbrew_smtp_password
+    networks:
+      - traefik-net
+      - openbrew-internal
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == node1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-net
+        - traefik.http.routers.openbrew-dev.rule=Host(`dev.openbrew.net`)
+        - traefik.http.routers.openbrew-dev.entrypoints=http,https
+        - traefik.http.routers.openbrew-dev.tls=true
+        - traefik.http.routers.openbrew-dev.tls.certResolver=letsEncrypt
+        - traefik.http.routers.openbrew-dev.service=openbrew-dev
+        - traefik.http.services.openbrew-dev.loadbalancer.server.port=8085
+        - traefik.http.services.openbrew-dev.loadbalancer.server.scheme=http
+
+networks:
+  traefik-net:
+    external: true
+  openbrew-internal:
+    driver: overlay
+
+secrets:
+  openbrew_smtp_host:
+    external: true
+  openbrew_smtp_port:
+    external: true
+  openbrew_smtp_username:
+    external: true
+  openbrew_smtp_password:
+    external: true

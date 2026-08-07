@@ -1,0 +1,66 @@
+﻿@using Openbrew.Web.Core.Model
+@model IList<TastingNote>
+    
+<style type="text/css">
+
+</style>
+
+<div class="groupbox" id="tastingnotes">
+    <span>
+        <h3>Tasting Notes (<span id="tasting-note-count">@Model.Count</span>)</h3>
+    </span>
+    <div class="tasting-notes-wrapper">
+        @if (Model.Any())
+        {
+            <div class="tasting-notes">
+                @foreach (var tastingNote in Model)
+                {
+                    @Html.Partial("~/Views/Recipe/_TastingNoteDetail.cshtml", tastingNote)
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-tasting-notes padding10">There aren't any tasting notes logged yet</div>
+            <div class="tasting-notes"></div>
+        }
+    </div>
+    @if (ViewBag.ActiveUser != null && Convert.ToInt32(ViewData["CreatorId"]) == ViewBag.ActiveUser.UserId)
+    {
+        <div id="tasting-note-form">
+
+            @if (ViewData["RecipeId"] != null)
+            {
+                <input type="hidden" id="TastingNotesRecipeId" value="@ViewData["RecipeId"]" />
+            }
+            else
+            {
+                <input type="hidden" id="TastingNotesBrewSessionId" value="@ViewData["BrewSessionId"]" />
+            }
+
+            <h4>Add Tasting Notes</h4>
+
+            <div class="values">
+                <div>
+                    <label for="taste-date">Date Tasted</label>
+                    <input type="text" id="taste-date" class="datepicker" value="@DateTime.Now.ToShortDateString()" />
+                </div>
+                <div>
+                    <div class="title">
+                        <label>Overall Rating</label>
+                        <span id="star"></span>
+                        <input type="hidden" name="Rating" id="Rating" value="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="clearall"></div>
+            <div class="notes">
+                <label>Notes</label>
+                <textarea id="NewTastingNotes"></textarea>
+            </div>
+            <div class="save">
+                <a href="#" class="button_small button_green">Save Tasting Notes</a>
+            </div>
+        </div>
+    }
+</div>

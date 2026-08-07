@@ -1,0 +1,90 @@
+@{
+    Layout = "~/Views/Shared/_OpenBrewLayout.cshtml";
+    ViewBag.Title = "Brewing Beer to Style";
+    ViewBag.Description = "A practical guide to using beer style guidelines while building a homebrew recipe.";
+
+    // Keep guideline editions separate from OpenBrew's legacy BJCP recipe taxonomy.
+    // Recipe style assignments are historical data and must never change when a
+    // professional guideline receives a new annual edition.
+    var guidelineEditions = new[] {
+        new { Year = 2026, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2025/12/12085737/2026_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2025, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2025/06/20143326/2025_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2024, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2024/12/12144941/2024_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2023, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2023/07/10124402/2023_BA_Beer_Style_Guidelines-updated.pdf" },
+        new { Year = 2022, Url = "https://www.brewersassociation.org/2022_ba_beer_style_guidelines_final" },
+        new { Year = 2021, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2021/02/22104023/2021_BA_Beer_Style_Guidelines_Final.pdf" },
+        new { Year = 2020, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2020/03/BA-beer-style-guidelines-2020.pdf" },
+        new { Year = 2019, Url = "https://s3-us-west-2.amazonaws.com/brewersassoc/wp-content/uploads/2019/04/BA-style-guidelines-2019.pdf" },
+        new { Year = 2018, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2018/03/2018_BA_Beer_Style_Guidelines_Final.pdf" },
+        new { Year = 2017, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/05/2017-BA-Beer-Style-Guidelines.pdf" },
+        new { Year = 2016, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/04/2016_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2015, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/04/2015-brewers-association-beer-style-guidelines.pdf" },
+        new { Year = 2014, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/04/2014_BA_Beer_Style_Guidelines_FINAL.pdf" }
+    };
+}
+
+<div class="content style-learning-page">
+    <header class="style-learning-hero">
+        <p class="eyebrow">A useful target, not a rulebook</p>
+        <h1>Brewing beer to style</h1>
+        <p>“To style” means deliberately aiming for a recognizable balance of aroma, flavor, appearance, mouthfeel, strength, and bitterness. It gives your recipe a target - then your own taste decides where to take it.</p>
+    </header>
+
+    <section class="style-learning-grid">
+        <article>
+            <h2>Start with the profile</h2>
+            <p>Read the style’s overall impression first. Is the beer hop-led, malt-led, dry, rich, crisp, fruity, roasty, or tart? That description helps you make better decisions than numbers alone.</p>
+        </article>
+        <article>
+            <h2>Use numbers as guardrails</h2>
+            <p>Original gravity, finishing gravity, bitterness, color, and ABV are useful checks. They are ranges, not a scorecard: a recipe can land at an edge of a range and still be a great example.</p>
+        </article>
+        <article>
+            <h2>Design the process too</h2>
+            <p>Yeast choice, fermentation temperature, water profile, mash schedule, carbonation, and conditioning are often what make a beer read as its intended style.</p>
+        </article>
+    </section>
+
+    <section class="style-learning-steps">
+        <div><span>1</span><h2>Pick a benchmark</h2><p>Choose a style and one or two commercial examples you enjoy. Write down the features you want to recreate.</p></div>
+        <div><span>2</span><h2>Build for balance</h2><p>Choose fermentables, hops, yeast, and process choices that support the intended profile. Adjust one variable at a time when learning.</p></div>
+        <div><span>3</span><h2>Measure, taste, iterate</h2><p>Compare your finished beer to the target, record what happened, and use the next batch to close the gap - or to make the beer more your own.</p></div>
+    </section>
+
+    <section class="style-learning-source">
+        <h2>Current professional reference</h2>
+        <p>The Brewers Association publishes an annually updated style reference for commercial brewing. Use it as a current reference alongside the homebrew-focused style guide shown in OpenBrew’s existing recipe tools.</p>
+        <p><a class="button button_green" href="https://www.brewersassociation.org/edu/brewers-association-beer-style-guidelines/" rel="noopener noreferrer" target="_blank">Brewers Association Beer Style Guidelines</a>
+        <a href="https://cdn.brewersassociation.org/wp-content/uploads/2025/12/12085737/2026_BA_Beer_Style_Guidelines.pdf" rel="noopener noreferrer" target="_blank">Read the 2026 guidelines (PDF)</a></p>
+    </section>
+
+    <section class="style-edition-library" aria-labelledby="style-edition-library-heading">
+        <div>
+            <p class="eyebrow">Official archive</p>
+            <h2 id="style-edition-library-heading">Brewers Association editions, 2014–2026</h2>
+            <p>Choose an edition to compare a recipe against the standards available in that year. These professional guidelines are an additional reference: OpenBrew’s recipe browser and saved recipe styles continue to use the legacy BJCP catalog, so no existing recipe is reclassified.</p>
+        </div>
+        <div class="style-edition-picker">
+            <label for="style-guideline-edition">Guideline edition</label>
+            <div>
+                <select id="style-guideline-edition">
+                    @foreach (var edition in guidelineEditions)
+                    {
+                        <option value="@edition.Url">@edition.Year Brewers Association Beer Style Guidelines</option>
+                    }
+                </select>
+                <a id="style-guideline-edition-link" class="button button_black" href="@guidelineEditions[0].Url" rel="noopener noreferrer" target="_blank">Open edition <span aria-hidden="true">↗</span></a>
+            </div>
+        </div>
+        <p class="fine-print">Source: <a href="https://www.brewersassociation.org/edu/brewers-association-beer-style-guidelines/" rel="noopener noreferrer" target="_blank">Brewers Association Beer Style Guidelines</a>. Editions shown are the complete archive currently published on that page.</p>
+    </section>
+</div>
+
+<script>
+    (function () {
+        var picker = document.getElementById('style-guideline-edition');
+        var link = document.getElementById('style-guideline-edition-link');
+        if (!picker || !link) return;
+        picker.onchange = function () { link.href = picker.value; };
+    }());
+</script>

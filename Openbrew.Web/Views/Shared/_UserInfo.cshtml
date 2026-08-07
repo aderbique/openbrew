@@ -1,0 +1,39 @@
+﻿@using Openbrew.Web
+@model Openbrew.Web.Core.Model.UserSummary
+           
+<div id="user-info" class="sf-menu-wrapper">
+    <div class="floatleft"><img src="@Model.GetAvatar(40)" width="40" height="40" alt="" /></div>
+    <div class="floatleft">
+        <ul class="sf-menu sf-js-enabled">
+            <li class="sf-with-ul">
+                <a href="@Url.UserProfileUrl(Model.Username)" class="sf-with-ul">@Model.Username <span class="sf-sub-indicator"> »</span></a>                
+                <ul class="sub-menu">
+                    
+                    @* Admin Tools *@
+                    @if (Model.IsAdmin)
+                    {
+                        <li><a href="@Url.Action("tools", "admin")"><span>Admin Tools</span></a>
+                            <ul class="sf-menu sf-js-enabled">
+                                <li><a href="@Url.Action("Affiliates", "Admin")" target="_blank">Affiliates</a></li>
+                                <li><a href="@Url.Action("Exceptions", "Admin")" target="_blank">View Exception Log</a></li>
+                            </ul>
+                        </li>
+                    }
+                    
+                    @* Partner Tools *@
+                    @if (Model.IsPartner)
+                    {
+                        <li><a href="@Url.Action("tools", "partner")"><span>Partner Tools</span></a></li>
+                    }
+
+                    <li><a href="@Url.UserProfileUrl(Model.Username)"><span>Profile</span></a></li>
+                    <li><a href="@Url.Action("dashboard", "dashboard")/#recipes"><span>My Recipes</span></a></li>
+                    <li><a href="@Url.Action("dashboard", "dashboard")/#brewsessions"><span>My Brew Sessions</span></a></li>
+                    <li><a href="@Url.Action("settings", "User")"><span>Settings</span></a></li>
+                    <li><a href="@Url.Action("logout", "auth")" data-returnurl="@Server.UrlEncode((Request.RawUrl ?? "/"))" class="sign-out-link">Sign Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="clearall"></div>
+</div>

@@ -1,0 +1,21 @@
+﻿@model CommentAddViewModel
+
+<div class="respond">
+	<h3>Leave a Comment</h3>
+	<div id="add-comment-msg" class="hidden">Please enter a comment</div>
+	@if (ViewBag.ActiveUser != null)
+	{
+		<div>
+			@Html.TextAreaFor(m => m.CommentText, new { Text = "Write a comment..." })
+		
+			<span id="suggest-limit">2000 character(s) remaining</span>
+			<a href="#" rel="nofollow" id="AddComment" data-recipeid="@Model.GenericId" class="button button_green floatright">Add Comment</a>
+		</div>
+	}
+	else
+	{ 
+		<p>You must be logged in to leave a comment.</p>
+		<a href="@(Url.Action("login", "auth") + "?ReturnUrl=" + Server.UrlEncode((Request.RawUrl ?? "/") + "#comments"))" rel="nofollow" class="button button_green">Create Free Account</a>
+		<a href="@(Url.Action("login", "auth") + "?ReturnUrl=" + Server.UrlEncode((Request.RawUrl ?? "/") + "#comments"))" rel="nofollow" class="marginleft20">Login</a>
+	}
+</div>

@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutNoShell.cshtml";
+}
+
+<div id="view-importbeerxml" class="modal">
+
+    <h2>Import BeerXML recipes</h2>
+
+    <p>Choose a BeerXML file. Files containing one or many recipes are supported; you can select which recipes to review and save.</p>
+
+    @using (Html.BeginForm("ImportBeerXmlDialog", "Recipe", FormMethod.Post, new { id = "ImportRecipeForm", target = "_parent", enctype = "multipart/form-data" }))
+    {
+        <div class="form-field fileuploadwrapper">
+            <span><input type="file" name="BeerXmlFile" id="BeerXmlFile" /></span>
+        </div>
+    
+        <input type="submit" id="ImportRecipeButton" class="button button_green margintop20" value="Choose recipes" />
+    }
+</div>

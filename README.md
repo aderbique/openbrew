@@ -1,72 +1,177 @@
-What is Brewgr?
-======
-Brewgr is a free home brewing web application located at http://brewgr.com.  It offers homebrewers numerous features for creating recipes, tracking brew day, and collaborating with others.  Brewgr is now open source with the hopes that the community will contribute features and fixes so it can continue to grow and be a valuable tool for homebrewers.
+OpenBrew
+=========
 
-Getting Started
-----------------------------
-If you're interested in contributing to Brewgr (and we hope you do), please pick something that interests you from the [Issue List](https://github.com/ctorx/brewgr.com/issues) and get started.  We'll try our best to merge any pull-requests that add value, but please, before embarking on a major new feature, please post it as an issue to get discussion going first.
+OpenBrew is a free and open source homebrew recipe workspace for building, cloning, sharing, and tracking beer recipes.
 
-Development Environment Setup
-========
+It is a modernized fork of Brewgr.com with the current work focused on keeping the app usable on a local development stack, cleaning up legacy view and route issues, and making configuration easier through environment variables.
 
-Technologies:
-----------------------------
-* Microsoft ASP.NET MVC - http://www.asp.net/mvc
-* Microsoft Entity Framework - http://www.asp.net/entity-framework
-* AutoMapper - https://github.com/AutoMapper/AutoMapper
-* Ninject - https://github.com/ninject/ninject
-* Exceptional - https://github.com/NickCraver/StackExchange.Exceptional
-* Fluent Validation - https://github.com/JeremySkinner/FluentValidation
-* Image Resizer - https://github.com/imazen/resizer
-* jQuery - https://github.com/jquery/jquery
-* Various jQuery plugins
+Highlights
+----------
 
-Database Setup
---------------------------
-1. Fork and clone the repository on your machine
-2. Navigate to the "Setup\Database" folder in the repository root and follow the directions in the  [README](Setup/Database/README.md).
+- Build, clone, and edit beer recipes
+- Track brew sessions and recipe comments
+- Upload and manage recipe photos
+- Search recipes and browse style guides
+- Send feedback and contact messages through the site
+- Reset passwords by email when SMTP is configured
+- Run locally with Docker or directly in Visual Studio/IIS Express
 
-Connection String Setup
-----------------------------
-1. Determine what your valid connection string is based upon your database setup.  If you need help with the connection string, check out http://www.connectionstrings.com/sql-server/.
-2. Create a system Enviornment Variable named "Brewgr_ConnectionString" and set the value to the connection string determined in step 1 above. 
-3. You may need to reboot your machine for Visual Studio and IIS Express to recognize the variable.
+Recent updates
+-------------
 
-Host File Entry
-----------------------------
-The development environment uses an artificial host name dev.brewgr.com.  In order to make this work, you'll need create a host file entry on your development machine that points dev.brewgr.com to 127.0.0.1.
+- Added Docker support for the web app and SQL Server Edge
+- Moved host, database, and media path settings to environment variables
+- Added SMTP configuration via environment variables for password reset and contact email
+- Fixed several Mono/ASP.NET MVC view lookup issues that were breaking pages on Linux/macOS containers
+- Fixed recipe photo uploads and cleanup so deleted recipes also remove their stored images and broken photo-stream links stop piling up
+- Cleaned up the site footer and about navigation so source links live only on the about page
+- Replaced the Facebook login flow with Sign in with Google and removed the old Facebook auth assets
+- Renamed the web core project to `Openbrew.Web.Core` to match the rest of the refactor
+- Updated the site branding from "OpenBrew recipe finder (beta)" to "Advanced Search"
 
+Getting started
+---------------
+
+### Docker
+
+The fastest way to run OpenBrew locally is with the provided Docker setup:
+
+```bash
+docker compose up --build
 ```
-127.0.0.1	dev.brewgr.com
+
+By default this starts:
+
+- `web` on `http://localhost:8085`
+- `db` on SQL Server Edge at `localhost:1433`
+
+Useful environment variables:
+
+- `OPENBREW_HOST_PORT`
+- `OPENBREW_HOST_NAME`
+- `OPENBREW_DB_NAME`
+- `OPENBREW_SA_PASSWORD`
+- `OPENBREW_REPO_ROOT`
+- `OPENBREW_WEB_ROOT`
+- `OPENBREW_CONNECTION_STRING`
+- `OPENBREW_BLOG_CONNECTION_STRING`
+- `OPENBREW_ROOT_URL`
+- `OPENBREW_ROOT_URL_SECURE`
+- `OPENBREW_STATIC_ROOT_URL`
+- `OPENBREW_STATIC_ROOT_URL_SECURE`
+- `OPENBREW_MEDIA_PHYSICAL_ROOT`
+- `Environment`
+- `SmtpHost`
+- `SmtpPort`
+- `SmtpUserName`
+- `SmtpPassword`
+
+For local development, copy `.openbrew.dev.env.example` to `.openbrew.dev.env`. Set `OPENBREW_SA_PASSWORD` (required), then add SMTP and Google OAuth values as needed. `scripts/run-dev.sh` reads that ignored file when it creates `brewgr-web`; it intentionally contains no credential fallbacks. Outgoing OpenBrew messages use `info@openbrew.net` as the sender.
+
+For the cluster deployment, keep using the four external Docker secrets referenced by `docker-stack.dev.yml`: `openbrew_smtp_host`, `openbrew_smtp_port`, `openbrew_smtp_username`, and `openbrew_smtp_password`.
+
+If you want password reset and contact email to work, set the SMTP values to a real mail server or local mail catcher.
+
+### Swarm / Portainer
+
+For cluster deploys, the repo now includes Swarm stack templates:
+
+- `docker-stack.dev.yml` for `dev.openbrew.net`
+- `docker-stack.prod.yml` for `openbrew.net`
+
+Both stacks:
+
+- run the web app from a Docker Hub image
+- use `mcr.microsoft.com/mssql/server:2022-latest` for SQL Server
+- keep uploaded media and SQL data on persistent storage
+- dev uses `/var/lib/openbrew-dev`
+- prod keeps the current `/volume1/docker/openbrew-prod` path until you decide to move it too
+- route through the existing `traefik-net` overlay network
+- bootstrap the database from the schema script inside the app image
+
+To deploy them from Portainer or `docker stack deploy`, provide these environment values:
+
+- `OPENBREW_IMAGE` for the app image, for example `yourdockerhubuser/openbrew-web:dev`
+- `OPENBREW_SA_PASSWORD`
+- `OPENBREW_DB_NAME`
+- `OPENBREW_HOST_PORT`
+- `OPENBREW_CONNECTION_STRING`
+- `OPENBREW_BLOG_CONNECTION_STRING`
+- `OPENBREW_ROOT_URL`
+- `OPENBREW_ROOT_URL_SECURE`
+- `OPENBREW_STATIC_ROOT_URL`
+- `OPENBREW_STATIC_ROOT_URL_SECURE`
+- `OPENBREW_MEDIA_PHYSICAL_ROOT`
+- `GOOGLE_APPLICATION_KEY`
+- `GOOGLE_APPLICATION_SECRET`
+- `openbrew_smtp_host` secret
+- `openbrew_smtp_port` secret
+- `openbrew_smtp_username` secret
+- `openbrew_smtp_password` secret
+
+The stack templates mount those four secrets into `/run/secrets/...` and expose them to the app through `SMTP_*_FILE` environment variables. The app reads those files directly, so the SMTP password never has to appear in the stack YAML or in a plain environment variable.
+
+The workflow in `.github/workflows/dockerhub.yml` publishes the app image to Docker Hub using `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`. It publishes `sha-<commit>` for every configured branch push, `latest` and `prod` from `master`/`main`, `dev` from development branches, and both `vX.Y.Z` and `X.Y.Z` for a release tag.
+
+#### Cluster migration checklist
+
+Keep real credentials in your cluster's secret store (or a Portainer/Docker secret), not in either stack YAML file. The stack templates deliberately reference `GOOGLE_APPLICATION_KEY` and `GOOGLE_APPLICATION_SECRET`; `GOOGLE_APPLICATION_KEY` is the Google OAuth client ID.
+
+Recipe photos are both written to and served from the application `Media` directory. Mount the same persistent volume at this exact in-container path:
+
+```text
+/workspace/brewgr/Openbrew.Web/Media
 ```
 
-IIS Express Setup
-----------------------------
-In order to make IIS Express play nice with the host name, you'll need to modify the applicationhost.config file to look like the following:
+Set `OPENBREW_MEDIA_PHYSICAL_ROOT` to that same path. Mounting the volume only at a separate path such as `/data/media` lets uploads report success but leaves `/Media/...` image URLs unreachable after a refresh.
 
-```xml
- <site name="dev.brewgr.com" id="1" serverAutoStart="true">
- 	<application path="/">
- 		<virtualDirectory path="/" physicalPath="{repo root path}\Brewgr.Web" />
- 	</application>
- 	<bindings>
- 		<binding protocol="http" bindingInformation=":80:dev.brewgr.com" />
- 	</bindings>
- </site>
+For Google Sign in, configure these authorized JavaScript origins on the OAuth web client as applicable:
+
+```text
+http://localhost:8085
+https://dev.openbrew.net
+https://openbrew.net
 ```
-If you're using Visual Studio 2015, you can modify the applicationhost.config file that gets created in the .vs folder for the Brewgr.Web project, but you'll need to launch the solution once first and dismiss the localhost warning.  At this point the file will be created.  Make the changes and either reload the Brewgr.Web project or restart Visual Studio.
 
-If you're not using Visual Studio 2015, you will need to modify the applicationhost.config that is located in the Documents\IISExpress folder under your account folder.  
+The retained OAuth callback endpoints are `https://dev.openbrew.net/Auth/OAuthLogin` and `https://openbrew.net/Auth/OAuthLogin`. The current Google Identity Services button posts its credential to the same-origin `/Auth/GoogleLogin` endpoint; that URL is not an OAuth redirect URI.
 
-Test Your Setup
-----------------------------
-1. Launch Visual Studio (with elevated access -- necessary for the non-localhost URL)
-2. Open the [Brewgr.Web.sln](Brewgr.Web.sln) file.  You'll need to make sure that you have Nuget installed and pull down the dependency packages.  NOTE: Brewgr uses a packages folder that is at the same level as the solution folder, as noted in the Nuget.config file.
-3. If you can build the solution sucessfully, you should be good to go.
- 
-Please let us know if you encounter setup errors and we'll help you out.  Cheers!
+Before increasing web replicas, ensure every replica can reach the same media volume and that your session/authentication setup is appropriate for more than one instance. The provided Swarm templates intentionally pin the web service to one node.
 
+### Visual Studio / IIS Express
 
----------
-Brewgr is Copyright &copy; 2011-2015 [Matthew Marksbury](https://github.com/ctorx) and [Jason Zimmerman](https://github.com/SingleSpeed) and other contributors under the [GNU General Public License v3.0](LICENSE.txt).
+1. Clone the repository.
+2. Restore packages.
+3. Set `OPENBREW_CONNECTION_STRING` to a valid SQL Server connection string.
+4. Make sure `dev.openbrew.local` points to `127.0.0.1` if you are using the host name based dev setup.
+5. Open `Openbrew.Web.sln` and run the web project.
 
+Database setup
+--------------
+
+If you are starting from scratch, follow the database instructions in:
+
+- [Setup/Database/README.md](Setup/Database/README.md)
+
+Source and credit
+-----------------
+
+- Current source: https://github.com/aderbique/openbrew
+- Original source: https://github.com/rak-phillip/Brewgr.com
+
+Technologies
+------------
+
+- Microsoft ASP.NET MVC
+- Microsoft Entity Framework
+- AutoMapper
+- Ninject
+- Exceptional
+- Fluent Validation
+- Image Resizer
+- jQuery
+- Various jQuery plugins
+
+License
+-------
+
+OpenBrew is copyright (c) 2011-2015 Matthew Marksbury, Jason Zimmerman, and other contributors under the GNU General Public License v3.0.

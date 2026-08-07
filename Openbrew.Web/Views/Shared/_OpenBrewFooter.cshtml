@@ -1,0 +1,54 @@
+﻿@using Openbrew.Web
+<div id="footer">
+    <div id="footer-inner">
+        <div class="footer-details">
+            <div class="logo-btm">
+                <a href="@Url.Action("Index", "Root")" class="footer-brand" aria-label="OpenBrew home">
+                    <img src="@Url.Content("~/img/openbrew-badge-dark.png")" alt="" />
+                    <span><strong>open</strong><em>brew</em></span>
+                </a>
+            </div>
+            <p>Openbrew is a free and opensource homebrew recipe workspace for buidling, cloning, sharing, and tracking beer receipes.</p>
+        </div>
+        <div class="footer-details" id="other-stuff">
+            <h4>Other Stuff</h4>
+            <a href="@Url.Action("about", "root")">About</a>
+            <a href="@Url.Action("Features", "Root")">Features</a>
+            <a href="@Url.Action("terms", "root")">Use Policy</a>
+            <a href="@Url.Action("privacy", "root")">Privacy Policy</a>
+            <a href="@Url.Action("contact", "root")">Contact</a>
+        </div>
+        <div class="footer-details" id="photo-stream">
+            <h4>Photo Stream</h4>
+            <div class="Stream">
+            </div>
+        </div>
+
+        <div class="footer-details no-margin">
+            <h4>Newsletter</h4>
+            <p>
+                OpenBrew periodically sends out updates, tips, and release notes. Sign up for the newsletter if you want the occasional useful email.
+            </p>
+            <form class="emailSignUp" action="@Url.Action("EmailSignUp", "Marketing")" method="post">
+                <label class="visually-hidden" for="openbrew-newsletter-email">Email address</label>
+                <input id="openbrew-newsletter-email" type="email" name="emailAddress" placeholder="Enter your email address" required class="newsletter" />
+                <button type="submit" class="button button_green">Subscribe</button>
+                <p class="newsletter-status" aria-live="polite"></p>
+            </form>
+            <a class="newsletter-unsubscribe" href="@Url.Action("NewsletterUnsubscribe", "Marketing")">Unsubscribe from newsletter</a>
+        </div>
+
+        <div class="Finfo">
+            <div class="copyright">
+                © Copyright @DateTime.Now.Year by <a href="https://github.com/aderbique/openbrew">OpenBrew</a>. All Rights Reserved.
+
+                <a href="https://github.com/aderbique/openbrew" id="buildinfo">Source</a>
+            </div>
+            <div class="designby">Build, share, clone, and brew.</div>
+        </div>
+    </div>
+</div>
+<a href="#" id="FeedbackTrigger"><img src="/img/feedback.gif" alt="Feedback"/></a>
+<script>
+$(function () { $('.emailSignUp').on('submit', function (event) { event.preventDefault(); var form = $(this), button = form.find('button'), status = form.find('.newsletter-status'); button.prop('disabled', true).text('Joining…'); $.post(form.attr('action'), form.serialize()).done(function (response) { status.text(response.message).addClass('success').removeClass('error'); form.find('input').val(''); }).fail(function (xhr) { status.text(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unable to subscribe right now. Please try again.').addClass('error').removeClass('success'); }).always(function () { button.prop('disabled', false).text('Subscribe'); }); }); });
+</script>

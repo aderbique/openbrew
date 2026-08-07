@@ -1,0 +1,20 @@
+﻿@using Openbrew.Web
+@model SetUsernameViewModel
+		   
+<h3>@(Model.Username == null ? "Choose a Username" : "Set Your Username")</h3>
+<p>Usernames are used to identify you on the site and for your openbrew URL.  Only letters and numbers are allowed.</p>
+@using (Html.BeginForm("SetUsername", "User", FormMethod.Post))
+{	
+	<div class="form-field">
+		@Html.LabelFor(m => m.Username, "Username") @Html.ValidationMessageFor(m => m.Username)
+		@Html.TextBoxFor(m => m.Username) 
+		<div id="username-avail" class="bold"></div>
+	</div>
+
+	<div class="form-field">
+		<label>Your Current openbrew URL</label>
+		<a href="@Html.Raw(Url.UserProfileUrl(Model.Username))">@Url.UserProfileUrl(Model.Username)</a>
+	</div>
+	
+	<input type="submit" class="button button_green" value="Set Username" id="username-submit" />
+}

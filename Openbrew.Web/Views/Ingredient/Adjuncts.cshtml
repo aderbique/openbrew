@@ -1,0 +1,80 @@
+﻿@using Openbrew.Web
+@model IngredientListViewModel<Openbrew.Web.Core.Model.Adjunct>
+
+@{
+    ViewBag.Title = "Adjuncts";
+}
+
+<div id="view-adjuncts">
+    <div class="ing-hero">
+        <div class="intro">
+            <h2>
+                Adjuncts, also known as additives or miscs, allow homebrewers to fine tune their homebrews
+            </h2>
+            <p>
+                Commonly used adjuncts include irish moss to improve the clarity of homebrew, 
+                dextrose (corn sugar) used for priming and yeast nutrient to aid in fermentation.
+            </p>
+            <p>
+                Other adjuncts include spices to flavor homebrew such as cinnamon, corriander,
+                ginger, anise, allspice, cloves, nutmeg, vanilla bean, etc.  Homebrewers also add
+                a variety of other ingredients to improve water chemistry and clarity.
+            </p>
+        </div>
+        <div class="image">
+            <img src="@Url.Image("~/img/irish-moss.jpg")" alt="Adjunct Cake" />
+        </div>
+        <div class="clearall"></div>
+    </div>
+
+    <div class="margintop20"> </div>
+    
+    <div class="two_third">
+            
+        @foreach (var hgroup in Model.IngredientGroups)
+        {
+            <div class="ing-list">
+                <h2>@hgroup.Category</h2>
+               <ul class="ings">
+                    @foreach (var adjunct in hgroup.Ingredients)
+                    {
+                        <li>
+                            <img src="@Url.Image("~/img/spice-jars.jpg")" alt="brewers adjunct vial" class="valignmiddle" /> <a href="@Url.AdjunctDetailUrl(adjunct.IngredientId, adjunct.Name)" class="valignmiddle">@adjunct.Name</a>
+                            <div class="clearall"> </div>
+                        </li>
+                    }
+                </ul>
+                <div class="clearall"></div>
+            </div>
+            
+        }
+    </div>
+    <div class="top-ten one_third column-last margintop10">
+        <h2 class="green">Top 10 Most Used Adjuncts</h2>
+        <ol>
+            @foreach (var ingredient in Model.TopTen)
+            {
+                <li><a href="@Url.HopDetailUrl(ingredient.IngredientId, ingredient.Name)">@ingredient.Name</a></li>
+            }                
+        </ol>
+        
+        <h2 class="margintop30 marginbottom10">Add Custom Adjuncts</h2>
+        <p class="paddingright40">
+            If you are using the openbrew homebrew recipe calculator
+            to create a new homebrew recipe and the adjunct 
+            you want to use is not listed, you can add a custom
+            adjunct by selecting "Add Custom Ingredient"
+            from the adjunct drop down menu.
+        </p>
+        <p class="paddingright40">
+            Once you've added a custom adjunct, it will be available
+            for any recipe you create.  If it is a adjunct that can be used by
+            other brewers, we will promote your custom
+            adjunct to a public adjunct that can be used by other
+            openbrew users.
+        </p>
+
+    </div>
+
+
+</div>

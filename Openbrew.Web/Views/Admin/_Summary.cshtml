@@ -1,0 +1,167 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Configuration
+@using Openbrew.Web.Core.Model
+@model SiteStats
+
+<h3>Object Counts</h3>
+<div class="data">
+	<label>Recipe Count</label>
+	<span>@(string.Format("{0:n0}", Model.RecipeCount))</span>
+</div>
+
+<div class="data">
+	<label>Brew Session Count</label>
+	<span>@(string.Format("{0:n0}", Model.BrewSessionCount))</span>
+</div>
+
+<div class="data">
+	<label>User Count</label>
+	<span>@(string.Format("{0:n0}", Model.UserCount))</span>
+</div>
+
+<div class="data">
+	<label>Logins last 24 Hours</label>
+	<span>@(string.Format("{0:n0}", Model.LoginCountLast24Hours))</span>
+</div>
+
+<div class="data">
+	<label>Custom Ing. Count</label>
+	<span>@(string.Format("{0:n0}", Model.CustomIngredientCount))</span>
+</div>
+
+<div class="data">
+	<label>Comment Count</label>
+	<span>@(string.Format("{0:n0}", Model.CommentCount))</span>
+</div>
+
+<div class="data">
+    <label>Tasting Note Count</label>
+    <span>@(string.Format("{0:n0}", Model.TastingNoteCount))</span>
+</div>
+
+
+<hr />
+
+<div class="limitheight recent-logins">
+	<h3>Recent Logins</h3>
+	@if (Model.Last25UserLogins != null && Model.Last25UserLogins.Any())
+	{
+		<table class="admin-table">
+			<thead><tr><th>User</th><th>Logged in</th><th>IP address</th></tr></thead>
+			<tbody>
+			@foreach (var login in Model.Last25UserLogins)
+			{
+				<tr>
+					<td>@if (login.User != null) { <a href="@Url.UserProfileUrl(login.User.Username)">@login.User.Username</a> } else { <text>Unknown user</text> }</td>
+					<td>@login.LoginDate.ToString("MMM d, yyyy h:mm tt")</td>
+					<td><code>@(string.IsNullOrWhiteSpace(login.IPAddress) ? "Not recorded" : login.IPAddress)</code></td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<p>No login activity has been recorded yet.</p>
+	}
+</div>
+
+<hr />
+
+<div class="limitheight">
+	<h3>Last 25 Recipes</h3>
+	<ul class="list">
+		@foreach(var recipe in Model.Last25Recipes)
+		{
+			<li>
+				<a href="@Url.RecipeDetailUrl(recipe.RecipeId, recipe.RecipeName, (recipe.BJCPStyleName))"><b>@recipe.RecipeName</b></a>
+				by
+				<a href="@Url.UserProfileUrl(recipe.CreatedByUserName)">@recipe.CreatedByUserName</a>
+				on
+				@recipe.DateCreated
+			</li>
+		}
+	</ul>
+</div>
+
+<hr />
+
+<div class="limitheight">
+	<h3>Last 25 User Sign Ups</h3>
+	<ul class="list">
+		@foreach(var user in Model.Last25Users)
+		{
+			<li>
+				<a href="@Url.UserProfileUrl(user.Username)">@user.Username</a> ( @user.FullName ) created on @user.DateCreated
+			</li>
+		}
+	</ul>
+</div>
+
+<hr />
+
+<div class="limitheight">
+	<h3>Recent Custom Ingredients</h3>
+	@if (Model.RecentCustomIngredients != null && Model.RecentCustomIngredients.Any())
+	{
+		<table class="admin-table recent-custom-ingredients">
+			<thead>
+				<tr><th>Ingredient</th><th>Added by</th><th>Details</th><th>Category</th><th>Created</th><th>Status</th></tr>
+			</thead>
+			<tbody>
+			@foreach(IIngredient ingredient in Model.RecentCustomIngredients)
+			{
+				var status = ingredient.IsPublic ? "Public" : "Pending review";
+				<tr>
+					<td><strong>@ingredient.Name</strong><br /><small>@ingredient.GetType().Name</small></td>
+					<td>
+						@if (ingredient.User != null)
+						{
+							<a href="@Url.UserProfileUrl(ingredient.User.Username)">@ingredient.User.Username</a>
+						}
+						else { <text>Unknown</text> }
+					</td>
+					<td>
+						@if (ingredient is Fermentable) { var fermentable = ingredient as Fermentable; <text>@fermentable.Ppg PPG · @fermentable.Lovibond L</text> }
+						else if (ingredient is Hop) { var hop = ingredient as Hop; <text>@hop.AA% AA</text> }
+						else if (ingredient is Yeast) { var yeast = ingredient as Yeast; <text>@yeast.Attenuation% attenuation</text> }
+						else { <text>Adjunct</text> }
+					</td>
+					<td>@(string.IsNullOrWhiteSpace(ingredient.Category) ? "Uncategorized" : ingredient.Category)</td>
+					<td>@ingredient.DateCreated.ToString("MMM d, yyyy")</td>
+					<td><span class="ingredient-review-status @(ingredient.IsPublic ? "is-public" : "is-pending")">@status</span></td>
+				</tr>
+			}
+			</tbody>
+		</table>
+		<p><a class="button button_gray button_small" href="@Url.Action("Tools", "Admin")#tab-tab-4">Review and promote custom ingredients</a></p>
+	}
+	else
+	{
+		<p>No custom ingredients are awaiting review.</p>
+	}
+</div>
+
+<hr />
+
+<div class="limitheight">
+	<h3>Last 25 Recipe Comments</h3>
+	<ul class="list">
+		@foreach(RecipeComment recipeComment in Model.Last25RecipeComments)
+		{
+			<li>@recipeComment.DateCreated - <a href="@Url.UserProfileUrl(recipeComment.User.Username)">@recipeComment.User.Username</a> @recipeComment.CommentText</li>
+		}
+	</ul>
+</div>
+
+<hr />
+
+<div class="limitheight">
+	<h3>Last 25 Recipe Brew Comments</h3>
+	<ul class="list">
+		@foreach(BrewSessionComment brewSessionComment in Model.Last25BrewSessionComments)
+		{
+			<li>@brewSessionComment.DateCreated - <a href="@Url.UserProfileUrl(brewSessionComment.User.Username)">@brewSessionComment.User.Username</a> @brewSessionComment.CommentText</li>
+		}
+	</ul>
+</div>

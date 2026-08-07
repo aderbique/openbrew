@@ -1,0 +1,92 @@
+﻿@using Openbrew.Web.Core.Model;
+@model IRecipeFactsViewModel
+@{
+    var recipeForStyle = Model as Openbrew.Web.Models.RecipeViewModel;
+    var selectedCatalog = recipeForStyle != null && !string.IsNullOrWhiteSpace(recipeForStyle.StyleCatalog) ? recipeForStyle.StyleCatalog : "ba-2026";
+    // Recipe categories remain legacy BJCP identifiers. The selected BA edition
+    // is a design reference and is deliberately not used to remap saved recipes.
+    var guidelineEditions = new[] {
+        new { Year = 2026, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2025/12/12085737/2026_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2025, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2025/06/20143326/2025_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2024, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2024/12/12144941/2024_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2023, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2023/07/10124402/2023_BA_Beer_Style_Guidelines-updated.pdf" },
+        new { Year = 2022, Url = "https://www.brewersassociation.org/2022_ba_beer_style_guidelines_final" },
+        new { Year = 2021, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2021/02/22104023/2021_BA_Beer_Style_Guidelines_Final.pdf" },
+        new { Year = 2020, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2020/03/BA-beer-style-guidelines-2020.pdf" },
+        new { Year = 2019, Url = "https://s3-us-west-2.amazonaws.com/brewersassoc/wp-content/uploads/2019/04/BA-style-guidelines-2019.pdf" },
+        new { Year = 2018, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2018/03/2018_BA_Beer_Style_Guidelines_Final.pdf" },
+        new { Year = 2017, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/05/2017-BA-Beer-Style-Guidelines.pdf" },
+        new { Year = 2016, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/04/2016_BA_Beer_Style_Guidelines.pdf" },
+        new { Year = 2015, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/04/2015-brewers-association-beer-style-guidelines.pdf" },
+        new { Year = 2014, Url = "https://cdn.brewersassociation.org/wp-content/uploads/2017/04/2014_BA_Beer_Style_Guidelines_FINAL.pdf" }
+    };
+}
+
+<div id="select-style" class="margintop20 recipedata">
+	<div class="form-field">
+
+        @if (ViewData["DisableEditing"] != null)
+		{
+			@Html.HiddenFor(m => m.StyleId)
+		}
+		else
+		{
+			@Html.LabelFor(m => m.Name, "Style catalog")
+            <div class="recipe-guideline-edition">
+				<label for="recipe-style-catalog">Catalog</label>
+				<select id="recipe-style-catalog" data-name="r_StyleCatalog"><option value="ba-2026" @(selectedCatalog == "ba-2026" ? "selected=\"selected\"" : "")>2026 Catalog</option><option value="legacy-bjcp" @(selectedCatalog == "legacy-bjcp" ? "selected=\"selected\"" : "")>Legacy</option></select>
+            </div>
+			<label for="recipe-bjcp-style">Recipe style</label>
+			<input type="hidden" data-name="r_StyleName" value="@Model.StyleName" />
+
+			<select id="recipe-bjcp-style" data-name="r_StyleId">
+                <option value="">Loading Brewers Association 2026 styles...</option>
+                @foreach (BjcpStyleGroup item in ViewBag.RecipeCreationOptions.StyleGroups)
+                {
+                    <optgroup label="@item.CategoryId.ToString(). @item.CategoryName">
+
+                    @foreach(var child in item.BjcpStyleSummaries)
+                    {
+                        <option value="@child.SubCategoryId" @(child.SubCategoryId == Model.StyleId ? "selected=\"selected\"" : "")>@child.SubCategoryId. @child.SubCategoryName</option>
+                    }
+
+                    </optgroup>
+                }
+            </select>
+		}
+
+	</div>
+	<div id="selected-style-chart"></div>
+	<div id="similar-style-chart"></div>
+	<div id="style-showmore"><a href="#" id="show-similar-styles">Show Similar Styles</a></div>
+	<div id="style-hidemore" class="hidden"><a href="#" id="hide-similar-styles">Hide Similar Styles</a></div>
+</div>
+
+<script>
+    (function () {
+        var catalog = document.getElementById('recipe-style-catalog'), style = document.getElementById('recipe-bjcp-style'), name = document.querySelector('[data-name=r_StyleName]');
+        var selectedStyleId = '@HttpUtility.JavaScriptStringEncode(Model.StyleId ?? "")';
+        if (!catalog || !style) return;
+        var legacy = style.innerHTML;
+        function syncStyleName() { name.value = style.value ? style.options[style.selectedIndex].text : ''; }
+        function setBaStyles(items) { style.innerHTML = '<option value="">Choose Brewers Association 2026 style...</option>'; items.forEach(function (item) { var option = document.createElement('option'); option.value = item.Id; option.text = item.Name; style.appendChild(option); }); if (selectedStyleId) style.value = selectedStyleId; syncStyleName(); $(style).trigger('chosen:updated'); }
+        $.getJSON('/ba-2026-style-catalog', setBaStyles).fail(function () { style.innerHTML = '<option value="">Could not load the 2026 catalog. Try again.</option>'; });
+        catalog.onchange = function () { selectedStyleId = ''; if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles); } $(style).trigger('chosen:updated'); };
+        style.onchange = function () { syncStyleName(); };
+    }());
+</script>
+
+<script id="bjcpStyleTitle" type="text/x-jquery-tmpl">
+    <div class="margintop10 bjcp-style-title">${SubCategoryName}</div>
+</script>
+<script id="bjcpStyleTemplate" type="text/x-jquery-tmpl">
+	<div class="bjcp-label" id="bjcp-label">${styleElement}</div>
+	<div class="bjcp-leftnumber">${styleElementStartValue}</div>
+	<div class="bjcp-slider" original-title="${styleElement}: {{if styleStart == 0}} Varies {{else}} ${styleStart}-${styleEnd} {{/if}} / Your ${styleElement}: ${currentBrewValue}">
+		<div class="bjcp-slider-range" style="left: ${styleElementStartPercent}%; width: ${styleElementEndPercent}%; "></div>
+		<img class="bjcp-marker" src="/img/stylemarker.png" style="left: ${styleMarkerPercent}%;" />
+	</div>
+	<div class="bjcp-rightnumber">${styleElementEndValue}</div>
+	<div class="bjcp-check"><img id="styleCheck" src="/img/icons/tick.png" style="display:${styleMatch}" /></div>
+	<div class="clearall"></div>
+    </script>

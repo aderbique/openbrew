@@ -1,0 +1,20 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Configuration
+@using ctorx.Core.Messaging
+@using Openbrew.Web.Core.Model
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="@Url.Action("AdminCss")" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Action("AdminJs")"></script>
+}
+
+@RenderBody()

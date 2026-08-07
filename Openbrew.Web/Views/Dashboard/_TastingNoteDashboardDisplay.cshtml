@@ -1,0 +1,32 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model TastingNoteSummary
+
+<div class="dashboard-item tasting-note">
+    <div class="image">
+        <a href="@Url.UserProfileUrl(Model.TastingUsername)"><img src="@UserAvatar.GetAvatar(50, Model.TastingUserEmailAddress)" width="50" height="50" alt="@Model.TastingUsername" /></a>
+    </div>
+    <div class="details">
+        <h3 class="username"><a href="@Url.UserProfileUrl(Model.TastingUsername)">@Model.TastingUsername</a></h3>
+        <span>logged tasting notes on @Model.TasteDate.ToShortDateString()</span>
+
+        <div class="">
+            <div class="image">
+                <a href="@Url.RecipeDetailUrl(Model.RecipeId, Model.RecipeName, Model.RecipeStyleName)"><img src="@Url.RecipeThumbnailUrl(Model.RecipeImage, Model.RecipeSrm)" alt="@Model.RecipeName" height="80" width="80" /></a>
+            </div>
+            <div class="recipe-details">
+                <h3 class="name"><a href="@Url.RecipeDetailUrl(Model.RecipeId, Model.RecipeName, Model.RecipeStyleName)">@Model.RecipeName</a></h3>
+                <div class="data">
+                    Tasted on @Model.TasteDate.ToShortDateString()
+                    <h4>Overall Rating</h4>
+                    <span id="star-@Model.TastingNoteId" class="rating block" data-raty-rating="@Model.Rating"></span>
+                </div>
+            </div>
+            <div class="clearall"></div>
+        </div>
+        <div class="notes">
+            @Model.Notes
+        </div>
+    </div>
+</div>
+<div class="clearall"></div>

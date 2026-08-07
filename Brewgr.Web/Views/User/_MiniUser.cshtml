@@ -1,7 +1,0 @@
-﻿@using Brewgr.Web
-@model Brewgr.Web.Core.Model.MiniUserSummary
-
-<div class="mini-user">
-    <a href="@Url.UserProfileUrl(Model.Username)"><img src="@Model.GetAvatar(75)" alt="@Model.Username" /></a>
-    <div><a href="@Url.UserProfileUrl(Model.Username)">@(Model.Username.Length > 14 ? Model.Username.Substring(0, 11) + "..." : Model.Username)</a></div>
-</div>

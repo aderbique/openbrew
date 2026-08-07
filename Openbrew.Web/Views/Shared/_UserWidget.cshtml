@@ -1,0 +1,30 @@
+﻿@using Openbrew.Web
+@model Openbrew.Web.Core.Model.UserSummary
+
+@{
+    var username = Model.Username.Length > 30 ? Model.Username.Substring(0, 30) + "..." : Model.Username;
+}
+
+<div class="user-widget">
+    <div class="image">
+        <a href="@Url.UserProfileUrl(Model.Username)">
+            <img src="@Model.GetAvatar(82)" alt="@Model.Username" border="0" width="82" height="82" />
+        </a> 
+    </div>
+    <div class="info">
+        <div class="name">
+            <a href="@Url.UserProfileUrl(Model.Username)">@username</a>
+        </div>
+        <div class="marginbottom5">Member Since @string.Format("{0:MM}", Model.DateCreated)/@string.Format("{0:yy}", Model.DateCreated)</div>
+        <div>
+            @Model.RecipeCount Recipe@(Model.RecipeCount == 1 ? "" : "s")
+        </div>
+        <div>
+            @Model.BrewSessionCount Brew Session@(Model.BrewSessionCount == 1 ? "" : "s")
+        </div>
+        <div>
+            @Model.CommentCount Comment@(Model.CommentCount == 1 ? "" : "s")
+        </div>
+    </div>
+    <div class="clearall"> </div>
+</div>

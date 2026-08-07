@@ -1,0 +1,33 @@
+﻿@using Openbrew.Web
+@model ContactViewModel
+@{
+	ViewBag.Title = "Contact";
+	ViewBag.Description = "Contact OpenBrew with questions, feedback, or bugs.";
+}
+
+<div id="contact-view" class="content">
+	<div class="two_third">
+		<h3>Contact OpenBrew</h3>
+		@using (Html.BeginForm())
+		{
+			<div class="form-field">
+				<div>@Html.LabelFor(m => m.Name, "Your name")</div>
+				<span>@Html.TextBoxFor(m => m.Name, new { size = 30 })</span>
+			</div>
+			<div class="form-field">
+				<div>@Html.LabelFor(m => m.EmailAddress, "Your email address")</div>
+				<span>@Html.TextBoxFor(m => m.EmailAddress, new { size = 30, type = "email" })</span>
+			</div>
+			<div class="form-field">
+				<div>@Html.LabelFor(m => m.MessageContent, "Message")</div>
+				<span>@Html.TextAreaFor(m => m.MessageContent)</span>
+			</div>
+
+			<input type="submit" value="Send Message" class="button button_green" />
+		}
+	</div>
+	<div class="one_third column-last">
+		<h3>Need a faster answer?</h3>
+		<p>Open an issue on the <a href="https://github.com/aderbique/openbrew">current repository</a> or use the source links in the footer.</p>
+	</div>
+</div>

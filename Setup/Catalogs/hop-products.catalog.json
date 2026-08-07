@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "catalog": "OpenBrew supplier hop products",
+  "updatedAt": "2026-08-07",
+  "notes": "A product is a supplier-specific snapshot of a hop variety. Do not invent harvest years, assay values, forms, or lot numbers: import them only from a supplier lot sheet or product page. Recipes may continue to use the legacy Hop variety default when no product is selected.",
+  "products": []
+}

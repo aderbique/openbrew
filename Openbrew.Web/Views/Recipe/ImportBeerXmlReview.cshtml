@@ -1,0 +1,34 @@
+@using Openbrew.Web.Core.Model
+@model IList<Recipe>
+@{
+    ViewBag.Title = "Choose BeerXML Recipes";
+    var completeRecipeCount = Model.Count(x => x.Fermentables.Any() && x.Yeasts.Any());
+    var incompleteRecipeCount = Model.Count - completeRecipeCount;
+}
+
+<section class="shell-shell import-beerxml-review">
+    <div class="shell-main">
+        <h1>Choose recipes to import</h1>
+        <p>This BeerXML file contains @completeRecipeCount complete recipe@(completeRecipeCount == 1 ? "" : "s") ready to import.@if (incompleteRecipeCount > 0) { <text> The remaining @incompleteRecipeCount record@(incompleteRecipeCount == 1 ? " is" : "s are") incomplete drafts and start unselected.</text> } Each recipe opens in the calculator for a final review before it is saved.</p>
+
+        @using (Html.BeginForm("ImportBeerXmlSelection", "Recipe", FormMethod.Post))
+        {
+            <div class="import-beerxml-list">
+                @for (var i = 0; i < Model.Count; i++)
+                {
+                    var recipe = Model[i];
+                    var isComplete = recipe.Fermentables.Any() && recipe.Yeasts.Any();
+                    <label class="import-beerxml-choice">
+                        <input type="checkbox" name="recipeIndexes" value="@i" @(isComplete ? "checked=\"checked\"" : "") />
+                        <span>
+                            <strong>@(string.IsNullOrWhiteSpace(recipe.RecipeName) ? "Untitled recipe" : recipe.RecipeName)</strong>
+                            <small>@recipe.Fermentables.Count fermentable@(recipe.Fermentables.Count == 1 ? "" : "s"), @recipe.Hops.Count hop@(recipe.Hops.Count == 1 ? "" : "s"), @recipe.Yeasts.Count yeast@(recipe.Yeasts.Count == 1 ? "" : "s")@(isComplete ? "" : " — incomplete draft")</small>
+                        </span>
+                    </label>
+                }
+            </div>
+            <input type="submit" class="button button_green margintop20" value="Review selected recipes" />
+            <a class="button button_gray margintop20 marginleft10" href="@Url.Action("homebrew-recipe-calculator")">Cancel</a>
+        }
+    </div>
+</section>

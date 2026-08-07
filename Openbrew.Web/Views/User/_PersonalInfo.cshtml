@@ -1,0 +1,89 @@
+﻿@model UserSettingsViewModel
+
+@{
+    var usernameFieldStyle = Model.HasCustomUsername ? "" : "display: none;";
+    var usernameLabelClass = Model.HasCustomUsername ? "valigntop paddingtop6" : "";
+}
+
+@using(Html.BeginForm())
+{
+    <h3 class="margintop10">Personal Information</h3>
+
+    <input type="hidden" id="DummyField" value="value" data-val="true" data-val-required="Not Empty" class="valid" />
+
+    @Html.HiddenFor(m => m.UserId)
+
+    <div class="form-field marginbottom10">
+        <label for="Username" class="@usernameLabelClass">Username</label>
+        <div id="UsernameField" class="username-field" style="@usernameFieldStyle">
+            @Html.TextBoxFor(m => m.Username, new { @class = "username" })
+            <div id="username-avail" class="bold"></div>
+            <p>Usernames are used to identify you on the site and for your openbrew URL.  Only letters, numbers and dashes are allowed.</p>
+        </div>
+        @if (!Model.HasCustomUsername)
+        {
+            <div id="UsernameFieldToggle" class="username-toggle">
+                You have not chosen a username. <a href="#" class="bold" id="ChooseUsername">Choose a Username</a>
+            </div>
+        }
+    </div>
+
+    <div class="form-field">
+        <label class="valigntop">Avatar</label>
+        <span>
+            <a href="http://www.gravatar.com" target="_blank" class="bold">Change Avatar at Gravatar</a>
+            <p class="marginleft0">openbrew uses gravatar.com for user avatars.</p>
+        </span>
+    </div>
+
+    <div class="form-field">
+        @Html.LabelFor(m => m.EmailAddress, "Email Address")
+        <span>
+            @if (Model.HasGoogleConnection)
+            {
+                @Html.TextBoxFor(m => m.EmailAddress, new { @class = "emailaddress google-managed-email", @readonly = "readonly", aria_describedby = "google-email-connection" })
+                <p id="google-email-connection" class="google-email-status marginleft0"><strong>Connected to Google</strong> · This email is managed by your Google account.</p>
+                <button id="unlink-google-button" type="button" class="button button_gray button_small">Unlink Google</button>
+                <div id="unlink-google-panel" class="unlink-google-panel" hidden="hidden">
+                    <p>Set a local password first. Once unlinked, you will sign in with this email and password instead of Google.</p>
+                    <label for="unlink-google-password">New password</label>
+                    <input id="unlink-google-password" type="password" autocomplete="new-password" />
+                    <label for="unlink-google-confirm-password">Confirm password</label>
+                    <input id="unlink-google-confirm-password" type="password" autocomplete="new-password" />
+                    <button id="confirm-unlink-google" type="button" class="button button_red button_small">Set password and unlink Google</button>
+                    <p id="unlink-google-status" class="google-email-status" aria-live="polite"></p>
+                </div>
+            }
+            else
+            {
+                @Html.TextBoxFor(m => m.EmailAddress, new { @class = "emailaddress" })
+                <div id="emailinuse" class="bold"></div>
+            }
+        </span>
+    </div>
+
+    <div class="form-field">
+        @Html.LabelFor(m => m.FirstName, "First Name")
+        <span>@Html.TextBoxFor(m => m.FirstName)</span>
+    </div>
+
+    <div class="form-field">
+        @Html.LabelFor(m => m.LastName, "Last Name")
+        <span>@Html.TextBoxFor(m => m.LastName)</span>
+    </div>
+
+    <div class="clearall">&nbsp;</div>
+
+    <div class="form-field">
+        <label for="Bio" class="valigntop paddingtop6">Bio</label>
+        <span>
+            @Html.TextAreaFor(m => m.Bio, 5, 60, null)
+            <br />
+            <span id="suggest-limit"></span>
+        </span>
+    </div>
+
+    <div class="clearall"></div>
+
+    <input id="savesettings" type="submit" class="button button_green" value="Save Changes" />
+}

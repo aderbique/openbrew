@@ -1,0 +1,37 @@
+﻿@model Openbrew.Web.Core.Model.RecipeSearchResults
+
+@{
+    ViewBag.Title = "We've Found " + Model.Recipes.Count + " Recipes";
+}
+
+<div id="view-styledetail" class="content">
+
+    <div class="ad-sense" style="width: 728px; margin: 0 auto 18px auto;">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- openbrew - homepage banner ad slot -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:728px;height:90px"
+             data-ad-client="ca-pub-6867430027291087"
+             data-ad-slot="7085856109"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="primary">
+        @Html.Partial("_RecipeList", Model.Recipes)
+    </div>
+    <div class="compliment">
+        <div class="ad-sense" style="margin: 18px 0 0 24px;">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- openbrew - skyscraper ad slot -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:160px;height:600px"
+                 data-ad-client="ca-pub-6867430027291087"
+                 data-ad-slot="4271990507"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+</div>

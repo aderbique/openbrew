@@ -1,0 +1,39 @@
+@{
+    Layout = "~/Views/Shared/_OpenBrewLayout.cshtml";
+    ViewBag.Title = "About OpenBrew";
+    ViewBag.Description = "OpenBrew is the revived open-source homebrew recipe workspace, built on the original Brewgr codebase.";
+}
+
+<div id="view-about" class="content about-page">
+    <header class="about-intro">
+        <p class="eyebrow">A second life for a useful brewing tool</p>
+        <h2>Built for homebrewers. Reborn for the next batch.</h2>
+        <p>OpenBrew is a community recipe workspace for the practical side of homebrewing: building recipes, understanding the numbers, and recording what happened when you brewed them.</p>
+    </header>
+
+    <section class="about-story">
+        <div>
+            <h3>The Brewgr story</h3>
+            <p>Brewgr was created in 2011 by software engineers and homebrewers Matthew Marksbury and Jason Zimmerman. They built a simple cloud-based place for brewers to create, share, and improve recipes at a time when tools like that were hard to find.</p>
+            <p>When the original service stopped operating at the end of 2025, its open-source codebase was still too useful to leave behind.</p>
+        </div>
+        <aside>
+            <span>2011</span><strong>Brewgr begins</strong>
+            <span>2025</span><strong>The original service ends</strong>
+            <span>2026</span><strong>OpenBrew continues the work</strong>
+        </aside>
+    </section>
+
+    <section class="about-reborn">
+        <h3>A fork, rebuilt for today</h3>
+        <p>OpenBrew is a modernized fork of that original codebase: the familiar recipe builder, calculations, sharing, and brewing workflows are being restored carefully, with a cleaner interface and an open path forward.</p>
+        <div class="about-actions">
+            <a class="button button_green" href="@Url.Action("homebrew-recipe-calculator", "Recipe")">Build a recipe</a>
+            <a href="@Url.Action("HowItWorks", "Root")">See how it works</a>
+        </div>
+    </section>
+
+    <footer class="about-credit">
+        Original Brewgr code © 2011–2015 Matthew Marksbury, Jason Zimmerman, and contributors · <a href="https://github.com/aderbique/openbrew">View the OpenBrew source</a>
+    </footer>
+</div>

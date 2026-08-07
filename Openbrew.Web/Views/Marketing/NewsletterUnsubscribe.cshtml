@@ -1,0 +1,12 @@
+@{ ViewBag.Title = "Unsubscribe from the OpenBrew Newsletter"; }
+<div class="content newsletter-page">
+    <h1>Unsubscribe from the newsletter</h1>
+    <p>Enter the email address that receives OpenBrew newsletter updates.</p>
+    @using (Html.BeginForm("NewsletterUnsubscribe", "Marketing", FormMethod.Post))
+    {
+        <label for="newsletter-unsubscribe-email">Email address</label>
+        <input id="newsletter-unsubscribe-email" type="email" name="emailAddress" required />
+        <button type="submit" class="button button_gray">Unsubscribe</button>
+    }
+    @if (ViewBag.NewsletterMessage != null) { <p class="newsletter-status error">@ViewBag.NewsletterMessage</p> }
+</div>

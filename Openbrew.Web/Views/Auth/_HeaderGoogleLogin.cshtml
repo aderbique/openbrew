@@ -1,0 +1,36 @@
+@using Openbrew.Web
+
+<div class="header-auth">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="text/javascript">
+        function handleHeaderGoogleCredential(response) {
+            var form = document.getElementById('header-google-login-form');
+
+            if (!form || !response || !response.credential) {
+                return;
+            }
+
+            form.idToken.value = response.credential;
+            form.submit();
+        }
+    </script>
+    <div id="g_id_onload"
+         data-client_id="@ViewBag.GoogleAuthClientId"
+         data-callback="handleHeaderGoogleCredential"
+         data-auto_prompt="false"
+         data-use_fedcm_for_prompt="true"
+         data-context="signin">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-theme="outline"
+         data-size="medium"
+         data-text="signin_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+    <a href="@Url.Action("login", "auth")" class="email-login" data-returnurl="@Server.UrlEncode((Request.RawUrl ?? "/"))">Use email</a>
+    <form id="header-google-login-form" action="@Url.Action("GoogleLogin", "Auth")" method="post" style="display:none;">
+        <input type="hidden" name="idToken" value="" />
+    </form>
+</div>

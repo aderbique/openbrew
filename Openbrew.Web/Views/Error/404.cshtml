@@ -1,0 +1,23 @@
+﻿@{
+	ViewBag.Title = "Recipe Not Available";
+	Response.Status = "404 Not Found";
+	Response.StatusCode = 404;
+}
+
+<div id="view-404" class="content missing-recipe-page">
+	<div class="missing-recipe-illustration" aria-hidden="true">
+		<img src="/img/beer-gone-missing.png" alt="" />
+	</div>
+
+	<div class="missing-recipe-copy">
+		<p class="missing-recipe-kicker">404 · Beer gone missing</p>
+		<h2>This recipe isn’t available.</h2>
+		<p>It may be a private draft, have been removed, or the link may have lost its way after a long boil.</p>
+		<p class="missing-recipe-note">If it’s your recipe, sign in and visit <a href="@Url.Action("MyRecipes", "Recipe")">My Recipes</a> to continue editing or publish it when it’s ready.</p>
+
+		<div class="missing-recipe-actions">
+			<a class="button button_green" href="@Url.Action("Index", "Root")">Find a recipe</a>
+			<a class="button button_gray" href="@Url.Action("NewRecipe", "Recipe")">Start a new brew</a>
+		</div>
+	</div>
+</div>

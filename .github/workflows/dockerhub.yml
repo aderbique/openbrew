@@ -1,0 +1,68 @@
+name: Build and Publish Docker Hub Images
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+      - develop
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/openbrew-web
+      DEFAULT_BRANCH: main
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Compute tags
+        id: tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "tags<<EOF"
+            echo "${IMAGE_NAME}:sha-${GITHUB_SHA}"
+            if [ "${GITHUB_REF_NAME}" = "${DEFAULT_BRANCH}" ] || [ "${GITHUB_REF_NAME}" = "master" ]; then
+              echo "${IMAGE_NAME}:latest"
+              echo "${IMAGE_NAME}:prod"
+            fi
+            if [ "${GITHUB_REF_NAME}" = "dev" ] || [ "${GITHUB_REF_NAME}" = "develop" ]; then
+              echo "${IMAGE_NAME}:dev"
+            fi
+            if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+              release_tag="${GITHUB_REF_NAME}"
+              release_version="${release_tag#v}"
+              echo "${IMAGE_NAME}:${release_tag}"
+              if [ "${release_version}" != "${release_tag}" ]; then
+                echo "${IMAGE_NAME}:${release_version}"
+              fi
+              echo "${IMAGE_NAME}:latest"
+              echo "${IMAGE_NAME}:prod"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}

@@ -1,0 +1,94 @@
+﻿@using Openbrew.Web
+@model BrowseRecipesViewModel
+
+@{
+	ViewBag.Title = "Homebrew Beer Recipes";
+	ViewBag.Description = "Browse homebrew recipes by style, learn more about BJCP styles and find new styles of beer to make in your homebrew recipes.";
+}
+
+<div id="recipes-view" class="content">
+
+    <div class="ad-sense" style="width: 728px; margin: 0 auto 18px auto;">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- openbrew - hombrew-recipes letterboard -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:728px;height:90px"
+             data-ad-client="ca-pub-6867430027291087"
+             data-ad-slot="7085856109"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <h2>Recipes by style</h2>
+
+	<p>OpenBrew’s recipe catalog uses the original BJCP categories that recipes were saved with. Keeping this legacy catalog in place means a recipe’s style and its place in the browser stay stable over time.</p>
+	<div class="style-catalog-switch">
+		<label for="browse-style-catalog">Style catalog</label>
+		<select id="browse-style-catalog"><option value="ba-2026" selected="selected">2026 Catalog</option><option value="legacy">Legacy</option></select>
+	</div>
+	<div id="ba-style-tools" class="ba-style-tools">
+		<label class="visually-hidden" for="ba-style-search">Filter styles</label>
+		<input id="ba-style-search" type="search" placeholder="Find a beer style…" autocomplete="off" />
+		<label class="ba-style-toggle"><input id="ba-has-recipes" type="checkbox" /> Styles with recipes</label>
+		<button id="ba-style-random" class="button button_green" type="button">Surprise me</button>
+	</div>
+	<div id="ba-surprise-roll" class="ba-surprise-roll" aria-live="polite" aria-hidden="true"><span class="ba-hop">✦</span><span class="ba-beer">🍺</span><strong>Finding your next pour…</strong><span class="ba-hop">✦</span></div>
+	<div id="ba-2026-styles" class="styles"></div>
+
+	<div id="legacy-styles" class="styles">
+        @{int i = 0;}
+		@foreach (var category in Model.BjcpCategories.OrderBy(x => x.CategoryId))
+  {
+			<div class="style@((i + 1) % 3 == 0 ? " last" : "")">
+				<h4>@category.CategoryId.ToString(). @category.CategoryName Recipes (@category.RecipeCount)</h4>
+
+				@foreach (var style in category.Styles.OrderBy(x => x.SubCategoryId))
+    {
+					<div>@style.SubCategoryId. <a href="@Url.StyleDetailUrl(style.UrlFriendlyName)">@style.SubCategoryName</a> (@style.RecipeCount)</div>
+    }
+                @{i++;}
+			</div>
+		}
+	</div>
+
+	<div class="clearall">
+		<h2>Other Homebrew Recipes (@Model.UnCategorizedRecipeCount)</h2>
+		<p>
+			Some homebrewers make homebrew recipes that don't conform to the exact guidelines of the BJCP styles.  It is also common for homebrewers to not
+			select a style when entering their recipes into the homebrew recipe calculator.  Just because these homebrew recipes are not assigned to a specific style
+			doesn't mean they aren't great recipes and we don't want you to miss them.
+		</p>
+
+		<a href="@Url.Action("other-homebrew-recipes", "Recipe")" class="button button_black">View Other Homebrew Recipes &rarr;</a>
+	</div>
+</div>
+
+<script>
+    (function () {
+        var catalog = document.getElementById('browse-style-catalog'), modern = document.getElementById('ba-2026-styles'), legacy = document.getElementById('legacy-styles'), tools = document.getElementById('ba-style-tools'), search = document.getElementById('ba-style-search'), hasRecipes = document.getElementById('ba-has-recipes'), random = document.getElementById('ba-style-random'), roll = document.getElementById('ba-surprise-roll');
+        function show(value) { var isModern = value === 'ba-2026'; modern.style.display = isModern ? '' : 'none'; legacy.style.display = isModern ? 'none' : ''; tools.style.display = isModern ? '' : 'none'; }
+        show('ba-2026');
+        catalog.onchange = function () { show(catalog.value); };
+		function filterStyles() { var query = search.value.toLowerCase().trim(); modern.querySelectorAll('.ba-style-card').forEach(function (card) { var count = Number(card.getAttribute('data-recipe-count') || 0), label = card.querySelector('h4').textContent.toLowerCase(); card.style.display = (!query || label.indexOf(query) !== -1) && (!hasRecipes.checked || count > 0) ? '' : 'none'; }); }
+		search.oninput = filterStyles; hasRecipes.onchange = filterStyles;
+        $.getJSON('/ba-2026-style-catalog', function (styles) {
+            modern.innerHTML = styles.map(function (style) {
+                var name = $('<div>').text(style.Name).html();
+                var slug = style.Name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                return '<a class="style ba-style-card" data-recipe-count="0" href="/styles/2026/' + style.Id + '/' + slug + '"><img class="ba-style-image" loading="lazy" src="/img/style-catalog/ba-2026/' + style.Id + '.png" alt="' + name + ' beer appearance"><h4>' + name + '</h4><div class="fine-print"><span class="ba-recipe-count" data-style="' + style.Id + '">0</span> <span class="ba-recipe-label">recipes</span> · 2026 Catalog</div></a>';
+            }).join('');
+			$.getJSON('/ba-2026-style-counts', function (counts) {
+				modern.querySelectorAll('.ba-recipe-count').forEach(function (count) {
+					var total = counts[count.getAttribute('data-style')] || 0;
+					count.textContent = total;
+					count.closest('.ba-style-card').setAttribute('data-recipe-count', total);
+					count.nextElementSibling.textContent = total === 1 ? 'recipe' : 'recipes';
+				});
+				filterStyles();
+				random.disabled = !modern.querySelector('.ba-style-card');
+			});
+        });
+		random.onclick = function () { var choices = Array.prototype.slice.call(modern.querySelectorAll('.ba-style-card')).filter(function (card) { return card.style.display !== 'none' && (!hasRecipes.checked || Number(card.getAttribute('data-recipe-count') || 0) > 0); }); if (!choices.length) return; var destination = choices[Math.floor(Math.random() * choices.length)].href; random.disabled = true; roll.classList.add('is-rolling'); roll.setAttribute('aria-hidden', 'false'); window.setTimeout(function () { window.location = destination; }, 850); };
+    }());
+</script>

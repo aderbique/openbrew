@@ -1,0 +1,21 @@
+﻿@model FeedbackViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoShell.cshtml";
+}
+           
+<div id="view-feedback" class="modal">
+
+    <h2>Tell Us How We're Doing</h2>
+
+    <p>We want openbrew to be your favorite homebrewing software.  Tell us what we can do better.</p>
+
+    @using (Html.BeginForm("Feedback", "Marketing", FormMethod.Post))
+    {
+        <div class="form-field">
+            <span>@Html.TextAreaFor(m => m.Feedback)</span>
+        </div>
+        <span id="FeedbackCounter"></span>
+        <input type="submit" class="button button_green margintop20" value="Send Feedback" />
+    }
+</div>

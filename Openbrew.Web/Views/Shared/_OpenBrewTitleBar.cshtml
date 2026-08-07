@@ -1,0 +1,12 @@
+﻿<div id="title" class="title">
+	<h1>
+		@ViewBag.Title
+		@if (!string.IsNullOrWhiteSpace(ViewBag.Subtitle))
+		{
+			<span> / @ViewBag.Subtitle</span>
+		}
+	</h1>
+	<div class="top-search">
+		@Html.Partial("_SearchForm", new SearchViewModel())
+	</div>
+</div>

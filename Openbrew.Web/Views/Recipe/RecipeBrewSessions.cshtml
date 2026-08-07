@@ -1,0 +1,23 @@
+﻿@using Openbrew.Web
+@model RecipeBrewSessionsViewModel
+
+@{
+	ViewBag.Title = Model.RecipeSummary.Name + " Brew Sessions";
+}
+
+<div id="view-RecipeBrewSessions" class="content">
+	
+	<div class="primary">
+		<h3>This recipe has been brewed @Model.BrewSessions.Count time(s)</h3>
+
+		@Html.Partial("_BrewSessionList", Model.BrewSessions)
+	</div>
+ 
+	@* Nutrition Label *@
+	<div class="compliment">
+		
+		@Html.Partial("_RecipeFacts", Model.RecipeSummary)
+		
+		<a href="@Url.RecipeDetailUrl(Model.RecipeSummary.RecipeId, Model.RecipeSummary.Name, Model.RecipeSummary.StyleName)" class="button button_black margintop20 widebutton">Go To Recipe</a>
+	</div>	  
+</div>

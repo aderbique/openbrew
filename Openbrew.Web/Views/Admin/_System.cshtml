@@ -1,0 +1,27 @@
+﻿@using System.Collections
+@using System.Reflection
+@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+
+@{
+	
+	var cacheKeys = Context.Cache.Cast<DictionaryEntry>()
+		.Where(x => !x.Key.ToString().StartsWith("__"))
+		.Where(x => !x.Key.ToString().StartsWith(":ViewCacheEntry"));
+}
+
+<h3>Cached Objects</h3>
+
+@if(cacheKeys.Any())
+{
+    <ul class="list" id="cache-items">
+        @foreach (DictionaryEntry item in cacheKeys)
+        {
+            <li><a href="#" data-key="@item.Key">[remove</a>] - @item.Key</li>
+        }
+    </ul>
+}
+else
+{
+	<div>There are currently no items in the Cache</div>
+}

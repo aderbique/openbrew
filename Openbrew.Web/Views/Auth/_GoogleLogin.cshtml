@@ -1,0 +1,84 @@
+﻿@using Openbrew.Web
+
+@{
+	var isLoginViaDialog = ViewData["LoginViaDialog"] is bool && (bool)ViewData["LoginViaDialog"];
+	// This partial is rendered once per page. Use a fixed callback name because
+	// Mono's legacy Razor parser treats a dynamic JavaScript function signature
+	// as a server-side expression and fails the login page at runtime.
+	var googleCallback = "handleGoogleCredentialResponse";
+	var googleFormId = isLoginViaDialog ? "dialog-google-login-form" : "google-login-form";
+	var googleLoginAction = isLoginViaDialog
+		? Url.Action("GoogleLoginViaDialog", "Auth", new { editMode = Request["editMode"] })
+		: Url.Action("GoogleLogin", "Auth");
+}
+
+<div class="margintop20 google-login-block">
+	@if (ViewBag.ActiveUser != null)
+	{
+		var activeUser = ViewBag.ActiveUser as Openbrew.Web.Core.Model.UserSummary;
+		var loggedInAs = "your account";
+		var avatarUrl = string.Empty;
+
+		if (activeUser != null)
+		{
+			if (!string.IsNullOrWhiteSpace(activeUser.FullName))
+			{
+				loggedInAs = activeUser.FullName;
+			}
+			else if (!string.IsNullOrWhiteSpace(activeUser.Username))
+			{
+				loggedInAs = activeUser.Username;
+			}
+
+			avatarUrl = activeUser.GetAvatar(40);
+		}
+
+		<div style="margin-bottom: 12px; overflow: hidden;">
+			@if (!string.IsNullOrWhiteSpace(avatarUrl))
+			{
+				<img src="@avatarUrl" width="40" height="40" alt="" style="float: left; margin-right: 10px; border-radius: 3px;" />
+			}
+			<div style="overflow: hidden;">
+				<p class="fine-print" style="margin-bottom: 4px;">You're already logged in as @loggedInAs.</p>
+				<a href="@Url.Action("Logout", "Auth")">Log out</a>
+			</div>
+		</div>
+	}
+	else
+	{
+		<script src="https://accounts.google.com/gsi/client" async defer></script>
+		<script type="text/javascript">
+				function handleGoogleCredentialResponse(response) {
+				var form = document.getElementById('@googleFormId');
+
+				if (!form || !response || !response.credential) {
+					return;
+				}
+
+				form.idToken.value = response.credential;
+				form.submit();
+			}
+		</script>
+
+		<p class="fine-print">Continue with Google</p>
+		<div id="g_id_onload"
+			 data-client_id="@ViewBag.GoogleAuthClientId"
+			 data-callback="@googleCallback"
+			 data-auto_prompt="true"
+			 data-auto_select="true"
+			 data-use_fedcm_for_prompt="true"
+			 data-context="signin">
+		</div>
+		<div class="g_id_signin"
+			 data-type="standard"
+			 data-theme="outline"
+			 data-size="large"
+			 data-text="signin_with"
+			 data-shape="rectangular"
+			 data-logo_alignment="left">
+		</div>
+		<form id="@googleFormId" action="@googleLoginAction" method="post" style="display:none;">
+			<input type="hidden" name="idToken" value="" />
+		</form>
+	}
+</div>

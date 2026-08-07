@@ -1,0 +1,128 @@
+﻿@using System.Web.Optimization
+@model RecipeDetailViewModel
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!-- Consider adding a manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+ <!--<![endif]-->
+<head>
+    <title>Print @Model.RecipeViewModel.Name</title>
+    
+    <style type="text/css">
+        body { font-family: Georgia, 'Times New Roman', serif; font-size: 10pt; }
+
+        [data-unit] { display: none; }
+
+        /* Hide Elements */
+        .hidden, #user-info, #primary-nav, .top-search, .recipe-metainfo, #recipe-rating, #ratingind, .recipe-desc,
+            #tastingnotes, #comments, .facts .last, a.widebutton, #selected-style-chart, #similar-recipes, #footer,
+            #FeedbackTrigger, #show-similar-styles, .recipe-info div:nth-of-type(2), .recipe-info div:nth-of-type(3),
+            .recipe-info div:nth-of-type(4), .recipe-info div:nth-of-type(5), .facts h3,
+            .facts [data-name='recipe-name'], .recipe-share, #header, .recipe-info { display: none !important; }
+
+        h1 { font-size: 150%; }
+        .recipe-photo-actions img { width: 112pt; height: 112pt; }
+        #recipeinfo { margin-top: 21pt; }
+        #recipeinfo h3 { display: none; }
+        .recipe-photo-actions, #recipedata { display: inline-block; }
+        .recipe-photo-actions { width: 107pt; }
+        #recipedata { width: 175pt; vertical-align: top; }
+        .recipe-title { margin-bottom: 8pt; }
+        .groupbox h3 { margin: 0; margin-top: 5pt; font-size: 130%; padding: 4pt; width: 492pt; border-bottom: solid 2pt #666; }
+        .groupbox table { border-collapse: collapse; width: 500pt; }
+        .groupbox table thead tr td { border-bottom: solid 2pt #666; font-weight: bold; padding: 3pt; }
+        .groupbox table tbody td { border: solid 1pt #888; padding: 3pt; }
+        .groupbox table tbody tr > td:first-of-type { border-left: 0; }
+        .groupbox table tbody tr > td:last-of-type { border-right: 0; }
+        #instructions { margin-top: 14pt; }
+        .facts { position: absolute; top: 48pt; left: 134pt; }
+        .facts .block label, .recipe-info label { display: inline-block; width: 75pt; }
+        .facts .block label:after { content: ':'; }
+        .recipe-title { position: absolute; top: 28pt; left: 7pt; }
+        #instructions b { font-weight: normal; }
+
+        .builder .groupbox:nth-of-type(2) table thead td:nth-of-type(1) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table tbody td:nth-of-type(1) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table thead td:nth-of-type(2) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table tbody td:nth-of-type(2) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table tfoot td:nth-of-type(2) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table thead td:nth-of-type(4) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table tbody td:nth-of-type(4) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table thead td:nth-of-type(5) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table tbody td:nth-of-type(5) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table thead td:nth-of-type(6) { text-align: center; }
+        .builder .groupbox:nth-of-type(2) table tbody td:nth-of-type(6) { text-align: center; }
+
+        .builder .groupbox:nth-of-type(3) table thead td:nth-of-type(1) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table tbody td:nth-of-type(1) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table tfoot td:nth-of-type(1) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table thead td:nth-of-type(3) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table tbody td:nth-of-type(3) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table thead td:nth-of-type(4) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table tbody td:nth-of-type(4) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table thead td:nth-of-type(6) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table tbody td:nth-of-type(6) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table thead td:nth-of-type(7) { text-align: center; }
+        .builder .groupbox:nth-of-type(3) table tbody td:nth-of-type(7) { text-align: center; }
+    </style>
+
+    <style type="text/css">
+    [data-unit=@Model.RecipeViewModel.UnitType] { display: inline; }
+    </style>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/js/jquery-1.11.0.min.js"><\/script>')</script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script>window.jQuery.migrateWarnings || document.write('<script src="/js/jquery-migrate-1.2.1.min.js"><\/script>')</script>
+</head>
+<body>
+    <div id="view-recipeprint" class="content">
+        
+        <h1>@Model.RecipeViewModel.Name @(!string.IsNullOrWhiteSpace(Model.RecipeViewModel.StyleName) ? " - " : "")@Model.RecipeViewModel.StyleName</h1>
+
+        <div class="primary builder" itemscope itemtype="http://schema.org/Recipe">
+            @* Recipe Info *@
+            @Html.Partial("_RecipeDetailInfo", Model)
+
+            @* Fermentables *@
+            @Html.Partial("_RecipeDetailFermentables", Model.RecipeViewModel, new ViewDataDictionary(this.ViewData) { { "UnitType", Model.RecipeViewModel.UnitType } })
+
+            @* Hops *@
+            @Html.Partial("_RecipeDetailHops", Model.RecipeViewModel, new ViewDataDictionary(this.ViewData) { { "UnitType", Model.RecipeViewModel.UnitType } })
+
+            @* Yeast *@
+            @Html.Partial("_RecipeDetailYeasts", Model.RecipeViewModel, new ViewDataDictionary(this.ViewData) { { "UnitType", Model.RecipeViewModel.UnitType } })
+
+            @* Adjuncts *@
+            @Html.Partial("_RecipeDetailAdjuncts", Model.RecipeViewModel, new ViewDataDictionary(this.ViewData) { { "UnitType", Model.RecipeViewModel.UnitType } })
+
+            @* MashSteps *@
+            @Html.Partial("_RecipeDetailMashSteps", Model.RecipeViewModel, new ViewDataDictionary(this.ViewData) { { "UnitType", Model.RecipeViewModel.UnitType } })
+
+            @* Recipe Steps *@
+            @Html.Partial("_RecipeDetailSteps", Model.RecipeViewModel)
+        </div>
+
+        @* Nutrition Label *@
+        <div class="compliment">
+            @Html.Partial("_RecipeFacts", Model.RecipeViewModel, new ViewDataDictionary(ViewData) { { "ShowInModal", false } })
+        </div>
+    </div>
+    
+    @* Scripts Bundle *@
+    @Scripts.Render("~/bundles/js")
+    
+    <script type="text/javascript">
+        window.print();
+    </script>
+</body>
+</html>

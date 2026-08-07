@@ -1,0 +1,52 @@
+@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+
+<div id="header">
+    <a href="@Url.Action("Index", "Root")" id="logo" class="brand-mark" aria-label="OpenBrew home">
+        <img src="@Url.Content("~/img/openbrew-badge-dark.png")" alt="" />
+        <span><strong>open</strong><em>brew</em></span>
+    </a>
+	@*  Main Navigation *@
+	<div id="primary-nav" class="sf-menu-wrapper">
+		<ul class="sf-menu sf-js-enabled">
+			<li><a href="@Url.Action("Index", "Root")">Home</a></li>
+            <li class="sf-with-ul">
+                <a href="#">Tools <span class="sf-sub-indicator"> »</span></a>
+				<ul class="sub-menu">
+					<li><a href="@Url.Action("homebrew-recipe-calculator", "recipe")"><span>Homebrew Recipe Calculator</span></a></li>
+					<li><a href="@Url.Action("CalculatorsHydrometerTemp", "content")"><span>Hydrometer Correction Calculator</span></a></li>
+				<li><a href="@Url.Action("CalculatorsMashSpargeWater", "content")"><span>Mash/Sparge Water Infusion Calculator</span></a></li>
+				<li><a href="@Url.Action("Calculations", "Content")"><span>Brewing Calculators</span></a></li>
+				</ul>
+			</li>
+			<li class="sf-with-ul">
+			    <a href="#">Recipes <span class="sf-sub-indicator"> »</span></a>
+			    <ul class="sub-menu">
+			        <li><a href="@Url.Action("homebrew-recipes", "recipe")"><span>Browse Recipes</span></a></li>
+			        <li><a href="@Url.Action("dashboard", "dashboard")/#recipes"><span>My Recipes</span></a></li>
+			        <li><a href="@Url.Action("dashboard", "dashboard")/#brewsessions"><span>My Brew Sessions</span></a></li>
+			        <li><a href="@Url.Action("homebrew-recipe-calculator", "recipe")"><span>Create a New Recipe</span></a></li>
+			        <li><a href="#" class="recipe-import" rel="nofollow"><span>Import Beer Xml</span></a></li>
+			    </ul>
+			</li>
+			<li class="sf-with-ul">
+			    <a href="#">About <span class="sf-sub-indicator"> »</span></a>
+				    <ul class="sub-menu">
+				        <li><a href="@Url.Action("about","root")">About OpenBrew</a></li>
+				        <li><a href="@Url.Action("HowItWorks","Root")">How It Works</a></li>
+					<li><a href="@Url.Action("features","root")">Features</a></li>
+					<li><a href="@Url.Action("BrewingToStyle","Root")">Brewing to Style</a></li>
+				    </ul>
+			</li>
+			<li><a href="@Url.Action("Support", "Root")">Support Openbrew</a></li>
+		</ul>
+	</div>
+	@if (ViewBag.ActiveUser != null)
+	{
+		@Html.Partial("_UserInfo", ViewBag.ActiveUser as UserSummary)
+	}
+	else
+	{
+		@Html.Partial("~/Views/Auth/_HeaderGoogleLogin.cshtml")
+	}
+</div>

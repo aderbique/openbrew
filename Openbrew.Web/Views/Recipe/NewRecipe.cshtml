@@ -1,0 +1,79 @@
+﻿@using Openbrew.Web.Core.Model
+@model RecipeViewModel
+
+@{
+	ViewBag.Title = "Homebrew Recipe Calculator";
+    HtmlHelper.ClientValidationEnabled = false;
+}
+
+<div id="view-newrecipe" class="content builder-wrapper">
+    
+    @if(ViewBag.ActiveUser == null)
+    {
+        <div class="ad-sense" style="width: 728px; margin: 0 auto 18px auto;">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- openbrew - NotLoggedIn-Letterboard -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-6867430027291087"
+                 data-ad-slot="5609122905"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    
+    @* Send To Shop Intro *@
+    @if(ViewBag.RecipeCreationOptions.SendToShopSettings.IsEnabled)
+    {
+        @Html.Partial("_BuilderSendToShopIntro", ViewBag.RecipeCreationOptions.SendToShopSettings as RecipeCreationSendToShopSettings)
+    }
+    
+    @* Recipe Builder *@
+    <div class="builder primary" @(ViewBag.ActiveUser == null ? "data-isanon=true" : "")>
+        @Html.Partial("_Builder", Model)
+    </div>
+	 
+    @* Nutrition Label *@
+    <div class="catcher">
+        <!--catcher-->
+    </div>
+    <div class="compliment">
+        <div id="recipe-facts">
+            @Html.Partial("_RecipeFacts", Model)
+        </div>
+		
+        <input type="submit" id="SaveRecipeButton" class="button button_green save-recipe margintop10" value="Save Recipe" />
+     
+        @Html.Partial("_RecipeStyleGuide", Model)
+    </div>	
+    <div class="catcher">
+        <!--catcher-->
+    </div>  
+</div>
+
+<div class="clearall"> </div>
+
+@* Photo Dialog *@
+<div class="hidden">
+    
+    @using (Html.BeginForm("SaveRecipe", "Recipe", FormMethod.Post, new { id = "RecipeForm", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="RecipeJson" id="RecipeJson" />
+        <div id="PhotoDialog" class="modal">
+            @Html.Partial("~/Views/Recipe/_BuilderPhotoDialog.cshtml", Model)
+            
+            <a href="#" class="button button_green margintop20" id="SavePhotoButton">Close</a>
+            <span class="fine-print marginleft10">Your photo will be uploaded after you save your recipe.</span>              
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            Builder.initialize();
+        });
+    </script>
+}

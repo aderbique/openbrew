@@ -1,0 +1,29 @@
+﻿@using System.Runtime.Remoting.Activation
+@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model SendToShopOrderViewModel
+
+@{
+	ViewBag.Title = "Send-To-Shop";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/sendtoshop.css")" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/js/sendtoshop.js")"></script>
+}
+
+<div id="view-sendtoshop" class="content">
+    @using(Html.BeginForm())
+    {
+        @Html.HiddenFor(m => m.RecipeId)
+        
+        @Html.Partial("_Step1")
+        @Html.Partial("_Step2")
+        @Html.Partial("_Step3")                    
+    }
+</div>

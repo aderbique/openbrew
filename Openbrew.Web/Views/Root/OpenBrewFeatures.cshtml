@@ -1,0 +1,23 @@
+@{
+    Layout = "~/Views/Shared/_OpenBrewLayout.cshtml";
+    ViewBag.Title = "Features";
+    ViewBag.Description = "OpenBrew's recipe calculator, live brewing facts, flexible units, scaling, and recipe management tools.";
+}
+
+<div id="view-features" class="content features-page">
+    <header class="features-intro">
+        <p class="eyebrow">Recipe calculator and workspace</p>
+        <h2>Powerful brewing tools, made approachable.</h2>
+        <p>OpenBrew keeps the useful parts of the classic Brewgr builder: fast ingredient entry, live recipe facts, and a workflow that bends to your brew day instead of the other way around.</p>
+        <a class="button button_green" href="@Url.Action("homebrew-recipe-calculator", "Recipe")">Build a recipe</a>
+    </header>
+
+    <section class="feature-grid">
+        <article class="feature-card wide"><div><h3>Metric units and conversion</h3><p>Switch between US and metric while you build. Amounts, batch size, boil size, and compatible ingredient units convert with the recipe.</p></div><img src="@Url.Content("~/img/features/Metric-Units.jpg")" alt="Metric unit selection" /></article>
+        <article class="feature-card"><img src="@Url.Content("~/img/features/Scale.jpg")" alt="Recipe scaling" /><div><h3>Scale any batch</h3><p>Adapt a recipe from a one-gallon trial batch to a full brew day without re-entering every ingredient.</p></div></article>
+        <article class="feature-card"><img src="@Url.Content("~/img/features/Amount-Selection.jpg")" alt="Ingredient amount entry" /><div><h3>Direct amount entry</h3><p>Enter precise fermentable, hop, and adjunct amounts directly—no long dropdowns or forced rounding.</p></div></article>
+        <article class="feature-card"><div><h3>Live bitterness and recipe facts</h3><p>Choose Tinseth or Rager calculations and see gravity, color, ABV, calories, and IBU update as you work.</p></div><img src="@Url.Content("~/img/features/IBU-Indicators.jpg")" alt="IBU indicators" /></article>
+        <article class="feature-card"><img src="@Url.Content("~/img/features/Sorting.jpg")" alt="Ingredient sorting" /><div><h3>Your order, preserved</h3><p>Drag ingredients and mash steps into the order that makes sense to you. Saved recipes keep that order.</p></div></article>
+        <article class="feature-card"><img src="@Url.Content("~/img/features/Ingredient-Search.jpg")" alt="Ingredient search" /><div><h3>Find ingredients quickly</h3><p>Searchable ingredient lists make it easier to find the right malt, hop, yeast, or adjunct while you build.</p></div></article>
+    </section>
+</div>

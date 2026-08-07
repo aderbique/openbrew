@@ -1,0 +1,75 @@
+﻿@model LoginViewModel
+
+@{
+	Layout = "~/Views/Shared/_LayoutNoShell.cshtml";
+	ViewBag.Title = "Login";
+	ViewBag.Subtitle = "Sign Up";
+}
+
+<style type="text/css">
+	#middle-wrapper { position: relative; width: 725px; }
+	.oauth-note { display: none; }
+	.login { padding-top: 24px; }
+	.login-dialog-close {
+		position: absolute;
+		top: 12px;
+		right: 14px;
+		width: 34px;
+		height: 34px;
+		padding: 0;
+		border: 1px solid #cbbcad;
+		border-radius: 50%;
+		background: #fffaf3;
+		color: #4a382d;
+		font: 700 24px/30px Arial, sans-serif;
+		cursor: pointer;
+	}
+	.login-dialog-close:hover, .login-dialog-close:focus { border-color: #b87825; background: #f5e7d3; color: #7c4319; }
+	.login-dialog-close:focus { outline: 3px solid rgba(200, 111, 36, .28); outline-offset: 2px; }
+</style>
+
+
+
+@if (!ViewBag.LoginViaDialogSuccess)
+{
+    <div id="view-loginviadialog" class="content">
+		<button type="button" class="login-dialog-close" aria-label="Close sign in and return to recipe" title="Close">&times;</button>
+	    <div class="login floatleft">
+
+			<h3>Login</h3>
+
+			@Html.Partial("_GoogleLogin", new ViewDataDictionary(ViewData) { { "LoginViaDialog", true } })
+
+			@using (Html.BeginForm())
+            {
+				@Html.Partial("_LoginForm", new ViewDataDictionary(ViewData) { { "LoginViaDialog", true } })
+            }
+		</div>
+
+		@using (Html.BeginForm("SignUpViaDialog" + (!string.IsNullOrWhiteSpace(Request["editMode"]) ? "?editMode=1" : ""), "Auth", FormMethod.Post, null))
+		{
+			@Html.Partial("_SignUpForm", new SignUpViewModel())
+		}
+	    <div class="clearall"></div>
+    </div>
+	<script type="text/javascript">
+		$(function () {
+			$('.login-dialog-close').on('click', function () {
+				if (window.parent && window.parent.$ && window.parent.$.colorbox) {
+					window.parent.$.colorbox.close();
+				}
+			});
+		});
+	</script>
+}
+ else
+ {
+    @section Scripts
+    {
+        <script type="text/javascript">
+            $(function() {
+                parent.parent.loginComplete(@(Request["editMode"] == "1" ? "true" : "false"));
+            });
+        </script>
+    }
+}

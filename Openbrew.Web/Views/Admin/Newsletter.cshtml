@@ -1,0 +1,8 @@
+@model IList<Openbrew.Web.Core.Model.NewsletterSignup>
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Title = "Newsletter Subscribers";
+}
+<div id="view-admin" class="content">
+    @Html.Partial("~/Views/Admin/_NewsletterManager.cshtml", Model)
+</div>

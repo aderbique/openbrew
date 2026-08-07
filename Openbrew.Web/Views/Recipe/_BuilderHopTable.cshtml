@@ -1,0 +1,83 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+
+@model IList<RecipeHopViewModel>
+
+@{
+    RecipeCreationOptions options = ViewBag.RecipeCreationOptions;
+}
+
+<div class="groupbox">
+	<span>
+		<h3 class="floatleft">Hops</h3>
+		<div class="floatright">
+			<select id="hop-list" data-trigger="h">
+			    <option value="" data-image="/img/pixel.gif" data-imagecss="lovibond addfirst">Add Hops...</option>
+                <option value="0" data-image="/img/pixel.gif" data-imagecss="lovibond addcustom" data-aa="0">Add Custom Ingredient</option>
+                @foreach (Hop hop in ViewBag.RecipeCreationOptions.Hops)
+                {
+                    var cssClass = options.SendToShopSettings.IsEnabled ? options.SendToShopSettings.IngredientIsEnabled(hop) ? "partner-ing-yes" : "partner-ing-no" : "";
+                    <option class="@cssClass" value="@hop.IngredientId" data-aa="@hop.AA.ToString("0.0")">@hop.Name</option>    
+                }
+			</select>
+		</div>
+	</span>
+	<div class="nopadding">
+		<table data-name="h_table" class="dataTable" >
+			<thead class="@(!Model.Any() ? "hidden" : "")">
+				<tr>
+				    <td>
+				        <span data-unit="s">oz</span>
+				        <span data-unit="m">g</span>
+				    </td>
+					<td>variety </td>
+					<td>type</td>
+					<td>usage</td>
+					<td>time</td>
+					<td>AA <span class="helptip" original-title="Alpha Acids are the compounds found inside the cones of the hop plant and contribute to the bitterness of the beer">&nbsp;</span> </td>
+				    <td>IBU</td>
+                    <td>remove</td>
+				</tr>
+			</thead>
+		    <tbody>
+		        @if(!Model.Any())
+		        {
+		            <tr class="introrow">
+		                <td colspan="8">
+		                    <img src="@Url.Image("~/img/hop-cones.jpg")" width="100" height="100" alt="Hop Cones" />
+		                    <div class="content">
+		                        <h4>Add Hops for Bittering, Aroma and Freshness</h4>
+		                        Hops are the key to balancing the sweetness of your beer. They add pleasant aromas,
+		                        bitterness and aid in preserving your homebrew.
+		                    </div>
+		                </td>
+		            </tr>
+                }
+                else
+                {
+                    foreach(var hop in Model)
+                    {
+                        @Html.Partial("_BuilderHopRow", hop)
+                    }
+                }
+		    </tbody>
+			<tfoot class="@(!Model.Any() ? "hidden" : "")">
+				<tr>
+				    <td colspan="2" class="alignleft paddingleft10">
+				        <span data-name="h_Total">0</span>
+				        <span data-unit="s">oz</span>
+				        <span data-unit="m">g</span>
+				    </td>
+				    <td colspan="6" class="options recipedata">
+				        <label for="r_IbuFormula">IBU Formula:</label>
+				        <select name="r_IbuFormula" data-name="r_IbuFormula">
+				            <option value="t" @(ViewData["IbuFormula"] == "t" ? " selected=selected" : "")>Tinseth</option>
+				            <option value="r" @(ViewData["IbuFormula"] == "r" ? " selected=selected" : "")>Rager</option>
+				            <option value="b" @(ViewData["IbuFormula"] == "b" ? " selected=selected" : "")>OpenBrew</option>
+				        </select>
+				    </td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,75 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model RecipeViewModel
+
+@{
+	ViewBag.Title = "Editing " + Model.Name;
+    HtmlHelper.ClientValidationEnabled = false;
+}
+
+<div id="view-editrecipe" class="content builder-wrapper">
+
+    @* Send To Shop Intro *@
+    @if(ViewBag.RecipeCreationOptions.SendToShopSettings.IsEnabled)
+    {
+        @Html.Partial("_BuilderSendToShopIntro", ViewBag.RecipeCreationOptions.SendToShopSettings as RecipeCreationSendToShopSettings)
+    }
+
+    @using (Html.BeginForm())
+    {
+		@* Recipe Builder *@
+        <div class="builder primary">
+            @Html.Partial("_Builder", Model)
+
+            @* Tasting Notes *@
+            @Html.Partial("_TastingNoteList", Model.TastingNotes ?? new List<TastingNote>(), new ViewDataDictionary(ViewData) { { "CreatorId", Model.CreatedBy }, { "RecipeId", Model.RecipeId } })
+
+            @* Start Comments *@
+            @Html.Partial("_RecipeDetailComments", Model)
+        </div>
+		@* Nutrition Label *@
+
+        <div class="catcher">
+            <!--catcher-->
+        </div>
+
+        <div class="compliment">
+
+            <div id="recipe-facts">
+                @Html.Partial("_RecipeFacts", Model)
+            </div>
+
+            <input type="submit" id="SaveRecipeButton" class="button button_green save-recipe margintop10" value="Save Recipe" />
+
+            @if (ViewBag.RecipeCreationOptions.SendToShopSettings.IsEnabled)
+            {
+                <a href="@Url.Action("Create", "SendToShop", new { RecipeId = Model.RecipeId })" class="button button_black widebutton margintop10 ">Send to @ViewBag.RecipeCreationOptions.SendToShopSettings.PartnerName</a>
+            }
+
+            @Html.Partial("_RecipeStyleGuide", Model)
+        </div>
+
+        <div class="catcher">
+            <!--catcher-->
+        </div>
+
+    }
+</div>
+
+<div class="clearall"> </div>
+
+@* Photo Dialog *@
+<div class="hidden">
+    <div id="RecipePhotoDialog">
+        @Html.Partial("~/Views/Recipe/_BuilderPhotoDialog.cshtml", Model)
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            Builder.initialize();
+        });
+    </script>
+}

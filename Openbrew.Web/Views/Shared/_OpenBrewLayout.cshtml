@@ -1,0 +1,30 @@
+@{
+	Layout = "~/Views/Shared/_OpenBrewCoreLayout.cshtml";
+}
+
+@using Openbrew.Web
+@using Openbrew.Web.Core.Configuration
+@using ctorx.Core.Messaging
+@using Openbrew.Web.Core.Model
+
+@section Styles
+{
+    @RenderSection("Styles", false)
+}
+
+@section Scripts
+{
+    @RenderSection("Scripts", false)
+}
+
+@Html.Partial("~/Views/Shared/_SiteAnnouncement.cshtml")
+
+<div class="header-wrapper1">
+    @Html.Partial("_OpenBrewHeader")
+    @Html.Partial("_OpenBrewTitleBar")
+</div>
+
+<div id="middle-wrapper">
+    @Html.Partial("_SiteMessages", ViewBag.Messages as IList<IMessage>)
+    @RenderBody()
+</div>

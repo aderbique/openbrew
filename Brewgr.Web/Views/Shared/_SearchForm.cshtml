@@ -1,7 +1,0 @@
-﻿@model SearchViewModel
-
-<form accept-charset="UTF-8" action="@Url.Action("Search", "Search")" method="get">
-    @Html.TextBoxFor(m => m.SearchTerm, new { Placeholder = "Search for Recipes, Brewers, and More" })
-    <input type="image" src="@Url.Content("~/img/search-button.png")" alt="search"/>
-    <a href="/homebrew-recipe-finder" class="fine-print finder-link" style="">homebrew recipe finder (beta)</a>
-</form>

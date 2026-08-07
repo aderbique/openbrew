@@ -1,0 +1,36 @@
+﻿@{
+    if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
+    ViewBag.Title = "How to Calculate Final Gravity";
+    ViewBag.Description = "How to calculate the final gravity of your homebrew.";
+    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/final-gravity";
+}
+
+<div class="calculations">
+    
+    @Html.Partial("_CalculationsNavigation")
+
+    <div class="primary">
+        <h3>Calculating Final Gravity</h3>
+        
+        <div class="ad-sense" style="width: 728px; margin: 18px auto;">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- openbrew - calculations spotlight -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-6867430027291087"
+                 data-ad-slot="1178923302"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <p>Final Gravity is the measured specific gravity once fermentation has completed. During fermentation your yeast will have eaten the sugars in your wort and pooped out carbon dioxide and alcohol (this is a very complex process where the yeast use a wide range of enzymes producing many by-products, way more in depth than we have time for here). The process removes some of the sugar content making your wort less dense. Remember that specific gravity is a measure of density, see calculating Original Gravity for more information.</p>
+        <p>The amount of gravity that disappears from your wort is called attenuation. This is a percentage letting you know how much the density will drop or how much sugar the yeast will consume. Yeast manufacturers will publish the apparent attenuation ranges of their yeast strains. Most yeast strains attenuation is between 65% - 85%. To calculate the attenuation of your homebrew you can use the following formula:</p>
+        <p class="formula">Attenuation = ((Original Gravity - Final Gravity)/(Original Gravity - 1)) * 100</p>
+        <p>In openbrew’s homebrew recipe builder you provide the yeast you will be using. Based on this we use the published attenuation and estimate your final gravity:</p>
+        <p class="formula">Final Gravity = 1 + ((Total Gravity Points * (1 - Attenuation Percent)) / 1000)</p>
+        <p>If you need to change the attenuation based on your setup you can do so.</p>
+        <p class="screenshot"><img src="/img/calculation_attenuation.png" width="521" height="113" alt="Calculate Original Gravity PPG OpenBrew" /></p>
+        <p>The final gravity is just an estimate based on the rating of the yeast. The fermentability of your wort will have a huge impact on what your final gravity will be. The amount of fermentable sugars in your wort is really what will determine your final gravity but this will be a good estimate. Once you become familiar with your equipment and process you will be able to estimate your attenuation more precise.</p>
+    </div>
+</div>

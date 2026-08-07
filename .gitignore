@@ -200,3 +200,8 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+.openbrew.dev.env
+.env
+.env.*
+!.env.example
+.DS_Store

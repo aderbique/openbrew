@@ -1,0 +1,83 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Configuration
+@using Openbrew.Web.Core.Model
+@using ctorx.Core.Formatting
+@model BrewSessionSummaryViewModel
+
+
+<div class="dashboard-item">
+    @if (Model.ShowAddedBy)
+    {
+        <div class="image">
+            <a href="@Url.UserProfileUrl(Model.BrewedByUsername)"><img src="@Model.GetAvatar(50)" width="50" height="50" alt="@Model.BrewedByUsername" /></a>
+        </div>
+    }
+    <div class="details">
+        @if (Model.ShowAddedBy)
+        {
+            <h3 class="username"><a href="@Url.UserProfileUrl(Model.BrewedByUsername)">@Model.BrewedByUsername</a></h3>
+            <text>added a brew session on @Model.DateCreated.ToShortDateString()</text> 
+        }
+        <div class="session">
+            <div class="image">
+                <a href="@Url.BrewSessionDetailUrl(Model.BrewSessionId, Model.RecipeName)"><img src="@Url.RecipeThumbnailUrl(Model.RecipeImageUrlRoot, Model.RecipeSrm)" alt="@Model.RecipeName" height="80" width="80" /></a>
+            </div>
+            <div class="session-details">
+                <h3 class="name"><a href="@Url.BrewSessionDetailUrl(Model.BrewSessionId, Model.RecipeName)">@Model.RecipeName</a></h3> @if (!Model.ShowAddedBy){ <text>brewed on @Model.BrewDate.ToShortDateString()</text> }
+                <div class="data">
+                    @if (Model.HasWaterInfusion)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>Water Infusion</span>
+						</span>
+					}
+					@if (Model.HasMashBoil)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>@(Model.GetRecipeType() == RecipeType.Extract ? "Boil" : "Mash/Boil")</span>
+						</span>
+					}
+					@if (Model.HasFermentation)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>Fermentation</span>
+						</span>
+					}
+					@if (Model.HasConditioning)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>Conditioning</span>
+						</span>
+					}
+					@if (Model.HasTastingNotes)
+					{
+						<span class="datapoint">
+							<img src="@Url.Image("~/img/icons/accept.png")" />
+							<span>Tasting Notes</span>
+						</span>
+					}
+				</div>
+
+				<div class="actions">
+					@if (ViewBag.ActiveUser != null && Model.WasBrewedBy(ViewBag.ActiveUser.UserId))
+					{
+						<a href="@Url.EditBrewSessionUrl(Model.BrewSessionId)" class="button button_gray button_small">Edit</a>
+						<a href="#" class="button button_gray button_small delete-brewsession" data-brewsessionid="@Model.BrewSessionId">Delete</a>
+					}
+					<a href="@Url.RecipeDetailUrl(Model.RecipeId, Model.RecipeName, !string.IsNullOrWhiteSpace(Model.RecipeBjcpStyleSubCategoryId) ? Model.RecipeBjcpStyleName : null)" class="button button_gray button_small">Go To Recipe</a>
+				</div>
+                
+                @* Start Comments *@
+                @Html.Partial("_Comments", Model.CommentWrapperViewModel)
+
+            </div>
+            <div class="clearall"></div>
+        </div>
+
+    </div>
+</div>
+<div class="clearall"></div>

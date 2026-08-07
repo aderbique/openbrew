@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#120d0a"/>
+      <stop offset="100%" stop-color="#261915"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="28%" r="64%">
+      <stop offset="0%" stop-color="#ffe3bd" stop-opacity="0.88"/>
+      <stop offset="58%" stop-color="#ffe3bd" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#ffe3bd" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f7e1b7"/>
+      <stop offset="48%" stop-color="#efb85f"/>
+      <stop offset="100%" stop-color="#cb6e23"/>
+    </linearGradient>
+    <linearGradient id="foam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff6ea"/>
+      <stop offset="100%" stop-color="#ead8bf"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7cb08a"/>
+      <stop offset="100%" stop-color="#486952"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="108" fill="url(#tile)"/>
+  <circle cx="188" cy="150" r="152" fill="url(#halo)"/>
+  <circle cx="386" cy="118" r="28" fill="#dc8835" fill-opacity="0.2"/>
+  <ellipse cx="256" cy="405" rx="124" ry="17" fill="#0f0907" fill-opacity="0.25"/>
+
+  <g transform="translate(102 86)" shape-rendering="geometricPrecision">
+    <path d="M88 238c0-11 9-20 20-20h108c11 0 20 9 20 20v76c0 28-23 51-51 51h-46c-28 0-51-23-51-51v-76Z" fill="url(#glass)"/>
+    <path d="M232 240c29 0 52 23 52 52s-23 52-52 52" fill="none" stroke="url(#glass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+    <path d="M98 158c0-10 8-18 18-18h82c10 0 18 8 18 18v20H98v-20Z" fill="url(#foam)"/>
+    <circle cx="124" cy="160" r="14" fill="#fff7ec"/>
+    <circle cx="170" cy="152" r="18" fill="#fff7ec"/>
+    <circle cx="206" cy="162" r="12" fill="#fff7ec"/>
+    <path d="M112 190c18 14 56 14 74 0" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="8" stroke-opacity="0.34"/>
+    <path d="M126 244c0-15 12-28 28-28s28 13 28 28v64c0 16 13 29 29 29h18" fill="none" stroke="#ead7bf" stroke-linecap="round" stroke-width="22"/>
+    <path d="M124 232c0-16 13-30 30-30s30 14 30 30" fill="none" stroke="#fff4df" stroke-linecap="round" stroke-width="12" stroke-opacity="0.48"/>
+    <path d="M116 330c40-18 84-18 130 0" fill="none" stroke="#f1ddb4" stroke-linecap="round" stroke-width="10" stroke-opacity="0.48"/>
+    <path d="M260 126c8-14 22-22 38-24" fill="none" stroke="url(#accent)" stroke-linecap="round" stroke-width="12"/>
+    <path d="M278 136c0-14 11-26 25-26s25 12 25 26-11 26-25 26-25-12-25-26Z" fill="url(#accent)" opacity="0.95"/>
+    <circle cx="289" cy="130" r="4" fill="#f7eddc" fill-opacity="0.7"/>
+  </g>
+</svg>

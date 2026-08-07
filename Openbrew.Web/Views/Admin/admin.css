@@ -1,0 +1,49 @@
+﻿/* ---- [ admin general ] ---------------------------------------------> */
+	#view-admin {font-size: 14px; }
+	.data { margin-bottom: 4px; }
+	.data label { display: inline-block; width: 175px; font-weight: bold; }
+	.data span { display: inline-block; }
+	hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+	#view-admin a:link { text-decoration: underline; }
+	#view-admin a.button:link { text-decoration: none; vertical-align: middle; }
+	b { font-weight: bold;}
+	div.limitheight { height: 210px; overflow-y: auto;}
+	.username { width: 200px; }
+
+/* ---- [ admin tables ] ---------------------------------------------> */
+	table.admin-table { border: solid 1px #ccc; border-collapse: collapse; width: 100%; }
+	table.admin-table td { border: solid 1px #ccc; padding: 8px; }
+	table.admin-table th { background-color: #aaa; color: #fff; font-weight: bold; text-align: left; padding: 8px; }
+	table.admin-table tr.even td { background-color: #eee; }
+	.recent-custom-ingredients { font-size: 12px; }
+	.recent-custom-ingredients small { color: #666; }
+	.ingredient-review-status { border-radius: 999px; display: inline-block; font-size: 11px; font-weight: bold; padding: 3px 7px; white-space: nowrap; }
+	.ingredient-review-status.is-public { background: #dcefdc; color: #215d28; }
+	.ingredient-review-status.is-pending { background: #fff0c8; color: #735300; }
+	.recent-logins code { color: #444; font-size: 11px; }
+	/* ---- [ newsletter subscribers ] ----------------------------------> */
+	.newsletter-admin-summary { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+	.newsletter-admin-summary span { background: #f3f1ea; border-radius: 999px; padding: 7px 12px; }
+	.newsletter-admin-add { background: #f7f5ef; border: 1px solid #ded8ca; border-radius: 6px; margin: 18px 0; padding: 16px; }
+	.newsletter-admin-add h2 { margin: 0 0 5px; }
+	.newsletter-admin-add p { margin: 0 0 12px; }
+	.newsletter-admin-form { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+	.newsletter-admin-form label { font-weight: bold; }
+	.newsletter-admin-form input { min-width: 240px; padding: 7px 8px; }
+	.newsletter-status { border-radius: 999px; display: inline-block; font-size: 12px; font-weight: bold; padding: 4px 8px; white-space: nowrap; }
+	.newsletter-status.is-subscribed { background: #dcefdc; color: #215d28; }
+	.newsletter-status.is-pending { background: #fff0c8; color: #735300; }
+	.newsletter-status.is-unsubscribed { background: #e7e7e7; color: #555; }
+	.newsletter-admin-table-wrap { overflow-x: auto; }
+	.newsletter-admin-actions { white-space: nowrap; }
+	.newsletter-admin-actions form { display: inline-block; margin: 0 4px 0 0; }
+	.newsletter-delete { background: #a33; border-color: #8c2525; color: #fff; }
+	@media (max-width: 720px) { .newsletter-admin-table { font-size: 12px; min-width: 700px; } .newsletter-admin-table th, .newsletter-admin-table td { padding: 5px; } }
+
+/* ---- [ import-products ] ---------------------------------------------> */
+	#view-importproducts .affiliate { margin-top: 12px; }
+	#view-importproducts .image { float: left; width: 125px; height: 60px; background-color: #fff; border: solid 1px #ccc; padding: 12px; margin-right: 12px; }
+	#view-importproducts .details { margin-left: 18px; padding-top: 4px;  }
+	#view-importproducts .details h3 a { color: #333;  }
+	#view-importproducts .details form input[type=file] { margin-top: 8px; border: dashed 1px #ccc;   }
+	#view-importproducts .details form .button { padding: 6px 14px;  }

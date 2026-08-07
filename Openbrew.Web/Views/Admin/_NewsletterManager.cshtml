@@ -1,0 +1,60 @@
+@using System.Linq
+@model IList<Openbrew.Web.Core.Model.NewsletterSignup>
+@{
+    var activeCount = Model.Count(x => x.IsConfirmed && !x.IsUnsubscribed);
+    var pendingCount = Model.Count(x => !x.IsConfirmed && !x.IsUnsubscribed);
+    var unsubscribedCount = Model.Count(x => x.IsUnsubscribed);
+}
+<section class="newsletter-admin">
+    <h1>Newsletter subscribers</h1>
+    <p>Manage every newsletter address in one place. Only the <strong>@activeCount confirmed subscriber@(activeCount == 1 ? "" : "s")</strong> should receive newsletter mail.</p>
+
+    <div class="newsletter-admin-summary">
+        <span><strong>@activeCount</strong> subscribed</span>
+        <span><strong>@pendingCount</strong> awaiting confirmation</span>
+        <span><strong>@unsubscribedCount</strong> unsubscribed</span>
+    </div>
+
+    <section class="newsletter-admin-add">
+        <h2>Add a subscriber</h2>
+        <p>Use this only for an address that has explicitly consented to receive the newsletter. Admin-added addresses are marked confirmed.</p>
+        @using (Html.BeginForm("AddNewsletterSubscriber", "Admin", FormMethod.Post, new { @class = "newsletter-admin-form" }))
+        {
+            <label for="newsletter-email-address">Email address</label>
+            <input id="newsletter-email-address" name="emailAddress" type="email" required="required" placeholder="brewer@example.com" />
+            <button class="button button_green" type="submit">Add confirmed subscriber</button>
+        }
+    </section>
+
+    <div class="newsletter-admin-table-wrap">
+        <table class="admin-table newsletter-admin-table">
+            <thead><tr><th>Email</th><th>Source</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+            @foreach (var subscriber in Model)
+            {
+                var status = subscriber.IsUnsubscribed ? "Unsubscribed" : subscriber.IsConfirmed ? "Subscribed" : "Awaiting confirmation";
+                var statusClass = subscriber.IsUnsubscribed ? "is-unsubscribed" : subscriber.IsConfirmed ? "is-subscribed" : "is-pending";
+                <tr>
+                    <td><a href="mailto:@subscriber.EmailAddress">@subscriber.EmailAddress</a></td>
+                    <td>@(string.IsNullOrWhiteSpace(subscriber.Source) ? "—" : subscriber.Source)</td>
+                    <td>@subscriber.DateCreated.ToShortDateString()</td>
+                    <td><span class="newsletter-status @statusClass">@status</span></td>
+                    <td class="newsletter-admin-actions">
+                        @using (Html.BeginForm("SetNewsletterSubscriberStatus", "Admin", FormMethod.Post))
+                        {
+                            <input type="hidden" name="newsletterSignupId" value="@subscriber.NewsletterSignupId" />
+                            <input type="hidden" name="isUnsubscribed" value="@(subscriber.IsUnsubscribed ? "false" : "true")" />
+                            <button class="button button_gray button_small" type="submit">@(subscriber.IsUnsubscribed ? "Restore" : "Unsubscribe")</button>
+                        }
+                        @using (Html.BeginForm("DeleteNewsletterSubscriber", "Admin", FormMethod.Post, new { @class = "newsletter-delete-form" }))
+                        {
+                            <input type="hidden" name="newsletterSignupId" value="@subscriber.NewsletterSignupId" />
+                            <button class="button button_small newsletter-delete" type="submit" onclick="return confirm('Delete this newsletter subscriber record permanently?');">Delete</button>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

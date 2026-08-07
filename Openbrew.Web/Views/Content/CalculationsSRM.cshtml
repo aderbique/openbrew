@@ -1,0 +1,36 @@
+﻿@{
+    if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
+    ViewBag.Title = "How to Calculate SRM/Beer Color";
+    ViewBag.Description = "How to calculate the SRM/beer color of your homebrew.";
+    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/srm-beer-color";
+}
+
+<div class="calculations">
+    
+    @Html.Partial("_CalculationsNavigation")
+
+    <div class="primary">
+        <h3>Calculating SRM/Beer Color</h3>
+        
+        <div class="ad-sense" style="width: 728px; margin: 18px auto;">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- openbrew - calculations spotlight -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-6867430027291087"
+                 data-ad-slot="1178923302"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <p>The original scale to measure beer color is called degrees lovibond and was created by Joseph Williams Lovibond. By comparing the beer to glass slides one could determine the closest degree lovibond. Due to limitations with the way people perceive color and the invention of the spectrophotometer a new system was created, the Standard Reference Method (SRM) and European Brewing Convention (EBC). The SRM method contains the procedure of a spectrophotometer to measure the light of a specific wavelength, 430 nanometers, as it passes through a sample of homebrew contained in a cuvette in the light path of the spectrophotometer. Lighter values have a lower SRM number and darker values have a higher SRM number. SRM values over 50 are considered black.</p>       
+        <p>Based on the Lovibond number of your malt you are able to estimate the color of your homebrew. Because homebrew systems are different this is just an estimate. Boil time, kettle caramelization, and different procedures can all have an effect on the color. Remember Lovibond is used to measure the malt and SRM is used for the final color for the beer. At openbrew we use the Dan Morey method for estimating homebrew SRM. First we determine the Malt Color Units (MCU). A Malt Color Units (MCU) is the color of each grain times the grain weight in pounds divided by the batch volume in gallons. When more than one fermentable is used, the MCU color is calculated for each fermentable and then added together.</p>
+        <p class="formula">MCU = (Grain Color * Grain Weight lbs.)/Volume in Gallons</p>
+        <p>This works great for beers that are light in color but due to the fact that light absorbance is logarithmic and not linear we need to use the Morey equation:</p>
+        <p class="formula">SRM Color = 1.49 * (MCU * 0.69)</p>
+        <p>If you need to change the Lovibond for a particular fermentable you can easily do that in openbrew’s Recipe Builder:</p>
+        <p class="screenshot"><img src="/img/calculation_srm.png" width="521" height="114" alt="Calculate SRM Beer Color openbrew" /></p>
+        <p>Remember that this is just an estimate. We highly recommend picking up a color chart from your local homebrew shop and start taking notes on your homebrews. This will help you learn how your homebrew system effects SRM color vs. these homebrew color calculations.</p>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model PartnerDashboardViewModel
+
+@{
+    Layout = "_PartnerLayout.cshtml";
+	ViewBag.Title = Model.Partner.Name;
+}
+
+<ul class="breadcrumbs">
+    <li><a href="@Url.Action("Index", "Root")">openbrew</a></li>
+    <li>Partner Dashboard</li>
+</ul>
+
+<div id="view-partnerdashboard" class="content">
+    
+    <div class="primary">
+        
+        <h2 class="marginbottom10">Partner Tools</h2>
+        <p>
+            Welcome to the openbrew partner dashboard.  From here you can change your partner account settings as
+            well as settings for any services that you are enrolled in.
+        </p>
+    
+        <h3 class="marginbottom10 margintop10">Active Services</h3>
+        
+        @if(!Model.Services.Any())
+        {
+            <p>You are currently not enrolled in any services.  Contact your openbrew representative
+                for details on how to enroll.
+            </p>
+        }
+        else
+        {
+            <ul class="services margintop20">
+                @if(Model.HasService(PartnerServiceType.SendToShop))
+                {
+                    <li>
+                        <h4 class="marginbottom0">Send to Shop</h4>
+                        <div class="margintop2">
+                            <a href="@Url.Action("ServiceSettings", new { partnerServiceTypeId = (int)PartnerServiceType.SendToShop })">Settings</a> &nbsp;|&nbsp;
+                            <a href="@Url.Action("SendToShopIngredients", new { partnerId = Model.Partner.PartnerId })">Ingredients</a>
+                        </div>
+                    </li>
+                }
+                @if(Model.HasService(PartnerServiceType.BrewShopDirectory))
+                {
+                    <li><a href="@Url.Action("ServiceSettings", new { partnerServiceTypeId = (int)PartnerServiceType.BrewShopDirectory })">Brew Shop Directory</a></li>
+                }
+            </ul>
+        }  
+
+    </div>
+    <div class="compliment">
+        
+        <div id="partner-info" class="graybox rounded padding20 marginbottom20">
+            <h3 class="marginbottom10 floatleft">Partner Info</h3>
+            <a href="@Url.Action("Settings", new { partnerId = Model.Partner.PartnerId })" class="settings-link inline-block floatright marginbottom10">
+                <img src="/img/icons/cog.png" alt="Settings" class="valignmiddle" /><span class="valignmiddle inline-block marginleft10">Settings</span>
+            </a>
+            
+            <div class="clearall marginbottom10"></div>
+
+            <ul class="marginbottom20">
+                <li><span>Name</span> @Model.Partner.Name</li>
+                <li><span>Status</span> Active</li>
+                <li><span>Partner Since</span> @Model.Partner.DateCreated.ToShortDateString()</li>
+                <li><span>Partner Key</span> @Model.Partner.Token</li>
+                <li class="margintop20"><span>Partner Url</span><br /><a class="service-link" href="@Url.RootUrl()?pid=@Model.Partner.Token">@Url.RootUrl()?pid=@Model.Partner.Token</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="clearall"></div>
+</div>

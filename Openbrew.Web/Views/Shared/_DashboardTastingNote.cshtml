@@ -1,0 +1,36 @@
+﻿@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model Openbrew.Web.Core.Model.TastingNote
+
+<div class="dashboard-item">
+    <div class="image">
+        <a href="@Url.UserProfileUrl(Model.User.CalculatedUsername)"><img src="@UserAvatar.GetAvatar(50, Model.User.EmailAddress)" width="50" height="50" alt="@Model.User.CalculatedUsername" /></a>
+    </div>
+    <div class="details">
+        <h3 class="username"><a href="@Url.UserProfileUrl(Model.User.CalculatedUsername)">@Model.User.CalculatedUsername</a></h3>
+        <text>logged tasting notes on @Model.DateCreated.ToShortDateString()</text>
+
+        <div class="tasting-note">
+
+            <h4 class="tasting-title">Tasted on @Model.TasteDate.ToShortDateString()</h4>
+
+            <span id="star-@Model.TastingNoteId" class="rating" data-raty-rating="@Model.Rating"></span>
+
+            <div class="clearall"> </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Notes))
+            {
+                <div class="item">
+                    <span class="marginbottom5 bold">Notes:</span>
+                    <p class="marginbottom5">
+                        @Model.Notes
+                    </p>
+                </div>
+            }
+        </div>	
+
+    </div>
+</div>
+<div class="clearall"></div>
+
+

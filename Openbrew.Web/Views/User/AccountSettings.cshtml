@@ -1,0 +1,38 @@
+﻿@using Openbrew.Web.Core.Model
+@model UserSettingsViewModel
+
+@{
+	ViewBag.Title = "Settings";
+}
+
+<div id="view-settings" class="content">
+		
+    <div class="tabs">
+        <div class="tab-ainner">
+            <ul class="nav clearfix">
+                <li id="tab1"><a href="#tab-tab-1">Personal Info</a></li>
+                <li id="tab2"><a href="#tab-tab-2">Password</a></li>
+                <li id="tab3"><a href="#tab-tab-3">Notifications</a></li>
+                <li id="tab4"><a href="#tab-tab-4">Appearance</a></li>
+				<li id="tab5"><a href="#tab-tab-5">Newsletter</a></li>
+            </ul>
+            <div id="tab-tab-1" class="tab">
+                @Html.Partial("_PersonalInfo", Model)
+            </div>
+            <div id="tab-tab-2" class="tab">
+                @Html.Partial("_ChangePassword", new ChangePasswordViewModel())
+            </div>
+            <div id="tab-tab-3" class="tab">
+                @Html.Partial("_Notifications", Model)
+            </div>
+            <div id="tab-tab-4" class="tab">
+                @Html.Partial("_Appearance")
+            </div>
+			<div id="tab-tab-5" class="tab">
+				@Html.Partial("_Newsletter")
+			</div>
+
+        </div>
+    </div>
+    <div class="clearall"></div>
+</div>

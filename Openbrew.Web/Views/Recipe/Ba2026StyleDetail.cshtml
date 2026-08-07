@@ -1,0 +1,102 @@
+@using Openbrew.Web
+@using ctorx.Core.Formatting
+@model Openbrew.Web.Models.Ba2026StyleDetailViewModel
+@{
+    ViewBag.Title = Model.Name + " Style Guide";
+    var createUrl = Url.Action("homebrew-recipe-calculator", "Recipe", new { styleCatalog = "ba-2026", styleId = Model.Id, styleName = Model.Name }, Url.Https());
+}
+
+<div class="content ba-style-detail">
+    <a class="back-link" href="@Url.Action("homebrew-recipes", "Recipe")">&larr; All 2026 beer styles</a>
+    <section class="ba-style-hero">
+        <img src="/img/style-catalog/ba-2026/@(Model.Id).png" alt="@Model.Name beer appearance" />
+        <div>
+            <span class="eyebrow">Brewers Association 2026 guidelines</span>
+            <h1>@Model.Name</h1>
+            <p class="ba-style-intro">@Model.Description</p>
+            <a class="button button_green" href="@createUrl">Create a @Model.Name Recipe</a>
+        </div>
+    </section>
+
+    @if (Model.TastingNotes.Any())
+    {
+    <section class="ba-tasting-notes">
+        <h2>Tasting notes</h2>
+        <p>@string.Join(" · ", Model.TastingNotes)</p>
+    </section>
+    }
+    <section class="ba-sensory-profile">
+        <h2>Style character</h2>
+        <div class="ba-sensory-grid">
+            @if (!string.IsNullOrWhiteSpace(Model.VisualCue)) { <div><strong>Appearance</strong><span>@Model.VisualCue</span></div> }
+            @if (!string.IsNullOrWhiteSpace(Model.BalanceCue)) { <div><strong>Balance</strong><span>@Model.BalanceCue</span></div> }
+            @if (!string.IsNullOrWhiteSpace(Model.BodyCue)) { <div><strong>Mouthfeel</strong><span>@Model.BodyCue</span></div> }
+            @if (!string.IsNullOrWhiteSpace(Model.MaltCue)) { <div><strong>Malt</strong><span>@Model.MaltCue</span></div> }
+            @if (!string.IsNullOrWhiteSpace(Model.HopCue)) { <div><strong>Hops</strong><span>@Model.HopCue</span></div> }
+            @if (!string.IsNullOrWhiteSpace(Model.FermentationCue)) { <div><strong>Fermentation</strong><span>@Model.FermentationCue</span></div> }
+        </div>
+    </section>
+
+    <section class="ba-guideline-facts">
+        <div><strong>Bitterness</strong><span>@Model.Bitterness IBU</span></div>
+        <div><strong>Color</strong><span>@Model.Color</span></div>
+        <div><strong>Original gravity</strong><span>@Model.OriginalGravity</span></div>
+        <div><strong>Final gravity</strong><span>@Model.FinalGravity</span></div>
+        <div><strong>Alcohol</strong><span>@Model.Alcohol</span></div>
+    </section>
+
+    <section class="ba-style-recipes">
+        <h2>@Model.Name Recipes</h2>
+        @if (Model.Recipes.Any())
+        {
+            <p class="ba-recipe-results-intro">Recipes currently published in OpenBrew for this 2026 style.</p>
+            <div class="recipe-list ba-recipe-list">
+            @foreach (var recipe in Model.Recipes)
+            {
+                var summary = recipe.RecipeSummary;
+                var styleName = !string.IsNullOrWhiteSpace(recipe.CatalogStyleName) ? recipe.CatalogStyleName : (summary != null ? summary.BJCPStyleName : null);
+                <article class="recipe ba-recipe-card">
+                    <div class="image">
+                        <a href="@Url.RecipeDetailUrl(recipe.RecipeId, recipe.RecipeName, styleName)"><img src="@Url.RecipeThumbnailUrl(recipe.ImageUrlRoot, recipe.Srm)" alt="@recipe.RecipeName" height="80" width="80" /></a>
+                    </div>
+                    <div class="details">
+                        <h3 class="name"><a href="@Url.RecipeDetailUrl(recipe.RecipeId, recipe.RecipeName, styleName)">@recipe.RecipeName</a></h3>
+                        <span class="author">by <a href="@Url.UserProfileUrl(recipe.User != null ? recipe.User.CalculatedUsername : "openbrew")">@(recipe.User != null ? recipe.User.CalculatedUsername : "OpenBrew member")</a> on @recipe.DateCreated.ToShortDateString()</span>
+                        <div class="data">
+                            @(summary != null ? summary.GetRecipeTypeName() : HumanReadableFormatter.AddSpacesToPascalCaseString(((Openbrew.Web.Core.Model.RecipeType)recipe.RecipeTypeId).ToString())) |
+                            @recipe.BatchSize.ToString("0.##") @(recipe.GetUnitType() == Openbrew.Web.Core.Model.UnitType.USStandard ? "Gallon" : "Liter")(s) |
+                            @(!string.IsNullOrWhiteSpace(styleName) ? styleName : "Unknown Style") |
+                            @recipe.Abv.ToString("F1") % ABV
+                        </div>
+                        <div class="actions">
+                            <a href="@Url.RecipeCloneUrl(recipe.RecipeId)" class="button button_gray button_small" rel="nofollow">Clone This</a>
+                            @if (summary != null && summary.BrewSessionCount > 0) { <a href="@Url.RecipeBrewSessionsUrl(recipe.RecipeId, recipe.RecipeName)" class="button button_gray button_small">Brew Sessions</a> }
+                            @if (ViewBag.ActiveUser != null && recipe.WasCreatedBy(ViewBag.ActiveUser.UserId))
+                            {
+                                if (recipe.IsPublic) { <a href="@Url.NewBrewSessionUrl(recipe.RecipeId)" class="button button_gray button_small">Brew This</a> }
+                                <a href="@Url.RecipeEditUrl(recipe.RecipeId)" class="button button_gray button_small">Edit</a>
+                                <a href="#" class="button button_gray button_small delete-recipe" data-recipeid="@recipe.RecipeId">Delete</a>
+                            }
+                        </div>
+                    </div>
+                    <div class="clearall"></div>
+                    @if (!string.IsNullOrWhiteSpace(recipe.Description))
+                    {
+                        <div class="description">@StringCleaner.CleanForPreviewText(recipe.Description, 500)@(recipe.Description.Length > 500 ? "..." : "")</div>
+                    }
+                    @if (recipe.RecipeMetaData != null && (recipe.RecipeMetaData.AverageRating > 0 || recipe.RecipeMetaData.CommentCount > 0 || recipe.RecipeMetaData.TastingNoteCount > 0))
+                    {
+                        <div class="ba-recipe-signals">@(recipe.RecipeMetaData.AverageRating > 0 ? string.Format("★ {0:0.0}", recipe.RecipeMetaData.AverageRating) : "") @(recipe.RecipeMetaData.CommentCount > 0 ? recipe.RecipeMetaData.CommentCount + " comments" : "") @(recipe.RecipeMetaData.TastingNoteCount > 0 ? recipe.RecipeMetaData.TastingNoteCount + " tasting notes" : "")</div>
+                    }
+                </article>
+            }
+            </div>
+        }
+        else
+        {
+            <p>No published recipes match this style yet. Be the first to brew one.</p>
+            <a class="button button_green" href="@createUrl">Create a @Model.Name Recipe</a>
+        }
+    </section>
+    <p class="fine-print">Style data is sourced from the <a href="https://www.brewersassociation.org/edu/brewers-association-beer-style-guidelines/" rel="noopener" target="_blank">Brewers Association 2026 Beer Style Guidelines</a>. Perceived bitterness can differ from measured IBU.</p>
+</div>

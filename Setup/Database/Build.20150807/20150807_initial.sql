@@ -2836,7 +2836,7 @@ INSERT [dbo].[NotificationType] ([NotificationTypeId], [NotificationTypeName]) V
 GO
 INSERT [dbo].[NotificationType] ([NotificationTypeId], [NotificationTypeName]) VALUES (50, N'RecipeBrewComment')
 GO
-INSERT [dbo].[OAuthProvider] ([OAuthProviderId], [OAuthProviderName], [IsActive]) VALUES (10, N'Facebook', 1)
+INSERT [dbo].[OAuthProvider] ([OAuthProviderId], [OAuthProviderName], [IsActive]) VALUES (10, N'Google', 1)
 GO
 INSERT [dbo].[PartnerServiceType] ([PartnerServiceTypeId], [PartnerServiceTypeName]) VALUES (10, N'SendToShop')
 GO

@@ -1,0 +1,32 @@
+﻿@model LoginViewModel
+
+@{
+	ViewBag.Title = "Login";
+	ViewBag.Subtitle = "Sign Up";
+}
+
+@section Styles
+{
+	<meta name="google-signin-client_id" content="@ViewBag.GoogleAuthClientId" />
+}
+
+<div id="view-login" class="content">
+	<div class="login floatleft marginright20">
+		
+		<h3>Login</h3>
+
+		@Html.Partial("_GoogleLogin")
+
+		@using (Html.BeginForm())
+		{
+			@Html.Partial("_LoginForm")
+		}
+	</div>
+	
+	@using (Html.BeginForm("SignUp", "Auth", FormMethod.Post, null))
+	{
+		@Html.Partial("_SignUpForm", new SignUpViewModel())
+	}
+		
+	<div class="clearall"></div>
+</div>

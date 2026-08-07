@@ -1,0 +1,41 @@
+@using Openbrew.Web
+@using Openbrew.Web.Core.Model
+@model Openbrew.Web.Core.Model.SiteStats
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+	ViewBag.Title = "Admin Tools";
+}
+
+<div id="view-admin" class="content">
+    <div class="tabs">
+		<div class="tab-inner">
+			<ul class="nav clearfix">
+				<li><a href="#tab-tab-1">Summary</a></li>
+				<li><a href="#tab-tab-2">System</a></li>
+				<li><a href="#tab-tab-3">Feedback</a></li>
+				<li><a href="#tab-tab-4">Custom Ingredients</a></li>
+				<li><a href="#tab-tab-5">Styles</a></li>
+				<li><a href="#tab-tab-6">Newsletter</a></li>
+			</ul>
+			<div id="tab-tab-1" class="tab">
+				@Html.Partial("~/Views/Admin/_Summary.cshtml")
+			</div>
+			<div id="tab-tab-2" class="tab">
+				@Html.Partial("~/Views/Admin/_System.cshtml")
+			</div>
+			<div id="tab-tab-3" class="tab">
+				@Html.Partial("~/Views/Admin/_Feedback.cshtml")
+			</div>
+			<div id="tab-tab-4" class="tab">
+				@Html.Partial("~/Views/Admin/_CustomIngredients.cshtml")
+			</div>
+		    <div id="tab-tab-5" class="tab">
+				@Html.Partial("~/Views/Admin/_Styles.cshtml")
+			</div>
+			<div id="tab-tab-6" class="tab">
+				@Html.Partial("~/Views/Admin/_NewsletterManager.cshtml", ViewBag.NewsletterSubscribers as IList<NewsletterSignup>)
+			</div>
+		</div>
+	</div>
+
+</div>

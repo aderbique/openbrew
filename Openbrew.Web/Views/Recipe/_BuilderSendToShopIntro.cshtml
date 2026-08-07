@@ -1,0 +1,47 @@
+﻿@using Openbrew.Web
+@model Openbrew.Web.Core.Model.RecipeCreationSendToShopSettings
+           
+<style type="text/css">
+    #sendtoshop-intro { background-color: #EAF8FF; border: solid 4px #B4D6E7; padding: 18px; border-radius: 8px; margin-bottom: 18px; text-align: center; }
+    #sendtoshop-intro h3 { color: #68A1BD; display: inline-block; margin-bottom: 0; }
+    #sendtoshop-intro h3 a {display: inline-block; margin-left: 12px; color: #68A30D  !important; }
+    #sendtoshop-intro h3 a {display: inline-block; margin-left: 12px; }
+
+    #sendtoshop-learnmore h2 { margin-bottom: 12px;}
+    #sendtoshop-learnmore p { font-size: 14px; }
+    #sendtoshop-learnmore img { display: inline-block; vertical-align: middle; margin-top: -4px; }
+
+</style>
+
+<div id="sendtoshop-intro">
+    <h3>This tool has been customized for @(Model.PartnerName).  <a href="#">Learn More.</a></h3>
+</div>
+
+<div class="hidden">
+    <div id="sendtoshop-learnmore" class="modal">
+        <h2>Welcome @Model.PartnerName Customers!</h2>
+        <p>
+            OpenBrew offers a feature to homebrew shops and homebrewers called <span class="bold">Send-To-Shop.</span>
+            This service allows you to send recipes to @Model.PartnerName so that the
+            ingredients can be prepared for you ahead of time and ready for pick up when you come in.
+        </p>
+        <p>
+            This service can be used for any recipe on OpenBrew, however, if @Model.PartnerName
+            does not stock the ingredient used in a recipe, you'll have to decide on a
+            substitution ingredient or it will not be included in your order.
+        </p>
+        
+        <div class="marginleft10 marginright10">
+            <h4 class="marginbottom10">TIP for people building their own recipes</h4>    
+            <p>
+                Ingredients stocked by @Model.PartnerName are marked with <img src="@Url.Image("~/img/icons/bullet_tick.png")" alt="" /> whereas ingredients 
+                not available at @Model.PartnerName will be marked with <img src="@Url.Image("~/img/icons/bullet_cross.png")" alt="" />.
+            </p>
+        </div>
+        
+        <p class="fine-print">
+            There is no fee to use this service, and you won't pay online.  
+            Be prepared to pay @Model.PartnerName for your order in full at the time of pick up.
+        </p>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+@using Openbrew.Web.Core.Model
+@model Openbrew.Web.Models.UserSettingsViewModel
+@{ var signup = ViewBag.NewsletterSignup as NewsletterSignup; var subscribed = signup != null && signup.IsConfirmed && !signup.IsUnsubscribed; var pendingConfirmation = signup != null && !signup.IsConfirmed && !signup.IsUnsubscribed; }
+<section class="newsletter-settings">
+    <h2>OpenBrew newsletter</h2>
+    <p>Receive occasional product updates, practical brewing tips, and release notes at <strong>@Model.EmailAddress</strong>, the email address in your Personal Info settings.</p>
+    <p class="newsletter-settings-status" aria-live="polite">@(subscribed ? "Subscribed." : pendingConfirmation ? "Awaiting email confirmation." : "Not subscribed.")</p>
+    <button type="button" class="button @(subscribed ? "button_gray" : "button_green")" data-newsletter-preference="@(subscribed ? "false" : "true")">@(subscribed ? "Unsubscribe" : pendingConfirmation ? "Resend confirmation" : "Subscribe")</button>
+</section>
+<script>
+$(function () {
+    $('[data-newsletter-preference]').on('click', function () {
+        var button = $(this), subscribe = button.attr('data-newsletter-preference') === 'true', status = $('.newsletter-settings-status');
+        button.prop('disabled', true);
+        $.post('@Url.Action("SetNewsletterPreference", "User")', { subscribe: subscribe }).done(function (response) { status.text(response.Message); if (response.Success) { if (subscribe) { button.text('Resend confirmation').attr('data-newsletter-preference', 'true').removeClass('button_gray').addClass('button_green'); } else { button.text('Subscribe').attr('data-newsletter-preference', 'true').removeClass('button_gray').addClass('button_green'); } } }).fail(function (xhr) { status.text(xhr.responseJSON && xhr.responseJSON.Message ? xhr.responseJSON.Message : 'Unable to update the newsletter preference.'); }).always(function () { button.prop('disabled', false); });
+    });
+});
+</script>

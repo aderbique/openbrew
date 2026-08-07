@@ -1,0 +1,32 @@
+﻿@using Openbrew.Web
+@using ctorx.Core.Formatting
+@model IList<Openbrew.Web.Core.Model.UserSummary>
+
+<div class="user-list">
+    @foreach (var user in Model)
+    {
+        <div class="user@(Model.IndexOf(user) == Model.Count - 1 ? " last" : "")">
+            
+            <div class="image">
+                <a href="@Url.UserProfileUrl(user.Username)"><img src="@user.GetAvatar(100)" width="100" height="100" alt="@user.Username" /></a>
+			</div>			
+			<div class="details">
+				<h3 class="name">
+					<a href="@Url.UserProfileUrl(user.Username)">@user.Username</a>
+				</h3>
+				
+                @if (!string.IsNullOrWhiteSpace(user.Bio))
+                {
+                    <span>@StringCleaner.CleanForPreviewText(user.Bio, 500)</span>
+                }
+                else
+                {
+                    <span>
+                        @user.Username has been a member of the OpenBrew online homebrew community since @user.DateCreated.ToShortDateString().
+                    </span>
+                }
+			</div>
+			<div class="clearall"></div>
+		</div>
+    }
+</div>

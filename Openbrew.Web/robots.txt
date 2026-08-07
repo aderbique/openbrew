@@ -1,0 +1,21 @@
+# www.robotstxt.org/
+# http://code.google.com/web/controlcrawlindex/
+
+User-agent: *
+Disallow: usersuggestion
+Disallow: terms
+Disallow: privacy
+Disallow: marketing/emailsignup
+Disallow: my-recipes
+Disallow: settings
+Disallow: change-avatar
+Disallow: RecentPhotos
+Disallow: loginviadialog
+Disallow: setpassword
+Disallow: changepassword
+Disallow: oauthlogin
+Disallow: setusername
+Disallow: 404
+Disallow: 500
+
+sitemap: http://127.0.0.1:8085/sitemap.xml

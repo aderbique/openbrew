@@ -1,27 +1,57 @@
 using System;
-using System.Web;
-using System.Web.Caching;
+using System.Collections.Concurrent;
 
 namespace ctorx.Core.Data
 {
 	public class HttpContextCachingService : ICachingService
 	{
-		HttpContext _Context;
+		static readonly ConcurrentDictionary<string, CacheEntry> Cache = new ConcurrentDictionary<string, CacheEntry>();
 
-		/// <summary>
-		/// Gets the Http Context Cache
-		/// </summary>
-		HttpContext Context
+		sealed class CacheEntry
 		{
-			get
-			{
-				if (this._Context == null)
-				{
-					this._Context = HttpContext.Current;
-				}
+			public object Value { get; set; }
+			public DateTime AbsoluteExpirationUtc { get; set; }
+			public TimeSpan SlidingExpiration { get; set; }
+			public DateTime LastAccessUtc { get; set; }
+		}
 
-				return this._Context;
+		static CacheEntry BuildEntry(object value, ICacheExpirationSettings cacheExpirationSettings)
+		{
+			if (cacheExpirationSettings == null)
+			{
+				cacheExpirationSettings = AbsoluteCacheExpirationSettings.Make(5);
 			}
+
+			return new CacheEntry
+			{
+				Value = value,
+				AbsoluteExpirationUtc = cacheExpirationSettings.AbsoluteExpiration == DateTime.MaxValue
+					? DateTime.MaxValue
+					: cacheExpirationSettings.AbsoluteExpiration.ToUniversalTime(),
+				SlidingExpiration = cacheExpirationSettings.SlidingExpiration
+					,
+				LastAccessUtc = DateTime.UtcNow
+			};
+		}
+
+		static bool IsExpired(CacheEntry entry)
+		{
+			if (entry == null)
+			{
+				return true;
+			}
+
+			if (entry.AbsoluteExpirationUtc != DateTime.MaxValue && DateTime.UtcNow >= entry.AbsoluteExpirationUtc)
+			{
+				return true;
+			}
+
+			if (entry.SlidingExpiration > TimeSpan.Zero && (DateTime.UtcNow - entry.LastAccessUtc) >= entry.SlidingExpiration)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -29,7 +59,19 @@ namespace ctorx.Core.Data
 		/// </summary>
 		public bool IsInCache(string key)
 		{
-			return this.Context.Cache[key] != null;
+			CacheEntry entry;
+			if (!Cache.TryGetValue(key, out entry))
+			{
+				return false;
+			}
+
+			if (IsExpired(entry))
+			{
+				this.Remove(key);
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -39,7 +81,18 @@ namespace ctorx.Core.Data
 		{
 			if (this.IsInCache(key))
 			{
-				return this.Context.Cache.Get(key) as TValue;
+				CacheEntry entry;
+				if (Cache.TryGetValue(key, out entry))
+				{
+					entry.LastAccessUtc = DateTime.UtcNow;
+					var cached = entry.Value as TValue;
+					if (cached != null)
+					{
+						return cached;
+					}
+				}
+
+				this.Remove(key);
 			}
 
 			if(retrieveFunc == null)
@@ -63,11 +116,6 @@ namespace ctorx.Core.Data
 		/// </summary>
 		public void Set<TValue>(string key, TValue value, ICacheExpirationSettings cacheExpirationSettings = null) where TValue : class
 		{
-			if (this.IsInCache(key))
-			{
-				this.Remove(key);
-			}
-
 			if(cacheExpirationSettings == null)
 			{
 				cacheExpirationSettings = AbsoluteCacheExpirationSettings.Make(5);
@@ -75,7 +123,7 @@ namespace ctorx.Core.Data
 
 			if (value != null)
 			{
-				this.Context.Cache.Insert(key, value, null, cacheExpirationSettings.AbsoluteExpiration, cacheExpirationSettings.SlidingExpiration, cacheExpirationSettings.Priority, null);
+				Cache[key] = BuildEntry(value, cacheExpirationSettings);
 			}
 		}
 
@@ -84,7 +132,7 @@ namespace ctorx.Core.Data
 		/// </summary>
 		public void Update<TValue>(string key, TValue value) where TValue : class
 		{
-			this.Context.Cache[key] = value;
+			this.Set(key, value);
 		}
 
 		/// <summary>
@@ -92,7 +140,8 @@ namespace ctorx.Core.Data
 		/// </summary>
 		public void Remove(string key)
 		{
-			this.Context.Cache.Remove(key);
+			CacheEntry ignored;
+			Cache.TryRemove(key, out ignored);
 		}
 	}
 }
