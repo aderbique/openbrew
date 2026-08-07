@@ -18,7 +18,7 @@ jobs:
       contents: read
 
     env:
-      IMAGE_NAME: austinderbique/openbrew-web
+      IMAGE_NAME: austinderbique/openbrew
       DEFAULT_BRANCH: main
 
     steps:
