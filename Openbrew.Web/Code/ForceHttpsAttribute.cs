@@ -19,6 +19,16 @@ namespace Openbrew.Web
 
 			if(filterContext.HttpContext != null)
 			{
+				// Traefik terminates TLS before proxying requests to the container.  In
+				// that deployment the internal connection is HTTP, while the browser
+				// connection is already HTTPS.  Respect the proxy's forwarded scheme
+				// to avoid redirecting an HTTPS request back to itself indefinitely.
+				var forwardedProto = filterContext.HttpContext.Request.Headers["X-Forwarded-Proto"];
+				if (string.Equals(forwardedProto, "https", StringComparison.OrdinalIgnoreCase))
+				{
+					return;
+				}
+
 				var kernel = KernelPersister.Get();
 				var settings = kernel.GetService(typeof(IWebSettings)) as IWebSettings;
 
