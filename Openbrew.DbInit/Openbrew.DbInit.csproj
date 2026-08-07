@@ -33,6 +33,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Brewgr.Core\Brewgr.Core.csproj">
+      <Project>{C3F8DB29-D16E-4A35-843F-001D2047DAE2}</Project>
+      <Name>Brewgr.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
