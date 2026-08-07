@@ -63,7 +63,24 @@
         if (!catalog || !style) return;
         var legacy = style.innerHTML;
         function syncStyleName() { name.value = style.value ? style.options[style.selectedIndex].text : ''; }
-        function renderReadOnlyComparison() { if (!readOnlyComparison || !style.value || !document.getElementById('RecipeJson')) return; var recipe = getRecipe(); $('#select-style').attr('data-style-id', style.value).attr('data-style-catalog', catalog.value); StyleChart.createForRecipeStyle(style.value, catalog.value, recipe, $('#selected-style-chart')); StyleChart.renderSimilarStyles(style.value, catalog.value, recipe, $('#similar-style-chart')); $('#similar-style-heading, #style-hidemore').removeClass('hidden').show(); $('#style-showmore').hide(); }
+        function renderReadOnlyComparison() {
+            if (!readOnlyComparison || !style.value || !document.getElementById('RecipeJson')) return;
+            var recipe = getRecipe();
+            $('#select-style').attr('data-style-id', style.value).attr('data-style-catalog', catalog.value);
+            StyleChart.createForRecipeStyle(style.value, catalog.value, recipe, $('#selected-style-chart'));
+
+            // Similar styles are useful context, but the recipe's own comparison
+            // should remain the focus until the brewer chooses to expand it.
+            if ($('#style-hidemore').is(':visible')) {
+                StyleChart.renderSimilarStyles(style.value, catalog.value, recipe, $('#similar-style-chart'));
+                $('#similar-style-heading, #style-hidemore').removeClass('hidden').show();
+                $('#style-showmore').hide();
+            } else {
+                $('#similar-style-chart').empty();
+                $('#similar-style-heading, #style-hidemore').addClass('hidden').hide();
+                $('#style-showmore').show();
+            }
+        }
         function setBaStyles(items) { style.innerHTML = '<option value="">Choose Brewers Association 2026 style...</option>'; items.forEach(function (item) { var option = document.createElement('option'); option.value = item.Id; option.text = item.Name; style.appendChild(option); }); if (selectedStyleId) style.value = selectedStyleId; syncStyleName(); $(style).trigger('chosen:updated'); renderReadOnlyComparison(); }
         if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); renderReadOnlyComparison(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles).fail(function () { style.innerHTML = '<option value="">Could not load the 2026 catalog. Try again.</option>'; }); }
         catalog.onchange = function () { selectedStyleId = ''; if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); renderReadOnlyComparison(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles); } $(style).trigger('chosen:updated'); };
