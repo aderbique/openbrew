@@ -30,6 +30,7 @@ services:
     image: ${OPENBREW_IMAGE}
     environment:
       Environment: dev
+      OPENBREW_RELEASE_VERSION: ${OPENBREW_IMAGE}
       OPENBREW_SQL_HOST: db
       OPENBREW_SQL_PORT: 1433
       OPENBREW_DB_NAME: ${OPENBREW_DB_NAME:-Openbrew_DEV}

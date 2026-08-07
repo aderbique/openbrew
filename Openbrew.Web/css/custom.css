@@ -1608,6 +1608,16 @@ div.error {
     }
 }
 
+.admin-runtime-panel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 24px; }
+.admin-runtime-panel > div { padding: 14px 16px; border: 1px solid var(--border-subtle, #d8c9b9); border-radius: 7px; background: var(--surface-raised, #f7f2ea); }
+.admin-runtime-panel span, .admin-runtime-panel strong { display: block; }
+.admin-runtime-panel span { margin-bottom: 5px; color: var(--text-muted, #6c6259); font-size: .82em; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.admin-runtime-panel strong { overflow-wrap: anywhere; color: var(--text, #302a25); }
+html[data-theme="dark"] .admin-runtime-panel > div { border-color: #5a4e45; background: #2b2623; }
+html[data-theme="dark"] .admin-runtime-panel span { color: #d8c9ba; }
+html[data-theme="dark"] .admin-runtime-panel strong { color: #f5eadc; }
+@media (max-width: 640px) { .admin-runtime-panel { grid-template-columns: 1fr; gap: 8px; } }
+
 /* Final cascade: keep the home refinements after the legacy theme rules. */
 #view-home .hero {
     background-image: url('/img/home-hero-brew.jpg');
