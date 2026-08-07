@@ -74,6 +74,7 @@ services:
         - traefik.docker.network=traefik-net
         - traefik.http.routers.openbrew-prod.rule=Host(`openbrew.net`)
         - traefik.http.routers.openbrew-prod.entrypoints=http,https
+        - traefik.http.routers.openbrew-prod.tls=true
         - traefik.http.routers.openbrew-prod.tls.certResolver=letsEncrypt
         - traefik.http.routers.openbrew-prod.service=openbrew-prod
         - traefik.http.services.openbrew-prod.loadbalancer.server.port=8085
