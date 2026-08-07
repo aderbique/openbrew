@@ -81,9 +81,16 @@
                 $('#style-showmore').show();
             }
         }
-        function setBaStyles(items) { style.innerHTML = '<option value="">Choose Brewers Association 2026 style...</option>'; items.forEach(function (item) { var option = document.createElement('option'); option.value = item.Id; option.text = item.Name; style.appendChild(option); }); if (selectedStyleId) style.value = selectedStyleId; syncStyleName(); $(style).trigger('chosen:updated'); renderReadOnlyComparison(); }
-        if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); renderReadOnlyComparison(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles).fail(function () { style.innerHTML = '<option value="">Could not load the 2026 catalog. Try again.</option>'; }); }
-        catalog.onchange = function () { selectedStyleId = ''; if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); renderReadOnlyComparison(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles); } $(style).trigger('chosen:updated'); };
+        function refreshStyleSelection() {
+            syncStyleName();
+            // The 2026 catalog is loaded asynchronously. Triggering change here
+            // gives edit pages their initial style gauge as soon as the selected
+            // style option exists, rather than waiting for the brewer to touch it.
+            $(style).trigger('chosen:updated').trigger('change');
+        }
+        function setBaStyles(items) { style.innerHTML = '<option value="">Choose Brewers Association 2026 style...</option>'; items.forEach(function (item) { var option = document.createElement('option'); option.value = item.Id; option.text = item.Name; style.appendChild(option); }); if (selectedStyleId) style.value = selectedStyleId; refreshStyleSelection(); }
+        if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); refreshStyleSelection(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles).fail(function () { style.innerHTML = '<option value="">Could not load the 2026 catalog. Try again.</option>'; }); }
+        catalog.onchange = function () { selectedStyleId = ''; if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); refreshStyleSelection(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles); } $(style).trigger('chosen:updated'); };
         style.onchange = function () { syncStyleName(); renderReadOnlyComparison(); };
     }());
 </script>
