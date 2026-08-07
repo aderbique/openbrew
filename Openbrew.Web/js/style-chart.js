@@ -85,6 +85,21 @@ var StyleChart = {
         StyleChart.create(StyleChart.GetStyle(styleId), recipe, objectToAddItTo);
     },
 
+    renderSimilarStyles: function (styleId, styleCatalog, recipe, objectToAddItTo) {
+        objectToAddItTo.empty();
+        var render = function (styles) {
+            var candidates = styles.filter(function (style) { return style.SubCategoryID !== styleId; });
+            var sorted = StyleChart.SortStylesByClosestMatch(recipe, candidates);
+            var numberOfResults = StyleChart.isWater(recipe) ? 1 : 3;
+            for (var i = 0; i < Math.min(numberOfResults, sorted.length); i++) StyleChart.create(sorted[i], recipe, objectToAddItTo);
+        };
+        if (styleCatalog === 'ba-2026' && /^\d+$/.test(styleId)) {
+            $.getJSON('/ba-2026-style-comparisons').done(render).fail(function () { objectToAddItTo.html('<p class="fine-print style-chart-unavailable">Similar style suggestions are unavailable right now.</p>'); });
+            return;
+        }
+        render(StyleChart.allStyles);
+    },
+
     // Creates the chart using the template and appends to the passed in object
     create: function (bjcpStyle, recipe, objectToAddItTo) {
 
@@ -148,9 +163,9 @@ var StyleChart = {
     },
 
     // returns all styles sorted by closest match
-    SortStylesByClosestMatch: function (recipe) {
+    SortStylesByClosestMatch: function (recipe, styles) {
 
-        var styles = StyleChart.allStyles;
+        styles = styles || StyleChart.allStyles;
 
         for (var i = 0; i < styles.length; i++) {
 

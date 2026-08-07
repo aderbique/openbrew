@@ -30,6 +30,7 @@ namespace Openbrew.Web.Controllers
 		static readonly object BaCatalogLock = new object();
 		static IList<object> Ba2026CatalogCache;
 		static string Ba2026GuidelineHtml;
+		static IList<BaStyleChartRange> Ba2026StyleComparisonCache;
 		const string BeerXmlImportQueueKey = "BeerXmlImportQueue";
 		readonly IUnitOfWorkFactory<BrewgrContext> UnitOfWorkFactory;
 		readonly IRecipeService RecipeService;
@@ -558,16 +559,24 @@ namespace Openbrew.Web.Controllers
 		{
 			if (string.IsNullOrWhiteSpace(styleId) || !Regex.IsMatch(styleId, "^\\d+$")) return Json(null, JsonRequestBehavior.AllowGet);
 			var guideline = GetBa2026Guideline(styleId);
-			if (guideline == null || guideline.GaugeMetrics == null) return Json(null, JsonRequestBehavior.AllowGet);
-			Func<string, BaStyleGaugeMetric> metric = label => guideline.GaugeMetrics.FirstOrDefault(x => x.Label == label);
-			var og = metric("OG"); var fg = metric("FG"); var ibu = metric("IBU"); var srm = metric("SRM"); var abv = metric("ABV");
-			if (og == null || fg == null || ibu == null || srm == null || abv == null) return Json(null, JsonRequestBehavior.AllowGet);
-			return Json(new {
-				SubCategoryID = guideline.Id, SubCategoryName = guideline.Name,
-				og_low = og.Low, og_high = og.High, fg_low = fg.Low, fg_high = fg.High,
-				ibu_low = ibu.Low, ibu_high = ibu.High, srm_low = srm.Low, srm_high = srm.High,
-				abv_low = abv.Low, abv_high = abv.High
-			}, JsonRequestBehavior.AllowGet);
+			return Json(ToBaStyleChartRange(guideline), JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpGet]
+		[ActionName("ba-2026-style-comparisons")]
+		public JsonResult Ba2026StyleComparisons()
+		{
+			lock (BaCatalogLock)
+			{
+				if (Ba2026StyleComparisonCache == null)
+				{
+					if (Ba2026GuidelineHtml == null) GetBa2026Guideline("1");
+					var ids = Regex.Matches(Ba2026GuidelineHtml ?? "", "<ul[^>]*id=[\\\"'](?<id>\\d+)[\\\"']", RegexOptions.IgnoreCase)
+						.Cast<Match>().Select(x => x.Groups["id"].Value).Distinct().ToList();
+					Ba2026StyleComparisonCache = ids.Select(GetBa2026Guideline).Where(x => x != null).Select(ToBaStyleChartRange).ToList();
+				}
+				return Json(Ba2026StyleComparisonCache, JsonRequestBehavior.AllowGet);
+			}
 		}
 
 		[ActionName("Ba2026StyleDetail")]
@@ -684,7 +693,11 @@ namespace Openbrew.Web.Controllers
 
 		static void AddBaGaugeMetric(ICollection<BaStyleGaugeMetric> metrics, string label, double[] range, double minimum, double baselineMaximum, string unit, string format)
 		{
-			if (range == null) return;
+			if (range == null)
+			{
+				metrics.Add(new BaStyleGaugeMetric { Label = label, Unit = unit, LowLabel = "Varies", HighLabel = "Varies", RangeLabel = "Varies", StartPercent = 0, WidthPercent = 100 });
+				return;
+			}
 			var maximum = Math.Max(baselineMaximum, range[1] * 1.12);
 			var start = Math.Max(0, Math.Min(100, (range[0] - minimum) / (maximum - minimum) * 100));
 			var end = Math.Max(start + 2, Math.Min(100, (range[1] - minimum) / (maximum - minimum) * 100));
@@ -696,6 +709,20 @@ namespace Openbrew.Web.Controllers
 				Low = range[0], High = range[1],
 				StartPercent = start, WidthPercent = end - start
 			});
+		}
+
+		static BaStyleChartRange ToBaStyleChartRange(Ba2026StyleDetailViewModel guideline)
+		{
+			if (guideline == null || guideline.GaugeMetrics == null) return null;
+			Func<string, BaStyleGaugeMetric> metric = label => guideline.GaugeMetrics.FirstOrDefault(x => x.Label == label);
+			Func<string, double> low = label => metric(label) != null ? metric(label).Low : 0;
+			Func<string, double> high = label => metric(label) != null ? metric(label).High : 0;
+			return new BaStyleChartRange {
+				SubCategoryID = guideline.Id, SubCategoryName = guideline.Name,
+				og_low = low("OG"), og_high = high("OG"), fg_low = low("FG"), fg_high = high("FG"),
+				ibu_low = low("IBU"), ibu_high = high("IBU"), srm_low = low("SRM"), srm_high = high("SRM"),
+				abv_low = low("ABV"), abv_high = high("ABV")
+			};
 		}
 
 		#endregion

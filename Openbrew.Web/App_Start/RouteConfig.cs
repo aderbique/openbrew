@@ -40,7 +40,8 @@ namespace Openbrew.Web
 			routes.MapRoute("RecipeBuilderTemplatesRoute", "buildertemplates-v2", new { controller = "Recipe", action = "buildertemplates-v2" });
 			routes.MapRoute("StyleDetailRoute", "style/{urlfriendlyname}/{page}", new { controller = "Recipe", action = "StyleDetail", page = UrlParameter.Optional });
 			routes.MapRoute("Ba2026StyleDetailRoute", "styles/2026/{styleId}/{slug}", new { controller = "Recipe", action = "Ba2026StyleDetail", slug = UrlParameter.Optional }, new { styleId = @"\d+" });
-			routes.MapRoute("Ba2026StyleRangeRoute", "ba-2026-style-range", new { controller = "Recipe", action = "Ba2026StyleRange" });
+			routes.MapRoute("Ba2026StyleRangeRoute", "ba-2026-style-range", new { controller = "Recipe", action = "ba-2026-style-range" });
+			routes.MapRoute("Ba2026StyleComparisonsRoute", "ba-2026-style-comparisons", new { controller = "Recipe", action = "ba-2026-style-comparisons" });
 			routes.MapRoute("UnCategorizedRecipesRoute", "recipes/other-homebrew-recipes/{page}", new { controller = "Recipe", action = "other-homebrew-recipes", page = UrlParameter.Optional });
 
 			// Content Routes

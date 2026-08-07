@@ -383,11 +383,9 @@ function builder_onReady() {
 
         $('#show-similar-styles').click(function () {
             var recipe = getRecipe();
-            var allStylesSorted = StyleChart.SortStylesByClosestMatch(recipe);
-            var numberOfResults = (StyleChart.isWater(recipe)) ? 1 : 3;
-            for (var i = 0; i < numberOfResults; i++) {
-                StyleChart.create(allStylesSorted[i], recipe, $('#similar-style-chart'));
-            }
+            var styleId = $('#select-style').attr('data-style-id') || recipe.StyleId;
+            var styleCatalog = $('#select-style').attr('data-style-catalog') || recipe.StyleCatalog;
+            StyleChart.renderSimilarStyles(styleId, styleCatalog, recipe, $('#similar-style-chart'));
             $('#style-showmore').hide();
             $('#style-hidemore').show();
             return false;

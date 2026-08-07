@@ -987,12 +987,7 @@ var Builder =
 
         // if "similar styles" section is showing then we need to refresh them
         if ($('#style-hidemore').is(":visible")) {
-            $('#similar-style-chart').empty();
-            var allStylesSorted = StyleChart.SortStylesByClosestMatch(recipe);
-            var numberOfResults = (StyleChart.isWater(recipe)) ? 1 : 3;
-            for (var i = 0; i < numberOfResults; i++) {
-                StyleChart.create(allStylesSorted[i], recipe, $('#similar-style-chart'));
-            }
+            StyleChart.renderSimilarStyles($('[data-name=r_StyleId]').val(), $('[data-name=r_StyleCatalog]').val(), recipe, $('#similar-style-chart'));
             $('#style-showmore').hide();
             $('#style-hidemore').show();
         }
