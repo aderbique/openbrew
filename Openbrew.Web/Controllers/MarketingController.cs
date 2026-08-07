@@ -17,15 +17,17 @@ namespace Openbrew.Web.Controllers
 		readonly IUnitOfWorkFactory<BrewgrContext> UnitOfWorkFactory;
 		readonly IMarketingService MarketingService;
 		readonly IEmailSender EmailSender;
+		readonly IUserService UserService;
 
 		/// <summary>
 		/// ctor the Mighty
 		/// </summary>
-		public MarketingController(IUnitOfWorkFactory<BrewgrContext> unitOfWorkFactory, IMarketingService marketingService, IEmailSender emailSender)
+		public MarketingController(IUnitOfWorkFactory<BrewgrContext> unitOfWorkFactory, IMarketingService marketingService, IEmailSender emailSender, IUserService userService)
 		{
 			this.UnitOfWorkFactory = unitOfWorkFactory;
 			this.MarketingService = marketingService;
 			this.EmailSender = emailSender;
+			this.UserService = userService;
 		}
 
 		/// <summary>
@@ -185,6 +187,26 @@ namespace Openbrew.Web.Controllers
 					this.LogHandledException(ex);
 					unitOfWork.Rollback();
 				}
+			}
+
+			// Email is deliberately sent after the feedback record is committed: a
+			// temporary mail outage must not discard a brewer's submission.
+			try
+			{
+				var adminEmails = this.UserService.GetAllUsers()
+					.Where(x => this.UserService.UserIsAdmin(x.UserId))
+					.Select(x => x.EmailAddress)
+					.Where(x => !string.IsNullOrWhiteSpace(x))
+					.ToList();
+
+				if (adminEmails.Any())
+				{
+					this.EmailSender.Send(new FeedbackNotificationEmailMessage(this.WebSettings, adminEmails, feedbackViewModel.Feedback, this.ActiveUser, this.Request.UserHostAddress));
+				}
+			}
+			catch (Exception ex)
+			{
+				this.LogHandledException(ex);
 			}
 
 			return View("~/Views/Marketing/FeedbackReceived.cshtml", true);

@@ -222,6 +222,7 @@
     <Compile Include="Code\GenericMessages.cs" />
     <Compile Include="Code\CustomHttpHeadersModule.cs" />
     <Compile Include="Email\ContactFormEmailMessage.cs" />
+	<Compile Include="Email\FeedbackNotificationEmailMessage.cs" />
     <Compile Include="Email\DefaultEmailMessageFactory.cs" />
     <Compile Include="Email\EmailMessageType.cs" />
     <Compile Include="Email\IEmailMessageFactory.cs" />
