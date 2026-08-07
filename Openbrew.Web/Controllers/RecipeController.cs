@@ -622,12 +622,61 @@ namespace Openbrew.Web.Controllers
 			var tastingNotes = new List<string>();
 			var noteMap = new Dictionary<string, string> { { "citrus", "citrus" }, { "tropical", "tropical fruit" }, { "pine", "piney hops" }, { "floral", "floral hops" }, { "caramel", "caramel malt" }, { "toast", "toasted malt" }, { "chocolate", "cocoa" }, { "coffee", "coffee" }, { "roast", "roast" }, { "spice", "spice" }, { "banana", "banana" }, { "clove", "clove" }, { "stone fruit", "stone fruit" }, { "berry", "berries" }, { "honey", "honey" }, { "smoke", "smoke" } };
 			foreach (var note in noteMap.Where(x => sourceNotes.Contains(x.Key)).Select(x => x.Value)) if (!tastingNotes.Contains(note)) tastingNotes.Add(note);
+			var bitterness = value("Bitterness (IBU)");
+			var color = value("Color SRM (EBC)");
+			var originalGravity = value("Original Gravity");
+			var finalGravity = value("Apparent Extract/Final Gravity");
+			var alcohol = value("Alcohol by Weight (Volume)");
+			var ibuRange = ExtractBaNumberRange(bitterness, @"\d+(?:\.\d+)?");
+			var srmRange = ExtractBaNumberRange(color, @"\d+(?:\.\d+)?");
+			var ogRange = ExtractBaNumberRange(originalGravity, @"1\.\d+");
+			var fgRange = ExtractBaNumberRange(finalGravity, @"1\.\d+");
+			var alcoholValues = ExtractBaNumberRange(alcohol, @"\d+(?:\.\d+)?(?=%)", true);
+			var gaugeMetrics = new List<BaStyleGaugeMetric>();
+			AddBaGaugeMetric(gaugeMetrics, "OG", ogRange, 1.020, 1.130, "", "0.000");
+			AddBaGaugeMetric(gaugeMetrics, "FG", fgRange, 1.000, 1.040, "", "0.000");
+			AddBaGaugeMetric(gaugeMetrics, "IBU", ibuRange, 0, 120, "IBU", "0.#");
+			AddBaGaugeMetric(gaugeMetrics, "SRM", srmRange, 0, 40, "SRM", "0.#");
+			AddBaGaugeMetric(gaugeMetrics, "ABV", alcoholValues, 0, 16, "%", "0.#");
+			if (ibuRange != null && ogRange != null && ogRange[0] > 1 && ogRange[1] > 1)
+			{
+				var buGuLow = ibuRange[0] / ((ogRange[1] - 1) * 1000);
+				var buGuHigh = ibuRange[1] / ((ogRange[0] - 1) * 1000);
+				AddBaGaugeMetric(gaugeMetrics, "BU:GU", new[] { buGuLow, buGuHigh }, 0, 1.5, "", "0.00");
+			}
 			return new Ba2026StyleDetailViewModel {
 				Id = styleId, Name = name, Description = description(name), TastingNotes = tastingNotes, Bitterness = value("Bitterness (IBU)"), Color = value("Color SRM (EBC)"),
-				OriginalGravity = value("Original Gravity"), FinalGravity = value("Apparent Extract/Final Gravity"), Alcohol = value("Alcohol by Weight (Volume)"),
+				OriginalGravity = originalGravity, FinalGravity = finalGravity, Alcohol = alcohol,
 				VisualCue = cue("Color"), BalanceCue = cue("Perceived Bitterness"), BodyCue = cue("Body"),
 				MaltCue = intensityCue("Perceived Malt Aroma & Flavor", "malt"), HopCue = intensityCue("Perceived Hop Aroma & Flavor", "hop"), FermentationCue = fermentationCue(cue("Fermentation Characteristics")),
-				Recipes = new List<Recipe>() };
+				GaugeMetrics = gaugeMetrics, Recipes = new List<Recipe>() };
+		}
+
+		static double[] ExtractBaNumberRange(string value, string pattern, bool useLastPair = false)
+		{
+			if (string.IsNullOrWhiteSpace(value)) return null;
+			var matches = Regex.Matches(value, pattern).Cast<Match>().Select(x => {
+				double number;
+				return double.TryParse(x.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out number) ? (double?)number : null;
+			}).Where(x => x.HasValue).Select(x => x.Value).ToList();
+			if (matches.Count < 2) return null;
+			var start = useLastPair && matches.Count >= 4 ? matches.Count - 2 : 0;
+			return new[] { Math.Min(matches[start], matches[start + 1]), Math.Max(matches[start], matches[start + 1]) };
+		}
+
+		static void AddBaGaugeMetric(ICollection<BaStyleGaugeMetric> metrics, string label, double[] range, double minimum, double baselineMaximum, string unit, string format)
+		{
+			if (range == null) return;
+			var maximum = Math.Max(baselineMaximum, range[1] * 1.12);
+			var start = Math.Max(0, Math.Min(100, (range[0] - minimum) / (maximum - minimum) * 100));
+			var end = Math.Max(start + 2, Math.Min(100, (range[1] - minimum) / (maximum - minimum) * 100));
+			var lowLabel = range[0].ToString(format, System.Globalization.CultureInfo.InvariantCulture);
+			var highLabel = range[1].ToString(format, System.Globalization.CultureInfo.InvariantCulture);
+			metrics.Add(new BaStyleGaugeMetric {
+				Label = label, Unit = unit, LowLabel = lowLabel, HighLabel = highLabel,
+				RangeLabel = unit == "%" ? lowLabel + "% – " + highLabel + "%" : lowLabel + " – " + highLabel + (string.IsNullOrEmpty(unit) ? "" : " " + unit),
+				StartPercent = start, WidthPercent = end - start
+			});
 		}
 
 		#endregion

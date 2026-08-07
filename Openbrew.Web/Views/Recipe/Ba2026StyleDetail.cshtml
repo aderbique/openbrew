@@ -18,12 +18,14 @@
         </div>
     </section>
 
+    <div class="ba-style-content-grid">
+    <main>
     @if (Model.TastingNotes.Any())
     {
-    <section class="ba-tasting-notes">
-        <h2>Tasting notes</h2>
-        <p>@string.Join(" · ", Model.TastingNotes)</p>
-    </section>
+        <section class="ba-tasting-notes">
+            <h2>Tasting notes</h2>
+            <p>@string.Join(" · ", Model.TastingNotes)</p>
+        </section>
     }
     <section class="ba-sensory-profile">
         <h2>Style character</h2>
@@ -98,5 +100,30 @@
             <a class="button button_green" href="@createUrl">Create a @Model.Name Recipe</a>
         }
     </section>
+    </main>
+
+    @if (Model.GaugeMetrics != null && Model.GaugeMetrics.Any())
+    {
+        <aside class="ba-style-gauge" aria-label="Style range gauge">
+            <p class="eyebrow">At a glance</p>
+            <h2>Style range gauge</h2>
+            <p class="ba-style-gauge-intro">The highlighted band shows the 2026 guideline range for this style.</p>
+            <div class="ba-style-gauge-metrics">
+            @foreach (var metric in Model.GaugeMetrics)
+            {
+                var gaugeStart = metric.StartPercent.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                var gaugeWidth = metric.WidthPercent.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+                <div class="ba-gauge-metric">
+                    <div class="ba-gauge-label"><strong>@metric.Label</strong><span>@metric.RangeLabel</span></div>
+                    <div class="ba-gauge-track" aria-label="@metric.Label range: @metric.RangeLabel">
+                        <span class="ba-gauge-range" style="left: @gaugeStart%; width: @gaugeWidth%"></span>
+                    </div>
+                </div>
+            }
+            </div>
+            <p class="fine-print">BU:GU is the bitterness-to-gravity ratio, calculated from the guideline ranges.</p>
+        </aside>
+    }
+    </div>
     <p class="fine-print">Style data is sourced from the <a href="https://www.brewersassociation.org/edu/brewers-association-beer-style-guidelines/" rel="noopener" target="_blank">Brewers Association 2026 Beer Style Guidelines</a>. Perceived bitterness can differ from measured IBU.</p>
 </div>

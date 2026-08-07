@@ -20,6 +20,18 @@ namespace Openbrew.Web.Models
         public string MaltCue { get; set; }
         public string HopCue { get; set; }
         public string FermentationCue { get; set; }
+        public IList<BaStyleGaugeMetric> GaugeMetrics { get; set; }
         public IList<Recipe> Recipes { get; set; }
+    }
+
+    public class BaStyleGaugeMetric
+    {
+        public string Label { get; set; }
+        public string Unit { get; set; }
+        public string LowLabel { get; set; }
+        public string HighLabel { get; set; }
+        public string RangeLabel { get; set; }
+        public double StartPercent { get; set; }
+        public double WidthPercent { get; set; }
     }
 }
