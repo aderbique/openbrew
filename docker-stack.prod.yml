@@ -9,9 +9,7 @@ services:
       - -ec
       - export MSSQL_SA_PASSWORD="$$(cat /run/secrets/openbrew_sql_sa_password)"; exec /opt/mssql/bin/sqlservr
     volumes:
-      - type: bind
-        source: /volume1/docker/openbrew-prod/sql
-        target: /var/opt/mssql
+      - openbrew-prod-sql:/var/opt/mssql
     networks:
       openbrew-internal:
         aliases:
@@ -52,9 +50,7 @@ services:
       SMTP_USERNAME_FILE: /run/secrets/openbrew_smtp_username
       SMTP_PASSWORD_FILE: /run/secrets/openbrew_smtp_password
     volumes:
-      - type: bind
-        source: /volume1/docker/openbrew-prod/media
-        target: /app/Openbrew.Web/Media
+      - openbrew-prod-media:/app/Openbrew.Web/Media
     secrets:
       - openbrew_sql_sa_password
       - openbrew_google_application_key
@@ -88,6 +84,10 @@ networks:
     external: true
   openbrew-internal:
     driver: overlay
+
+volumes:
+  openbrew-prod-sql:
+  openbrew-prod-media:
 
 secrets:
   openbrew_sql_sa_password:
