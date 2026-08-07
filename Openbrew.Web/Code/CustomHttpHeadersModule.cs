@@ -45,11 +45,11 @@ namespace Openbrew.Web
 						context.Response.AddHeader("Expires", DateTime.Now.AddYears(20).ToString("r"));
 					}
 
-					// Set Caching for CSS/JS (No Caching)
+					// Versioned CSS and JS assets can be cached between deployments.
 					if(extension == "js" || extension == "css")
 					{
-						context.Response.AddHeader("Cache-Control", "no-cache,must-revalidate,private");
-						context.Response.AddHeader("Expires", DateTime.Now.AddYears(-20).ToString("r"));
+						context.Response.AddHeader("Cache-Control", "max-age=604800,public");
+						context.Response.AddHeader("Expires", DateTime.UtcNow.AddDays(7).ToString("r"));
 					}
 				}
 				// URLs with no extensions
