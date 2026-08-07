@@ -48,7 +48,7 @@ services:
       Google_ApplicationSecret_FILE: /run/secrets/openbrew_google_application_secret_v2
       OPENBREW_CONTACT_EMAIL_ADDRESS: info@openbrew.net
       SMTP_HOST_FILE: /run/secrets/openbrew_smtp_host
-      SMTP_PORT_FILE: /run/secrets/openbrew_smtp_port
+      SMTP_PORT_FILE: /run/secrets/openbrew_smtp_port_v2
       SMTP_USERNAME_FILE: /run/secrets/openbrew_smtp_username
       SMTP_PASSWORD_FILE: /run/secrets/openbrew_smtp_password
     volumes:
@@ -60,7 +60,7 @@ services:
       - openbrew_google_application_key_v4
       - openbrew_google_application_secret_v2
       - openbrew_smtp_host
-      - openbrew_smtp_port
+      - openbrew_smtp_port_v2
       - openbrew_smtp_username
       - openbrew_smtp_password
     networks:
@@ -99,7 +99,7 @@ secrets:
     external: true
   openbrew_smtp_host:
     external: true
-  openbrew_smtp_port:
+  openbrew_smtp_port_v2:
     external: true
   openbrew_smtp_username:
     external: true
