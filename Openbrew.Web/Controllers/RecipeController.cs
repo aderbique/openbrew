@@ -552,6 +552,24 @@ namespace Openbrew.Web.Controllers
 			return Json(counts, JsonRequestBehavior.AllowGet);
 		}
 
+		[HttpGet]
+		[ActionName("ba-2026-style-range")]
+		public JsonResult Ba2026StyleRange(string styleId)
+		{
+			if (string.IsNullOrWhiteSpace(styleId) || !Regex.IsMatch(styleId, "^\\d+$")) return Json(null, JsonRequestBehavior.AllowGet);
+			var guideline = GetBa2026Guideline(styleId);
+			if (guideline == null || guideline.GaugeMetrics == null) return Json(null, JsonRequestBehavior.AllowGet);
+			Func<string, BaStyleGaugeMetric> metric = label => guideline.GaugeMetrics.FirstOrDefault(x => x.Label == label);
+			var og = metric("OG"); var fg = metric("FG"); var ibu = metric("IBU"); var srm = metric("SRM"); var abv = metric("ABV");
+			if (og == null || fg == null || ibu == null || srm == null || abv == null) return Json(null, JsonRequestBehavior.AllowGet);
+			return Json(new {
+				SubCategoryID = guideline.Id, SubCategoryName = guideline.Name,
+				og_low = og.Low, og_high = og.High, fg_low = fg.Low, fg_high = fg.High,
+				ibu_low = ibu.Low, ibu_high = ibu.High, srm_low = srm.Low, srm_high = srm.High,
+				abv_low = abv.Low, abv_high = abv.High
+			}, JsonRequestBehavior.AllowGet);
+		}
+
 		[ActionName("Ba2026StyleDetail")]
 		public ActionResult Ba2026StyleDetail(string styleId, string slug)
 		{
@@ -675,6 +693,7 @@ namespace Openbrew.Web.Controllers
 			metrics.Add(new BaStyleGaugeMetric {
 				Label = label, Unit = unit, LowLabel = lowLabel, HighLabel = highLabel,
 				RangeLabel = unit == "%" ? lowLabel + "% – " + highLabel + "%" : lowLabel + " – " + highLabel + (string.IsNullOrEmpty(unit) ? "" : " " + unit),
+				Low = range[0], High = range[1],
 				StartPercent = start, WidthPercent = end - start
 			});
 		}

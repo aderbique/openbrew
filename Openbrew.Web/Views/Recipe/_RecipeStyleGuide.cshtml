@@ -82,11 +82,11 @@
 <script id="bjcpStyleTemplate" type="text/x-jquery-tmpl">
 	<div class="bjcp-label" id="bjcp-label">${styleElement}</div>
 	<div class="bjcp-leftnumber">${styleElementStartValue}</div>
-	<div class="bjcp-slider" original-title="${styleElement}: {{if styleStart == 0}} Varies {{else}} ${styleStart}-${styleEnd} {{/if}} / Your ${styleElement}: ${currentBrewValue}">
+	<div class="bjcp-slider {{if styleMatch == 'block'}}is-in-range{{else}}is-out-of-range{{/if}}" original-title="${styleElement}: {{if styleStart == 0}} Varies {{else}} ${styleStart}-${styleEnd} {{/if}} / Your ${styleElement}: ${currentBrewValue}">
 		<div class="bjcp-slider-range" style="left: ${styleElementStartPercent}%; width: ${styleElementEndPercent}%; "></div>
 		<img class="bjcp-marker" src="/img/stylemarker.png" style="left: ${styleMarkerPercent}%;" />
 	</div>
 	<div class="bjcp-rightnumber">${styleElementEndValue}</div>
-	<div class="bjcp-check"><img id="styleCheck" src="/img/icons/tick.png" style="display:${styleMatch}" /></div>
+	<div class="bjcp-check"><span class="style-result {{if styleMatch == 'block'}}is-in-range{{else}}is-out-of-range{{/if}}" title="{{if styleMatch == 'block'}}In range{{else}}Out of range{{/if}}">{{if styleMatch == 'block'}}✓{{else}}×{{/if}}</span></div>
 	<div class="clearall"></div>
     </script>

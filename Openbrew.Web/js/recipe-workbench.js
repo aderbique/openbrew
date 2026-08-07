@@ -640,11 +640,7 @@ var Builder =
             } else {
                 $('#recipe-facts .style').text($(this[this.selectedIndex]).text().split('. ')[1]);
 
-                // set up the style chart
-                var targetStyle = StyleChart.GetStyle($(this[this.selectedIndex]).val());
-                $('#selected-style-chart').empty();
-
-                StyleChart.create(targetStyle, Builder.getRecipe(), $('#selected-style-chart'));
+                StyleChart.createForRecipeStyle($(this).val(), $('[data-name=r_StyleCatalog]').val(), Builder.getRecipe(), $('#selected-style-chart'));
             }
         });
     },
@@ -987,9 +983,7 @@ var Builder =
         $('.color').css('background-color', util.srm_To_hex(recipe.Srm));
 
         // Refresh the Style Chart after a calculation
-        var targetStyle = StyleChart.GetStyle($('[data-name=r_StyleId]').val());
-        $('#selected-style-chart').empty();
-        StyleChart.create(targetStyle, recipe, $('#selected-style-chart'));
+        StyleChart.createForRecipeStyle($('[data-name=r_StyleId]').val(), $('[data-name=r_StyleCatalog]').val(), recipe, $('#selected-style-chart'));
 
         // if "similar styles" section is showing then we need to refresh them
         if ($('#style-hidemore').is(":visible")) {

@@ -136,9 +136,7 @@
         $(function() {
             var recipe = getRecipe();
 
-            // set up the style chart
-            var targetStyle = StyleChart.GetStyle('@Model.RecipeViewModel.StyleId');
-            StyleChart.create(targetStyle, recipe, $('#selected-style-chart'));
+            StyleChart.createForRecipeStyle('@Model.RecipeViewModel.StyleId', '@Model.RecipeViewModel.StyleCatalog', recipe, $('#selected-style-chart'));
         });
 
         (function() {

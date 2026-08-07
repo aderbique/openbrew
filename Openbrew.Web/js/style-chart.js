@@ -67,6 +67,24 @@ var StyleChart = {
             return false;
     },
 
+    // 2026 styles live in the Brewers Association catalog; legacy styles are
+    // bundled above. Both feed the same in-range/out-of-range comparison chart.
+    createForRecipeStyle: function (styleId, styleCatalog, recipe, objectToAddItTo) {
+        objectToAddItTo.empty();
+        if (!styleId || !recipe) return;
+        if (styleCatalog === 'ba-2026' && /^\d+$/.test(styleId)) {
+            var requestKey = styleCatalog + ':' + styleId;
+            objectToAddItTo.data('style-chart-request', requestKey);
+            $.getJSON('/ba-2026-style-range', { styleId: styleId }).done(function (style) {
+                if (objectToAddItTo.data('style-chart-request') === requestKey && style) StyleChart.create(style, recipe, objectToAddItTo);
+            }).fail(function () {
+                if (objectToAddItTo.data('style-chart-request') === requestKey) objectToAddItTo.html('<p class="fine-print style-chart-unavailable">Style comparison is unavailable right now.</p>');
+            });
+            return;
+        }
+        StyleChart.create(StyleChart.GetStyle(styleId), recipe, objectToAddItTo);
+    },
+
     // Creates the chart using the template and appends to the passed in object
     create: function (bjcpStyle, recipe, objectToAddItTo) {
 

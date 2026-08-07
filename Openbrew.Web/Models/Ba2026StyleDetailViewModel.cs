@@ -31,6 +31,8 @@ namespace Openbrew.Web.Models
         public string LowLabel { get; set; }
         public string HighLabel { get; set; }
         public string RangeLabel { get; set; }
+        public double Low { get; set; }
+        public double High { get; set; }
         public double StartPercent { get; set; }
         public double WidthPercent { get; set; }
     }

@@ -494,6 +494,10 @@
     .bjcp-leftnumber { font-size: 8px; font-weight: bold; float:left; width: 23px; text-align:right; margin-top: 3px; margin-right:1px; }
     .bjcp-rightnumber { font-size: 8px; font-weight: bold; float:left; width: 30px; margin-top: 3px; margin-left:1px; }
     .bjcp-check { float:left; }
+    .style-result { display: inline-block; width: 17px; height: 17px; margin: -1px 0 0 5px; border-radius: 50%; color: #fff; font-size: 13px; font-weight: bold; line-height: 17px; text-align: center; }
+    .style-result.is-in-range { background: #3f8a5a; }
+    .style-result.is-out-of-range { background: #bd4d43; }
+    .bjcp-slider.is-out-of-range .bjcp-marker { filter: hue-rotate(130deg) saturate(1.4); }
     .bjcp-similarstyles { font-weight: bold; font-size: 12px; display: block; color:#333; padding:4px;}
     .bjcp-chartwrapper { padding-top: 6px; border-top: solid 4px #CCC;}
     .bjcp-marker { margin-top: -4px; margin-left: -4px; float: left; z-index: 3; position: absolute; }
