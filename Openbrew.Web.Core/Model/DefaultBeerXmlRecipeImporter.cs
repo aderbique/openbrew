@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml;
+using System.IO;
 using Openbrew.Web.Core.Service;
 
 namespace Openbrew.Web.Core.Model
@@ -33,7 +35,18 @@ namespace Openbrew.Web.Core.Model
 		{
 			if (string.IsNullOrWhiteSpace(beerXml)) throw new ArgumentNullException("beerXml");
 
-			var document = XDocument.Parse(beerXml, LoadOptions.None);
+			var readerSettings = new XmlReaderSettings
+			{
+				DtdProcessing = DtdProcessing.Prohibit,
+				XmlResolver = null,
+				MaxCharactersInDocument = 5 * 1024 * 1024
+			};
+			XDocument document;
+			using (var stringReader = new StringReader(beerXml))
+			using (var xmlReader = XmlReader.Create(stringReader, readerSettings))
+			{
+				document = XDocument.Load(xmlReader, LoadOptions.None);
+			}
 			var entries = document.Descendants().Where(x => IsNamed(x, "RECIPE")).ToList();
 			if (!entries.Any()) throw new FormatException("The file does not contain any BeerXML recipe records.");
 

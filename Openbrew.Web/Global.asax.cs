@@ -66,6 +66,26 @@ namespace Openbrew.Web
 			}
 		}
 
+		// XSP does not consistently invoke custom IHttpModules' header event. Keep
+		// these protections in the application lifecycle as well so local and
+		// container deployments receive the same baseline response hardening.
+		protected void Application_PreSendRequestHeaders()
+		{
+			var headers = Response.Headers;
+			headers.Remove("Server");
+			headers.Remove("X-Powered-By");
+			headers["X-Content-Type-Options"] = "nosniff";
+			headers["X-Frame-Options"] = "SAMEORIGIN";
+			headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+			headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+
+			var forwardedProto = Request.Headers["X-Forwarded-Proto"];
+			if (Request.IsSecureConnection || string.Equals(forwardedProto, "https", StringComparison.OrdinalIgnoreCase))
+			{
+				headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
+			}
+		}
+
 		/// <summary>
 		/// Fires on Application Error
 		/// </summary>

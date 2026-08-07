@@ -941,6 +941,8 @@ namespace Openbrew.Web.Controllers
 
  
         [HttpPost]
+        [Authorize]
+        [ForceHttps]
         public ActionResult AddComment(CommentAddViewModel commentAddViewModel)
         {
             if (!commentAddViewModel.Validate().IsValid)

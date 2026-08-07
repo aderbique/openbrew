@@ -17,16 +17,21 @@ namespace ctorx.Core.Security
             }
 
 
+			var issuedAt = DateTime.Now;
 			var authTicket = new FormsAuthenticationTicket(1, //version
 				identifier, // user name
-				DateTime.Now,             //creation
-				DateTime.Now.AddYears(10), //Expiration (you can set it to 1 month
-				true,  //Persistent
+				issuedAt,             //creation
+				persist ? issuedAt.AddDays(30) : issuedAt.AddHours(8),
+				persist,
 				identifier); // additional informations
 
 			var encryptedTicket = FormsAuthentication.Encrypt(authTicket);
 
-			var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+			var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+			{
+				HttpOnly = true,
+				Secure = HttpContext.Current.Request.IsSecureConnection
+			};
 
 			if (persist)
 			{

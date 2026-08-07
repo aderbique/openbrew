@@ -10,8 +10,22 @@ namespace Openbrew.Web
 		/// </summary>
 		public void Init(HttpApplication context)
 		{
-			// Remove Server Header
-			context.PreSendRequestHeaders += (sender, args) => context.Response.Headers.Remove("Server");
+			context.PreSendRequestHeaders += (sender, args) =>
+			{
+				var response = context.Response;
+				response.Headers.Remove("Server");
+				response.Headers.Remove("X-Powered-By");
+				response.Headers.Set("X-Content-Type-Options", "nosniff");
+				response.Headers.Set("X-Frame-Options", "SAMEORIGIN");
+				response.Headers.Set("Referrer-Policy", "strict-origin-when-cross-origin");
+				response.Headers.Set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+
+				var forwardedProto = context.Request.Headers["X-Forwarded-Proto"];
+				if (context.Request.IsSecureConnection || string.Equals(forwardedProto, "https", StringComparison.OrdinalIgnoreCase))
+				{
+					response.Headers.Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+				}
+			};
 
 			// Handle Caching Headers
 			context.BeginRequest += (sender, args) =>

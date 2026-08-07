@@ -237,9 +237,10 @@ namespace Openbrew.Web.Controllers
 			this.AuthenticationService.SignOut();
 			Session.Abandon();
 
-			if (!string.IsNullOrWhiteSpace(Request["ReturnUrl"]))
+			var returnUrl = GetSafeReturnUrl(Request["ReturnUrl"]);
+			if (!string.IsNullOrWhiteSpace(returnUrl))
 			{
-				return Redirect(string.Concat(this.WebSettings.RootPath, Server.UrlDecode(Request["ReturnUrl"])));
+				return Redirect(this.WebSettings.RootPath.TrimEnd('/') + returnUrl);
 			}
 
 			return RedirectToAction("Login");
@@ -527,9 +528,10 @@ namespace Openbrew.Web.Controllers
 		void InitializeGoogleAuth(string googleRedirectUrl)
 		{
 			// Keep the ReturnUrl for When they come back from FB
-			if (!string.IsNullOrWhiteSpace(Request["ReturnUrl"]))
+			var returnUrl = GetSafeReturnUrl(Request["ReturnUrl"]);
+			if (!string.IsNullOrWhiteSpace(returnUrl))
 			{
-				Session["OAuthReturnUrl"] = Request["ReturnUrl"];
+				Session["OAuthReturnUrl"] = returnUrl;
 			}
 
 			ViewBag.GoogleAuthRedirectUrl = googleRedirectUrl;
@@ -646,12 +648,20 @@ namespace Openbrew.Web.Controllers
 			this.SignIn(userSummary, persistLogin);
 
 			// Redirect
-			var redirectUrl = (Session["OAuthReturnUrl"] ?? Request["ReturnUrl"]) != null ? string.Format("{0}{1}", this.WebSettings.RootPath, Session["OAuthReturnUrl"].ToString()) 
-				: this.WebSettings.RootPath; 
+			var returnUrl = GetSafeReturnUrl(Session["OAuthReturnUrl"] ?? Request["ReturnUrl"]);
+			var redirectUrl = !string.IsNullOrWhiteSpace(returnUrl)
+				? this.WebSettings.RootPath.TrimEnd('/') + returnUrl
+				: this.WebSettings.RootPath;
 
 			Session.Remove("OAuthReturnUrl");
 
-			return RedirectPermanent(redirectUrl);
+			return Redirect(redirectUrl);
+		}
+
+		string GetSafeReturnUrl(object candidate)
+		{
+			var value = candidate == null ? null : Server.UrlDecode(Convert.ToString(candidate));
+			return !string.IsNullOrWhiteSpace(value) && Url.IsLocalUrl(value) ? value : null;
 		}
 	}
 }
