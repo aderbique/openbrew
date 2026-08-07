@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest an improvement to OpenBrew.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing an idea. The most useful requests explain the brewing problem before proposing a solution.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What brewing or workflow problem would this solve?
+      placeholder: When I ..., it is difficult to ...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the experience you would like to have.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds or other approaches have you tried?
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Who would benefit?
+      options:
+        - Homebrewers
+        - Recipe creators
+        - Community members browsing recipes
+        - Site administrators
+        - Developers or self-hosters
+        - Everyone
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add sketches, screenshots, links, or examples from other tools if useful.

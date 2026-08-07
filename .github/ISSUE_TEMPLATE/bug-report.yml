@@ -1,0 +1,60 @@
+name: Bug report
+description: Tell us about something that is broken or behaving unexpectedly.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping make OpenBrew better. Please avoid including passwords, API keys, or other private data.
+  - type: input
+    id: summary
+    attributes:
+      label: What happened?
+      description: A concise description of the problem.
+      placeholder: Saving a recipe does not retain its photo
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest set of steps that consistently shows the issue.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area affected
+      options:
+        - Recipe builder
+        - Recipe browsing or search
+        - Import or export
+        - Account or sign-in
+        - Ingredient or style catalog
+        - Dark mode or visual design
+        - Deployment or Docker
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and environment
+      description: Include browser/version and whether this is local, dev, or production.
+      placeholder: Chrome 139 on macOS; local Docker
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots, logs, or other context
+      description: Drag in screenshots or paste redacted logs if helpful.

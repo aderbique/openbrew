@@ -1,0 +1,23 @@
+name: Documentation improvement
+description: Report missing, confusing, or incorrect documentation.
+title: "[Docs]: "
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Documentation location
+      description: Link to the file, page, or section that needs attention.
+      placeholder: README.md — Swarm / Portainer
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is unclear, missing, or incorrect?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+      description: If you have wording or an example command, include it here.

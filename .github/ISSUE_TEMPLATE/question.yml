@@ -1,0 +1,24 @@
+name: Question or support request
+description: Ask for help using, configuring, or self-hosting OpenBrew.
+title: "[Question]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not post credentials, access tokens, connection strings, or private recipe data.
+  - type: textarea
+    id: question
+    attributes:
+      label: What would you like help with?
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Include the relevant commands or configuration with sensitive values removed.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Docker Compose on Ubuntu 24.04, or Chrome on macOS

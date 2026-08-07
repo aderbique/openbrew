@@ -28,6 +28,7 @@ namespace Openbrew.DbInit
 				if (tableExists)
 				{
 					Console.WriteLine("Database already seeded.");
+					ApplyMigrations(config);
 					return 0;
 				}
 
@@ -50,6 +51,8 @@ namespace Openbrew.DbInit
 				{
 					throw new InvalidOperationException("Database initialization completed but the expected schema table is still missing.");
 				}
+
+				ApplyMigrations(config);
 
 				Console.WriteLine("Database bootstrap complete.");
 				return 0;
@@ -179,14 +182,41 @@ namespace Openbrew.DbInit
 
 		static void ExecuteSchemaScript(DbInitConfig config)
 		{
-			if (!File.Exists(config.SchemaScriptPath))
+			ExecuteSqlScript(config, config.SchemaScriptPath, "schema");
+		}
+
+		static void ApplyMigrations(DbInitConfig config)
+		{
+			var migrationFiles = new[]
 			{
-				throw new FileNotFoundException("Schema script not found.", config.SchemaScriptPath);
+				"20260806_add_recipe_style_catalog.sql",
+				"20260807_add_newsletter_confirmation.sql",
+				"20260807_add_user_login_ip_address.sql",
+				"20260807_add_yeast_catalog_metadata.sql",
+				"20260807_add_ingredient_catalog_foundation.sql",
+				"20260807_refresh_adjunct_and_mash_catalog.sql"
+			};
+
+			foreach (var migrationFile in migrationFiles)
+			{
+				var migrationPath = Path.Combine(config.MigrationsDirectory, migrationFile);
+				if (File.Exists(migrationPath))
+				{
+					ExecuteSqlScript(config, migrationPath, "migration");
+				}
+			}
+		}
+
+		static void ExecuteSqlScript(DbInitConfig config, string scriptPath, string scriptType)
+		{
+			if (!File.Exists(scriptPath))
+			{
+				throw new FileNotFoundException(string.Concat(scriptType, " script not found."), scriptPath);
 			}
 
-			Console.WriteLine("Applying schema script {0}.", config.SchemaScriptPath);
+			Console.WriteLine("Applying {0} script {1}.", scriptType, scriptPath);
 
-			var script = File.ReadAllText(config.SchemaScriptPath);
+			var script = File.ReadAllText(scriptPath);
 			var batches = SplitSqlBatches(script).ToList();
 
 			using (var connection = new SqlConnection(config.TargetConnectionString))
@@ -255,6 +285,7 @@ namespace Openbrew.DbInit
 		public string SqlAdminUser { get; private set; }
 		public string SqlAdminPassword { get; private set; }
 		public string SchemaScriptPath { get; private set; }
+		public string MigrationsDirectory { get; private set; }
 		public bool RecreateOnMissingSchema { get; private set; }
 		public int MaxAttempts { get; private set; }
 		public int DelayMilliseconds { get; private set; }
@@ -280,9 +311,10 @@ namespace Openbrew.DbInit
 				SqlHost = GetEnv("OPENBREW_SQL_HOST", "db", "BREWGR_SQL_HOST"),
 				SqlPort = GetIntEnv("OPENBREW_SQL_PORT", 1433, "BREWGR_SQL_PORT"),
 				DatabaseName = GetEnv("OPENBREW_DB_NAME", "Brewgr_DEV", "BREWGR_DB_NAME"),
-				SqlAdminUser = GetEnv("OPENBREW_SQL_ADMIN_USER", "sa", "BREWGR_SQL_ADMIN_USER"),
-				SqlAdminPassword = GetEnv("OPENBREW_SA_PASSWORD", "Brewgr_dev_123!", "BREWGR_SA_PASSWORD"),
-				SchemaScriptPath = GetEnv("OPENBREW_DB_INIT_SCRIPT", "/workspace/brewgr/Setup/Database/Build.20150807/20150807_initial.sql", "BREWGR_DB_INIT_SCRIPT"),
+					SqlAdminUser = GetEnv("OPENBREW_SQL_ADMIN_USER", "sa", "BREWGR_SQL_ADMIN_USER"),
+					SqlAdminPassword = GetEnv("OPENBREW_SA_PASSWORD", "Brewgr_dev_123!", "BREWGR_SA_PASSWORD"),
+					SchemaScriptPath = GetEnv("OPENBREW_DB_INIT_SCRIPT", "/workspace/brewgr/Setup/Database/Build.20150807/20150807_initial.sql", "BREWGR_DB_INIT_SCRIPT"),
+					MigrationsDirectory = GetEnv("OPENBREW_DB_MIGRATIONS_DIR", "/app/Setup/Database", "BREWGR_DB_MIGRATIONS_DIR"),
 				RecreateOnMissingSchema = GetBoolEnv("OPENBREW_DB_INIT_RECREATE_ON_MISSING", false, "BREWGR_DB_INIT_RECREATE_ON_MISSING"),
 				MaxAttempts = GetIntEnv("OPENBREW_SQL_WAIT_ATTEMPTS", 60, "BREWGR_SQL_WAIT_ATTEMPTS"),
 				DelayMilliseconds = GetIntEnv("OPENBREW_SQL_WAIT_DELAY_MS", 2000, "BREWGR_SQL_WAIT_DELAY_MS")

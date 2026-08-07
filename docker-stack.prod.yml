@@ -4,7 +4,10 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_PID: Developer
-      MSSQL_SA_PASSWORD: ${OPENBREW_SA_PASSWORD}
+    command:
+      - /bin/bash
+      - -ec
+      - export MSSQL_SA_PASSWORD="$$(cat /run/secrets/openbrew_sql_sa_password)"; exec /opt/mssql/bin/sqlservr
     volumes:
       - type: bind
         source: /volume1/docker/openbrew-prod/sql
@@ -13,6 +16,8 @@ services:
       openbrew-internal:
         aliases:
           - db
+    secrets:
+      - openbrew_sql_sa_password
     deploy:
       replicas: 1
       placement:
@@ -29,7 +34,7 @@ services:
       OPENBREW_SQL_PORT: 1433
       OPENBREW_DB_NAME: ${OPENBREW_DB_NAME:-Openbrew_PROD}
       OPENBREW_SQL_ADMIN_USER: sa
-      OPENBREW_SA_PASSWORD: ${OPENBREW_SA_PASSWORD}
+      OPENBREW_SA_PASSWORD_FILE: /run/secrets/openbrew_sql_sa_password
       OPENBREW_DB_INIT_SCRIPT: /app/Setup/Database/Build.20150807/20150807_initial.sql
       OPENBREW_HOST_PORT: 8085
       OPENBREW_ROOT_URL: https://openbrew.net
@@ -38,10 +43,10 @@ services:
       OPENBREW_STATIC_ROOT_URL_SECURE: https://openbrew.net
       # Recipe images are served by XSP from /Media, so persist them at the
       # corresponding directory beneath the application web root.
-      OPENBREW_MEDIA_PHYSICAL_ROOT: /workspace/brewgr/Openbrew.Web/Media
-      Google_ApplicationKey: ${GOOGLE_APPLICATION_KEY}
-      Google_ApplicationSecret: ${GOOGLE_APPLICATION_SECRET}
-      OPENBREW_CONTACT_EMAIL_ADDRESS: ${OPENBREW_CONTACT_EMAIL_ADDRESS:-austinjderbique@gmail.com}
+      OPENBREW_MEDIA_PHYSICAL_ROOT: /app/Openbrew.Web/Media
+      Google_ApplicationKey_FILE: /run/secrets/openbrew_google_application_key
+      Google_ApplicationSecret_FILE: /run/secrets/openbrew_google_application_secret
+      OPENBREW_CONTACT_EMAIL_ADDRESS: info@openbrew.net
       SMTP_HOST_FILE: /run/secrets/openbrew_smtp_host
       SMTP_PORT_FILE: /run/secrets/openbrew_smtp_port
       SMTP_USERNAME_FILE: /run/secrets/openbrew_smtp_username
@@ -49,8 +54,11 @@ services:
     volumes:
       - type: bind
         source: /volume1/docker/openbrew-prod/media
-        target: /workspace/brewgr/Openbrew.Web/Media
+        target: /app/Openbrew.Web/Media
     secrets:
+      - openbrew_sql_sa_password
+      - openbrew_google_application_key
+      - openbrew_google_application_secret
       - openbrew_smtp_host
       - openbrew_smtp_port
       - openbrew_smtp_username
@@ -82,6 +90,12 @@ networks:
     driver: overlay
 
 secrets:
+  openbrew_sql_sa_password:
+    external: true
+  openbrew_google_application_key:
+    external: true
+  openbrew_google_application_secret:
+    external: true
   openbrew_smtp_host:
     external: true
   openbrew_smtp_port:
