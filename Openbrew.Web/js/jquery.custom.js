@@ -29,14 +29,14 @@ jQuery(document).ready(function() {
 	}
 
 	function closeMobileMenus(except) {
-		jQuery('#primary-nav > ul > li.mobile-open, #user-info > div:last-child > ul > li.mobile-open')
+		jQuery('#primary-nav > ul.sf-menu > li.mobile-open, #user-info > div.floatleft > ul.sf-menu > li.mobile-open')
 			.not(except)
 			.removeClass('mobile-open')
 			.children('a[aria-expanded]')
 			.attr('aria-expanded', 'false');
 	}
 
-	jQuery('#primary-nav > ul > li.sf-with-ul > a, #user-info > div:last-child > ul > li.sf-with-ul > a').on('click', function(event) {
+	jQuery('#primary-nav > ul.sf-menu > li.sf-with-ul > a, #user-info > div.floatleft > ul.sf-menu > li.sf-with-ul > a').on('click', function(event) {
 		if (!isMobileMenu()) {
 			return;
 		}
