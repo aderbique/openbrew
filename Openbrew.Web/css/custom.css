@@ -1618,6 +1618,123 @@ html[data-theme="dark"] .admin-runtime-panel span { color: #d8c9ba; }
 html[data-theme="dark"] .admin-runtime-panel strong { color: #f5eadc; }
 @media (max-width: 640px) { .admin-runtime-panel { grid-template-columns: 1fr; gap: 8px; } }
 
+/* Thumb-friendly navigation and sign-in controls. The legacy menu was built
+   for hover and a fixed 960px header; these rules keep its desktop appearance
+   while giving phone users clear, full-height controls and tap-open menus. */
+@media (max-width: 820px) {
+    #header {
+        align-items: center;
+        padding: 12px 14px;
+        gap: 8px;
+    }
+
+    #header #logo { min-width: 0; }
+
+    #header #user-info {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        width: auto;
+        height: auto;
+        margin: 0 0 0 auto;
+        padding: 3px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .11);
+    }
+
+    #header #user-info > .floatleft { float: none; }
+    #header #user-info > .floatleft:first-child { display: flex; align-items: center; }
+    #header #user-info img { width: 34px; height: 34px; margin: 0 5px 0 0; }
+    #header #user-info ul { line-height: normal; }
+    #header #user-info ul > li { margin: 0; }
+    #header #user-info ul > li > a {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        min-height: 42px;
+        max-width: 164px;
+        margin: 0;
+        padding: 8px 28px 8px 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        font-size: 15px;
+        line-height: 1.1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #header #user-info .sf-sub-indicator {
+        right: 9px;
+        top: 50%;
+        margin-top: -3px;
+    }
+
+    #primary-nav .sf-menu > li > .sub-menu,
+    #header #user-info .sf-menu > li > .sub-menu {
+        display: none;
+        top: calc(100% + 6px) !important;
+        margin: 0;
+        z-index: 7000;
+    }
+
+    #primary-nav .sf-menu > li.mobile-open > .sub-menu,
+    #header #user-info .sf-menu > li.mobile-open > .sub-menu { display: block; }
+
+    #primary-nav .sf-menu > li > .sub-menu {
+        left: 0 !important;
+        width: min(300px, calc(100vw - 48px));
+    }
+
+    #header #user-info .sf-menu > li > .sub-menu {
+        right: 0 !important;
+        left: auto !important;
+        width: min(270px, calc(100vw - 48px));
+    }
+
+    #primary-nav .sf-menu > li > .sub-menu li,
+    #header #user-info .sf-menu > li > .sub-menu li { height: auto; }
+
+    #primary-nav .sf-menu > li > .sub-menu a,
+    #header #user-info .sf-menu > li > .sub-menu a {
+        box-sizing: border-box;
+        min-height: 42px;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        line-height: 1.3;
+    }
+
+    #view-login,
+    #view-loginviadialog {
+        box-sizing: border-box;
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    #view-login .login,
+    #view-loginviadialog .login,
+    #view-login .sign-up,
+    #view-loginviadialog .sign-up {
+        box-sizing: border-box;
+        float: none;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        margin: 14px 0 0;
+    }
+
+    #view-login input[type=text],
+    #view-login input[type=password],
+    #view-loginviadialog input[type=text],
+    #view-loginviadialog input[type=password] { box-sizing: border-box; max-width: 100%; }
+}
+
+@media (max-width: 360px) {
+    #header #logo.brand-mark span { font-size: 17px; }
+    #header #user-info ul > li > a { max-width: 116px; }
+}
+
 /* Final cascade: keep the home refinements after the legacy theme rules. */
 #view-home .hero {
     background-image: url('/img/home-hero-brew.jpg');
@@ -1741,6 +1858,14 @@ html[data-theme="dark"] .admin-runtime-panel strong { color: #f5eadc; }
 
     #footer .Finfo { display: block; }
     #footer .designby { margin-top: 8px; }
+}
+
+/* Keep the account button overrides at the end of the legacy stylesheet,
+   where older header rules cannot shrink its mobile touch target again. */
+@media (max-width: 820px) {
+    #header { align-items: center; padding: 12px 14px; gap: 8px; }
+    #header #user-info { margin: 0 0 0 auto; }
+    #header #user-info img { width: 34px; height: 34px; margin: 0 5px 0 0; }
 }
 
 /* Keep emphasis readable after the final legacy-layout refinements. */

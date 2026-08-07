@@ -20,6 +20,44 @@ jQuery(document).ready(function() {
 			dropShadows: false
 		});	
 	}
+
+/* On a touch-sized screen, Superfish's hover menus need an explicit tap
+   state. Keep desktop hover behaviour intact while making navigation and the
+   signed-in account menu practical to use with a thumb. */
+	function isMobileMenu() {
+		return window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
+	}
+
+	function closeMobileMenus(except) {
+		jQuery('#primary-nav > ul > li.mobile-open, #user-info > div:last-child > ul > li.mobile-open')
+			.not(except)
+			.removeClass('mobile-open')
+			.children('a[aria-expanded]')
+			.attr('aria-expanded', 'false');
+	}
+
+	jQuery('#primary-nav > ul > li.sf-with-ul > a, #user-info > div:last-child > ul > li.sf-with-ul > a').on('click', function(event) {
+		if (!isMobileMenu()) {
+			return;
+		}
+
+		var item = jQuery(this).parent('li');
+		if (!item.children('ul').length) {
+			return;
+		}
+
+		event.preventDefault();
+		var isOpen = item.hasClass('mobile-open');
+		closeMobileMenus(item);
+		item.toggleClass('mobile-open', !isOpen);
+		jQuery(this).attr('aria-expanded', isOpen ? 'false' : 'true');
+	});
+
+	jQuery(document).on('click touchstart', function(event) {
+		if (isMobileMenu() && !jQuery(event.target).closest('#primary-nav, #user-info').length) {
+			closeMobileMenus();
+		}
+	});
 	
 /*-----------------------------------------------------------------------------------*/
 /*	Toggle Content
