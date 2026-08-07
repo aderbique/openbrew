@@ -111,7 +111,7 @@ To deploy them from Portainer or `docker stack deploy`, provide these environmen
 
 The stack templates mount those four secrets into `/run/secrets/...` and expose them to the app through `SMTP_*_FILE` environment variables. The app reads those files directly, so the SMTP password never has to appear in the stack YAML or in a plain environment variable.
 
-The workflow in `.github/workflows/dockerhub.yml` publishes the app image to Docker Hub using `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`. It publishes `sha-<commit>` for every configured branch push, `latest` and `prod` from `master`/`main`, `dev` from development branches, and both `vX.Y.Z` and `X.Y.Z` for a release tag.
+The workflow in `.github/workflows/dockerhub.yml` publishes the app image to the `aderbique/openbrew-web` Docker Hub repository using the `DOCKERHUB_TOKEN` repository secret. It publishes `sha-<commit>` for every configured branch push, `latest` and `prod` from `master`/`main`, `dev` from development branches, and both `vX.Y.Z` and `X.Y.Z` for a release tag.
 
 #### Cluster migration checklist
 
