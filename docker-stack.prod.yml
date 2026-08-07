@@ -42,7 +42,7 @@ services:
       # Recipe images are served by XSP from /Media, so persist them at the
       # corresponding directory beneath the application web root.
       OPENBREW_MEDIA_PHYSICAL_ROOT: /app/Openbrew.Web/Media
-      Google_ApplicationKey_FILE: /run/secrets/openbrew_google_application_key_v2
+      Google_ApplicationKey_FILE: /run/secrets/openbrew_google_application_key_v3
       Google_ApplicationSecret_FILE: /run/secrets/openbrew_google_application_secret
       OPENBREW_CONTACT_EMAIL_ADDRESS: info@openbrew.net
       SMTP_HOST_FILE: /run/secrets/openbrew_smtp_host
@@ -53,7 +53,7 @@ services:
       - openbrew-prod-media:/app/Openbrew.Web/Media
     secrets:
       - openbrew_sql_sa_password
-      - openbrew_google_application_key_v2
+      - openbrew_google_application_key_v3
       - openbrew_google_application_secret
       - openbrew_smtp_host
       - openbrew_smtp_port
@@ -93,7 +93,7 @@ volumes:
 secrets:
   openbrew_sql_sa_password:
     external: true
-  openbrew_google_application_key_v2:
+  openbrew_google_application_key_v3:
     external: true
   openbrew_google_application_secret:
     external: true
