@@ -98,6 +98,10 @@ namespace Openbrew.Web.Core.Service
 		{
 			var request = (HttpWebRequest)WebRequest.Create("https://oauth2.googleapis.com/tokeninfo?id_token=" + UrlEncode(idToken));
 			request.Method = "GET";
+			// Authentication happens in the interactive request path.  Do not leave
+			// a browser waiting on an unavailable upstream verification endpoint.
+			request.Timeout = 15000;
+			request.ReadWriteTimeout = 15000;
 			return ParseJson(ReadResponse(request));
 		}
 

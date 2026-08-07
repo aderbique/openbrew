@@ -461,9 +461,17 @@ namespace Openbrew.Web.Controllers
 				return View("~/Views/Auth/Login.cshtml");
 			}
 
-			var userSummary = this.ProcessOAuthUserInfo(this.GoogleConnectService.GetUserInfoFromIdToken(idToken));
-			Session.Remove("OAuthStateToken");
-			return SignInAndRedirect(userSummary, true);
+			try
+			{
+				var userSummary = this.ProcessOAuthUserInfo(this.GoogleConnectService.GetUserInfoFromIdToken(idToken));
+				Session.Remove("OAuthStateToken");
+				return SignInAndRedirect(userSummary, true);
+			}
+			catch (Exception)
+			{
+				this.AppendMessage(new ErrorMessage { Text = "Google sign-in could not be completed. Please try again or use email sign-in." });
+				return View("~/Views/Auth/Login.cshtml");
+			}
 		}
 
 		/// <summary>
@@ -481,13 +489,22 @@ namespace Openbrew.Web.Controllers
 				return View("~/Views/Auth/LoginViaDialog.cshtml");
 			}
 
-			var userSummary = this.ProcessOAuthUserInfo(this.GoogleConnectService.GetUserInfoFromIdToken(idToken));
-			Session.Remove("OAuthStateToken");
-			this.SignIn(userSummary, true);
-			this.AppendLoginViaDialogSuccessMessage(userSummary, !string.IsNullOrWhiteSpace(Request["editMode"]));
+			try
+			{
+				var userSummary = this.ProcessOAuthUserInfo(this.GoogleConnectService.GetUserInfoFromIdToken(idToken));
+				Session.Remove("OAuthStateToken");
+				this.SignIn(userSummary, true);
+				this.AppendLoginViaDialogSuccessMessage(userSummary, !string.IsNullOrWhiteSpace(Request["editMode"]));
 
-			ViewBag.LoginViaDialogSuccess = true;
-			return View("~/Views/Auth/LoginViaDialog.cshtml");
+				ViewBag.LoginViaDialogSuccess = true;
+				return View("~/Views/Auth/LoginViaDialog.cshtml");
+			}
+			catch (Exception)
+			{
+				ViewBag.LoginViaDialogSuccess = false;
+				this.AppendMessage(new ErrorMessage { Text = "Google sign-in could not be completed. Please try again or use email sign-in." });
+				return View("~/Views/Auth/LoginViaDialog.cshtml");
+			}
 		}
 
 		/// <summary>
