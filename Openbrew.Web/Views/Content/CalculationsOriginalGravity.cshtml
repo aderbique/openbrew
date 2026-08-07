@@ -1,8 +1,9 @@
-﻿@{
+﻿@using Openbrew.Web
+@{
     if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
     ViewBag.Title = "How to Calculate Original Gravity";
     ViewBag.Description = "How to calculate the original gravity of your homebrew.";
-    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/original-gravity";
+    ViewBag.Canonical = Url.RootUrl(true).TrimEnd('/') + "/calculations/original-gravity";
 }
 
 <div class="calculations">

@@ -18,4 +18,4 @@ Disallow: setusername
 Disallow: 404
 Disallow: 500
 
-sitemap: http://127.0.0.1:8085/sitemap.xml
+sitemap: https://openbrew.net/sitemap.xml

@@ -16,36 +16,38 @@ namespace Openbrew.Web
 		readonly IRecipeService RecipeService;
 		readonly IBeerStyleService BeerStyleService;
 		readonly IUserService UserService;
+		readonly IWebSettings WebSettings;
 
 		readonly string[] StaticLinks = new[]
 		{
-			"http://brewgr.com",
-			"http://brewgr.com/about",
-			"http://brewgr.com/features",
-			"https://brewgr.com/login",
-			"http://brewgr.com/how-it-works",
-			"http://brewgr.com/homebrew-recipes",
-			"https://brewgr.com/homebrew-recipe-calculator",
-			"https://brewgr.com/contact",
-            "http://brewgr.com/calculations",
-			"http://brewgr.com/calculations/original-gravity",
-			"http://brewgr.com/calculations/final-gravity",
-			"http://brewgr.com/calculations/srm-beer-color",
-			"http://brewgr.com/calculations/ibu-hop-bitterness",
-			"http://brewgr.com/calculations/alcohol-content",
-			"http://brewgr.com/calculations/calories",
-			"http://brewgr.com/calculators/hydrometer-correction",
-			"http://brewgr.com/pliny-the-elder-clone-recipes"
+			"/",
+			"/about",
+			"/features",
+			"/login",
+			"/how-it-works",
+			"/homebrew-recipes",
+			"/homebrew-recipe-calculator",
+			"/contact",
+            "/calculations",
+			"/calculations/original-gravity",
+			"/calculations/final-gravity",
+			"/calculations/srm-beer-color",
+			"/calculations/ibu-hop-bitterness",
+			"/calculations/alcohol-content",
+			"/calculations/calories",
+			"/calculators/hydrometer-correction",
+			"/pliny-the-elder-clone-recipes"
 		};
 
 		/// <summary>
 		/// ctor the Mighty
 		/// </summary>
-		public BrewgrSeoSitemap(IRecipeService recipeService, IBeerStyleService beerStyleService, IUserService userService)
+		public BrewgrSeoSitemap(IRecipeService recipeService, IBeerStyleService beerStyleService, IUserService userService, IWebSettings webSettings)
 		{
 			this.RecipeService = recipeService;
 			this.BeerStyleService = beerStyleService;
 			this.UserService = userService;
+			this.WebSettings = webSettings;
 		}
 
 		/// <summary>
@@ -55,6 +57,10 @@ namespace Openbrew.Web
 		public string GenerateXml(UrlHelper urlHelper)
 		{
 			var xml = new StringBuilder();
+			var rootUrl = this.WebSettings.RootPathSecure.TrimEnd('/');
+			Func<string, string> absoluteUrl = url => Uri.IsWellFormedUriString(url, UriKind.Absolute)
+				? url
+				: rootUrl + "/" + url.TrimStart('/');
 
 			xml.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			xml.Append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" " + 
@@ -65,7 +71,7 @@ namespace Openbrew.Web
 			#region STATIC LINKS 
 
 			// Add the Static Links
-			StaticLinks.ForEach(x => xml.AppendLine(this.CreateUrlString(x, new DateTime(2012, 08, 14), "weekly")));
+			StaticLinks.ForEach(x => xml.AppendLine(this.CreateUrlString(absoluteUrl(x), new DateTime(2012, 08, 14), "weekly")));
 
 			#endregion
 
@@ -76,13 +82,13 @@ namespace Openbrew.Web
 
 			foreach(var style in styles)
 			{
-				xml.AppendLine(this.CreateUrlString(urlHelper.StyleDetailUrl(style.UrlFriendlyName), DateTime.Now, "daily", "1.0"));
+				xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.StyleDetailUrl(style.UrlFriendlyName)), DateTime.Now, "daily", "1.0"));
 
 				var stylePageCount = this.BeerStyleService.GetStylePageCount(style.SubCategoryId);
 
 				for(var page = 2; page <= stylePageCount; page++)
 				{
-					xml.AppendLine(this.CreateUrlString(urlHelper.StyleDetailUrl(style.UrlFriendlyName, page), DateTime.Now, "daily", "1.0"));
+					xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.StyleDetailUrl(style.UrlFriendlyName, page)), DateTime.Now, "daily", "1.0"));
 				}
 			}
 
@@ -96,12 +102,12 @@ namespace Openbrew.Web
 
 			if(uncategorizedPageCount > 0)
 			{
-				xml.AppendLine(this.CreateUrlString(urlHelper.Action("other-homebrew-recipes", "Recipe", new { page = (int?)null }, "http"), DateTime.Now, "daily", "1.0"));
+				xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.Action("other-homebrew-recipes", "Recipe", new { page = (int?)null })), DateTime.Now, "daily", "1.0"));
 				if(uncategorizedPageCount > 1)
 				{
 					for(var page = 2; page <= uncategorizedPageCount; page++)
 					{
-						xml.AppendLine(this.CreateUrlString(urlHelper.Action("other-homebrew-recipes", "Recipe", new { page = page }, "http"), DateTime.Now, "daily", "1.0"));
+						xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.Action("other-homebrew-recipes", "Recipe", new { page = page })), DateTime.Now, "daily", "1.0"));
 					}
 				}
 			}
@@ -112,14 +118,14 @@ namespace Openbrew.Web
 
 			// Add the Recipe Links (this will need to be extracted when we hit thousands of Recipes)
 			var recipes = this.RecipeService.GetAllRecipes();
-			recipes.ForEach(x => xml.AppendLine(this.CreateUrlString(urlHelper.RecipeDetailUrl(x.RecipeId, x.RecipeName, (x.BjcpStyle != null ? x.BjcpStyle.SubCategoryName : null)), x.DateModified ?? x.DateCreated, "weekly", "1.0")));
+			recipes.ForEach(x => xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.RecipeDetailUrl(x.RecipeId, x.RecipeName, (x.BjcpStyle != null ? x.BjcpStyle.SubCategoryName : null))), x.DateModified ?? x.DateCreated, "weekly", "1.0")));
 
 			#endregion
 
 			#region BREW SESSION DETAIL 
 
 			var brewSessions = this.RecipeService.GetAllBrewSessionSummaries();
-			brewSessions.ForEach(x => xml.AppendLine(this.CreateUrlString(urlHelper.BrewSessionDetailUrl(x.BrewSessionId, x.RecipeName), x.DateModified ?? x.DateCreated, "weekly", "1.0")));
+			brewSessions.ForEach(x => xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.BrewSessionDetailUrl(x.BrewSessionId, x.RecipeName)), x.DateModified ?? x.DateCreated, "weekly", "1.0")));
 
 			#endregion
 
@@ -127,7 +133,7 @@ namespace Openbrew.Web
 
 			// Add the User Profile Links (this will need to be extracted when we have a lot of users)
 			var users = this.UserService.GetAllUsers();
-			users.ForEach(x => xml.AppendLine(this.CreateUrlString(urlHelper.UserProfileUrl(x.CalculatedUsername), x.DateModified ?? x.DateCreated, "weekly", "0.6")));
+			users.ForEach(x => xml.AppendLine(this.CreateUrlString(absoluteUrl(urlHelper.UserProfileUrl(x.CalculatedUsername)), x.DateModified ?? x.DateCreated, "weekly", "0.6")));
 
 			#endregion
 

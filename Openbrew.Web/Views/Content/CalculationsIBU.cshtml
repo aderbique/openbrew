@@ -1,8 +1,9 @@
-﻿@{
+﻿@using Openbrew.Web
+@{
     if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
     ViewBag.Title = "How to Calculate IBU/Hop Bitterness";
     ViewBag.Description = "How to calculate the IBUs in your homebrew.";
-    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/ibu-hop-bitterness";
+    ViewBag.Canonical = Url.RootUrl(true).TrimEnd('/') + "/calculations/ibu-hop-bitterness";
 }
 
 <div class="calculations">

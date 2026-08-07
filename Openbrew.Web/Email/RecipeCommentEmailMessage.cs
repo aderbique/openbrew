@@ -12,6 +12,7 @@ namespace Openbrew.Web.Email
 		readonly RecipeSummary RecipeSummary;
 		readonly string CommenterUsername;
 		readonly UserSummary UserToNotify;
+		readonly IWebSettings WebSettings;
 
 		/// <summary>
 		/// ctor the Mighty
@@ -21,6 +22,7 @@ namespace Openbrew.Web.Email
 			RecipeSummary = recipeSummary;
 			CommenterUsername = commenterUsername;
 			UserToNotify = userToNotify;
+			WebSettings = webSettings;
 
 			this.SenderAddress = webSettings.SenderAddress;
 			this.SenderDisplayName = webSettings.SenderDisplayName;
@@ -60,7 +62,7 @@ namespace Openbrew.Web.Email
 			message.AppendLine();
 			message.AppendLine("You can read the comment and respond by visiting the recipe page on openbrew at the following link.");
 			message.AppendLine();
-			message.AppendLine("<http://127.0.0.1:8085>");
+			message.AppendLine("<" + this.WebSettings.RootPathSecure.TrimEnd('/') + "/recipe/" + this.RecipeSummary.RecipeId + ">");
 
 			message.AppendLine("If clicking the link above does not work, copy and paste the URL in");
 			message.AppendLine("a new browser window instead.");

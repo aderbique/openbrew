@@ -1,8 +1,9 @@
-﻿@{
+﻿@using Openbrew.Web
+@{
     if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
     ViewBag.Title = "How to Calculate SRM/Beer Color";
     ViewBag.Description = "How to calculate the SRM/beer color of your homebrew.";
-    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/srm-beer-color";
+    ViewBag.Canonical = Url.RootUrl(true).TrimEnd('/') + "/calculations/srm-beer-color";
 }
 
 <div class="calculations">

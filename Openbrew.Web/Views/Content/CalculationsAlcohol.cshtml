@@ -1,8 +1,9 @@
-﻿@{
+﻿@using Openbrew.Web
+@{
     if (Request.QueryString["iframe"] == "1") { this.Layout = "~/Views/Shared/_LayoutNoShell.cshtml"; }
     ViewBag.Title = "How to Calculate Alcohol Content";
     ViewBag.Description = "How to calculate the alcohol content of your homebrew.";
-    ViewBag.Canonical = "http://127.0.0.1:8085/calculations/alcohol-content";
+    ViewBag.Canonical = Url.RootUrl(true).TrimEnd('/') + "/calculations/alcohol-content";
 }
 
 <div class="calculations">

@@ -7,7 +7,7 @@
 @{
     ViewBag.Title = Model.GetTitle();
     ViewBag.Description = Model.GetDescription();
-    ViewBag.Canonical = Url.RecipeDetailUrl(Model.RecipeViewModel.RecipeId, Model.RecipeViewModel.Name, Model.RecipeViewModel.StyleName);
+    ViewBag.Canonical = Url.RootUrl(true).TrimEnd('/') + Url.RecipeDetailUrl(Model.RecipeViewModel.RecipeId, Model.RecipeViewModel.Name, Model.RecipeViewModel.StyleName);
 }
 
 @section Styles
