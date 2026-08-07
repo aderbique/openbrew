@@ -988,6 +988,7 @@ var Builder =
         // if "similar styles" section is showing then we need to refresh them
         if ($('#style-hidemore').is(":visible")) {
             StyleChart.renderSimilarStyles($('[data-name=r_StyleId]').val(), $('[data-name=r_StyleCatalog]').val(), recipe, $('#similar-style-chart'));
+            $('#similar-style-heading').removeClass('hidden').show();
             $('#style-showmore').hide();
             $('#style-hidemore').show();
         }

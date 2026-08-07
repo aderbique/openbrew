@@ -133,12 +133,6 @@
 @section Scripts
 {
     <script type="text/javascript">
-        $(function() {
-            var recipe = getRecipe();
-
-            StyleChart.createForRecipeStyle('@Model.RecipeViewModel.StyleId', '@Model.RecipeViewModel.StyleCatalog', recipe, $('#selected-style-chart'));
-        });
-
         (function() {
             function copyText(text) {
                 if (navigator.clipboard && navigator.clipboard.writeText) {

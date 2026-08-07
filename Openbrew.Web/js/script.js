@@ -386,6 +386,7 @@ function builder_onReady() {
             var styleId = $('#select-style').attr('data-style-id') || recipe.StyleId;
             var styleCatalog = $('#select-style').attr('data-style-catalog') || recipe.StyleCatalog;
             StyleChart.renderSimilarStyles(styleId, styleCatalog, recipe, $('#similar-style-chart'));
+            $('#similar-style-heading').removeClass('hidden').show();
             $('#style-showmore').hide();
             $('#style-hidemore').show();
             return false;
@@ -393,6 +394,7 @@ function builder_onReady() {
 
         $('#hide-similar-styles').click(function() {
             $('#similar-style-chart').empty();
+            $('#similar-style-heading').addClass('hidden').hide();
             $('#style-showmore').show();
             $('#style-hidemore').hide();
             return false;

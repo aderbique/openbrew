@@ -928,6 +928,9 @@ namespace Openbrew.Web.Controllers
 			// TODO: Check if the name passed in the URL is different than what
 			// TODO: is in the DB.  If it is....do a 301 Redirect.  This is for SEO.
             ViewData["DisableEditing"] = true;
+			// Detail pages use the style selector for comparison only, but still need
+			// the legacy catalog available when a brewer switches catalogs.
+			ViewBag.RecipeCreationOptions = this.RecipeService.GetRecipeCreationOptions();
 
 
 			// Get Send To Shop Settings (if any)

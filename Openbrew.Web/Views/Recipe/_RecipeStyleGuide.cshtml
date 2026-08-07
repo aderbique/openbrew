@@ -3,6 +3,7 @@
 @{
     var recipeForStyle = Model as Openbrew.Web.Models.RecipeViewModel;
     var selectedCatalog = recipeForStyle != null && !string.IsNullOrWhiteSpace(recipeForStyle.StyleCatalog) ? recipeForStyle.StyleCatalog : "ba-2026";
+    var isReadOnlyComparison = ViewData["DisableEditing"] != null;
     // Recipe categories remain legacy BJCP identifiers. The selected BA edition
     // is a design reference and is deliberately not used to remap saved recipes.
     var guidelineEditions = new[] {
@@ -24,19 +25,12 @@
 
 <div id="select-style" class="margintop20 recipedata" data-style-id="@Model.StyleId" data-style-catalog="@selectedCatalog">
 	<div class="form-field">
-
-        @if (ViewData["DisableEditing"] != null)
-		{
-			@Html.HiddenFor(m => m.StyleId)
-		}
-		else
-		{
-			@Html.LabelFor(m => m.Name, "Style catalog")
+			<label for="recipe-style-catalog">@(isReadOnlyComparison ? "Compare recipe to style" : "Style catalog")</label>
             <div class="recipe-guideline-edition">
 				<label for="recipe-style-catalog">Catalog</label>
 				<select id="recipe-style-catalog" data-name="r_StyleCatalog"><option value="ba-2026" @(selectedCatalog == "ba-2026" ? "selected=\"selected\"" : "")>2026 Catalog</option><option value="legacy-bjcp" @(selectedCatalog == "legacy-bjcp" ? "selected=\"selected\"" : "")>Legacy</option></select>
             </div>
-			<label for="recipe-bjcp-style">Recipe style</label>
+			<label for="recipe-bjcp-style">@(isReadOnlyComparison ? "Style to compare" : "Recipe style")</label>
 			<input type="hidden" data-name="r_StyleName" value="@Model.StyleName" />
 
 			<select id="recipe-bjcp-style" data-name="r_StyleId">
@@ -53,10 +47,9 @@
                     </optgroup>
                 }
             </select>
-		}
-
 	</div>
 	<div id="selected-style-chart"></div>
+	<div id="similar-style-heading" class="bjcp-similarstyles hidden">Closest style matches</div>
 	<div id="similar-style-chart"></div>
 	<div id="style-showmore"><a href="#" id="show-similar-styles">Show Similar Styles</a></div>
 	<div id="style-hidemore" class="hidden"><a href="#" id="hide-similar-styles">Hide Similar Styles</a></div>
@@ -66,13 +59,15 @@
     (function () {
         var catalog = document.getElementById('recipe-style-catalog'), style = document.getElementById('recipe-bjcp-style'), name = document.querySelector('[data-name=r_StyleName]');
         var selectedStyleId = '@HttpUtility.JavaScriptStringEncode(Model.StyleId ?? "")';
+        var readOnlyComparison = @(isReadOnlyComparison ? "true" : "false");
         if (!catalog || !style) return;
         var legacy = style.innerHTML;
         function syncStyleName() { name.value = style.value ? style.options[style.selectedIndex].text : ''; }
-        function setBaStyles(items) { style.innerHTML = '<option value="">Choose Brewers Association 2026 style...</option>'; items.forEach(function (item) { var option = document.createElement('option'); option.value = item.Id; option.text = item.Name; style.appendChild(option); }); if (selectedStyleId) style.value = selectedStyleId; syncStyleName(); $(style).trigger('chosen:updated'); }
-        $.getJSON('/ba-2026-style-catalog', setBaStyles).fail(function () { style.innerHTML = '<option value="">Could not load the 2026 catalog. Try again.</option>'; });
-        catalog.onchange = function () { selectedStyleId = ''; if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles); } $(style).trigger('chosen:updated'); };
-        style.onchange = function () { syncStyleName(); };
+        function renderReadOnlyComparison() { if (!readOnlyComparison || !style.value || !document.getElementById('RecipeJson')) return; var recipe = getRecipe(); $('#select-style').attr('data-style-id', style.value).attr('data-style-catalog', catalog.value); StyleChart.createForRecipeStyle(style.value, catalog.value, recipe, $('#selected-style-chart')); StyleChart.renderSimilarStyles(style.value, catalog.value, recipe, $('#similar-style-chart')); $('#similar-style-heading, #style-hidemore').removeClass('hidden').show(); $('#style-showmore').hide(); }
+        function setBaStyles(items) { style.innerHTML = '<option value="">Choose Brewers Association 2026 style...</option>'; items.forEach(function (item) { var option = document.createElement('option'); option.value = item.Id; option.text = item.Name; style.appendChild(option); }); if (selectedStyleId) style.value = selectedStyleId; syncStyleName(); $(style).trigger('chosen:updated'); renderReadOnlyComparison(); }
+        if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); renderReadOnlyComparison(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles).fail(function () { style.innerHTML = '<option value="">Could not load the 2026 catalog. Try again.</option>'; }); }
+        catalog.onchange = function () { selectedStyleId = ''; if (catalog.value === 'legacy-bjcp') { style.innerHTML = legacy.replace('Loading Brewers Association 2026 styles...', 'Choose BJCP Style...'); syncStyleName(); renderReadOnlyComparison(); } else { $.getJSON('/ba-2026-style-catalog', setBaStyles); } $(style).trigger('chosen:updated'); };
+        style.onchange = function () { syncStyleName(); renderReadOnlyComparison(); };
     }());
 </script>
 
