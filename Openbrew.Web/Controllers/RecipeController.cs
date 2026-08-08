@@ -798,38 +798,58 @@ namespace Openbrew.Web.Controllers
 		/// /Executes the view for ChangeRecipePhoto
 		/// </summary>
 		[HttpPost]
+		[Authorize]
 		[ForceHttps]
 		public ActionResult BuilderChangeRecipePhoto(ChangeRecipePhotoViewModel changeRecipePhotoViewModel)
 		{
-			var recipe = this.RecipeService.GetRecipeById(changeRecipePhotoViewModel.RecipeId);
-
-			if (recipe.CreatedBy != this.ActiveUser.UserId)
+			if (changeRecipePhotoViewModel == null || changeRecipePhotoViewModel.PhotoForUpload == null || changeRecipePhotoViewModel.PhotoForUpload.ContentLength == 0)
 			{
-				return this.Issue404();
+				this.AppendMessage(new ErrorMessage { Text = "Please select a photo to upload." });
+				ViewBag.UploadComplete = false;
+				return View("~/Views/Recipe/BuilderChangeRecipePhoto.cshtml", new RecipeViewModel());
 			}
 
-			var recipeViewModel = Mapper.Map(recipe, new RecipeViewModel());
+			RecipeViewModel recipeViewModel = null;
 			var uploadSucceeded = false;
+			string newImageUrlRoot = null;
 
 			using(var unitOfWork = this.UnitOfWorkFactory.NewUnitOfWork())
 			{
 				try
 				{
+					// UnitOfWork creates a fresh data context. Load the recipe after it
+					// opens so ImageUrlRoot is tracked and actually persists on commit.
+					var recipe = this.RecipeService.GetRecipeById(changeRecipePhotoViewModel.RecipeId);
+					if (recipe == null || recipe.CreatedBy != this.ActiveUser.UserId)
+					{
+						return this.Issue404();
+					}
+
 					var oldImageUrlRoot = recipe.ImageUrlRoot;
 
 					// Save the New Image
-					recipe.ImageUrlRoot = this.StaticContentService.SaveRecipeImage(changeRecipePhotoViewModel.PhotoForUpload.InputStream,
+					newImageUrlRoot = this.StaticContentService.SaveRecipeImage(changeRecipePhotoViewModel.PhotoForUpload.InputStream,
 						this.WebSettings.MediaPhysicalRoot);
-
-					// Delete the Old Image (if it exists)
-					if (!string.IsNullOrWhiteSpace(oldImageUrlRoot))
-					{
-						this.StaticContentService.DeleteRecipeImage(this.WebSettings.MediaPhysicalRoot, oldImageUrlRoot);
-					}
+					recipe.ImageUrlRoot = newImageUrlRoot;
 
 					unitOfWork.Commit();
 					recipeViewModel = Mapper.Map(recipe, new RecipeViewModel());
 					uploadSucceeded = true;
+
+					// Do not remove the previous image until its replacement has been
+					// committed. A failed database write should never make a recipe lose
+					// the photo it already had.
+					if (!string.IsNullOrWhiteSpace(oldImageUrlRoot))
+					{
+						try
+						{
+							this.StaticContentService.DeleteRecipeImage(this.WebSettings.MediaPhysicalRoot, oldImageUrlRoot);
+						}
+						catch (Exception deleteException)
+						{
+							this.LogHandledException(deleteException);
+						}
+					}
 
 					this.AppendMessage(new SuccessMessage { Text = "Your photo has been uploaded." });
 				}
@@ -837,6 +857,17 @@ namespace Openbrew.Web.Controllers
 				{
 					this.LogHandledException(ex);					
 					unitOfWork.Rollback();
+					if (!string.IsNullOrWhiteSpace(newImageUrlRoot))
+					{
+						try
+						{
+							this.StaticContentService.DeleteRecipeImage(this.WebSettings.MediaPhysicalRoot, newImageUrlRoot);
+						}
+						catch (Exception deleteException)
+						{
+							this.LogHandledException(deleteException);
+						}
+					}
 
 					this.AppendMessage(new ErrorMessage { Text = "There was a problem saving your photo.  Please try again."});
 				}
