@@ -2383,7 +2383,13 @@ html[data-theme="dark"] .theme-choice.is-selected { border-color: #eba04d; box-s
    960px-era columns and making dense recipe work practical on a phone. */
 @media (max-width: 820px) {
     html,
-    body { overflow-x: hidden; }
+    body {
+        overflow-x: hidden;
+        /* A fixed, multi-layer gradient forces expensive repaints during
+           momentum scrolling on mobile browsers. Keep the same artwork but
+           let it move with the document so swipes remain responsive. */
+        background-attachment: scroll;
+    }
 
     #title,
     .top-search { display: none !important; }
